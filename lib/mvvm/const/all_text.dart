@@ -10,6 +10,8 @@ class CustomText {
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
 
   static const String continuar = 'Continuar';
+  static const String entrar = 'Entrar';
+  static const String cadastrar = 'Cadastrar-se';
   static const String desenvolvido = 'Desenvolvido por miatech.pro';
 
 

@@ -1,7 +1,10 @@
 import '../mvvm/const/export.dart';
+import 'mvvm/controller/login_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  Get.put(LoginController());
+
   await StorageService.init(); // Initialize GetStorage
   runApp(const MyApp());
 }

@@ -22,7 +22,7 @@ class OnboardingController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _timer = Timer.periodic(const Duration(seconds: 4), (_) {
+    _timer = Timer.periodic(const Duration(seconds: 2), (_) {
       currentStep.value = (currentStep.value + 1) % images.length;
     });
   }
@@ -37,7 +37,7 @@ class OnboardingController extends GetxController {
 
   Future<void> continueToNext() async {
     isButtonLoading.value = true;
-    await Future.delayed(const Duration(seconds: 2)); // simulate loading
+    await Future.delayed(const Duration(seconds: 1)); // simulate loading
     isButtonLoading.value = false;
     Get.offAllNamed(RouteNameV1.welcome);
   }

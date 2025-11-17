@@ -1,137 +1,175 @@
 import '../../const/export.dart';
 
+import 'dart:math' as math;
+
+
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final _ = MediaQuery.of(context).size.width;
 
     return SafeArea(
       child: Scaffold(
-        body: Container(
-          width: double.infinity,
-          height: double.infinity,
-          color: CustomColor.white,
-          child: Column(
-            children: [
-              Expanded(
-                flex: 3,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const SizedBox(height: 20),
-
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0,),
-                      child: Text(
-                        'Bem-vindo ao Quero Obras, sua melhor ferramenta para todas as necessidades do seu ciclo de vida.',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontFamily: 'Josefin Sans',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                          color: const Color(0xFF16577F),
-                          height: 1.2,
-                        ),
+        backgroundColor: CustomColor.white,
+        body: Column(
+          children: [
+            // TOP SECTION – Text + Image
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 20),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      'Bem-vindo ao Quero Obras, sua melhor ferramenta para todas as necessidades do seu ciclo de vida.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontFamily: 'Josefin Sans',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: const Color(0xFF16577F),
+                        height: 1.2,
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    CustomImageView(
-                      imagePath: CustomImage.welcomeLogo,
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  CustomImageView(
+                    imagePath: CustomImage.welcomeLogo,
+                  ),
+                ],
               ),
+            ),
 
-              Expanded(
-                flex: 4,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    // Rotated orange background
-                    Positioned(
-                      left: -55,
-                      top: 0,
-                      child: Transform.rotate(
-                        angle: 84.329 * 3.14159 / 180,
-                        child: Container(
-                          width: 474,
-                          height: 771,
-                          decoration: const BoxDecoration(
-                            color: CustomColor.sprimary,
-                          ),
+            // BOTTOM SECTION – Orange Shape, Border, Button
+            Expanded(
+              flex: 4,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  // 🟧 Rotated orange background
+                  Positioned(
+                    left: -55,
+                    top: 0,
+                    child: Transform.rotate(
+                      angle: 84.329 * math.pi / 180,
+                      child: Container(
+                        width: 474,
+                        height: 771,
+                        decoration: const BoxDecoration(
+                          color: CustomColor.sprimary,
                         ),
                       ),
                     ),
+                  ),
 
-                    // Dashed border (also rotated)
-                    Positioned(
-                      left: -51,
-                      top: 5,
-                      child: Transform.rotate(
-                        angle: 84.329 * 3.14159 / 180,
-                        child: CustomPaint(
-                          size: const Size(474, 744),
-                          painter: DashedBorderPainter(
-                            color: CustomColor.sprimary,
-                            strokeWidth: 5,
-                            dashWidth: 10,
-                            dashSpace: 6,
-                          ),
+                  // 🟠 Dashed border (rotated)
+                  Positioned(
+                    left: -51,
+                    top: 5,
+                    child: Transform.rotate(
+                      angle: 84.329 * math.pi / 180,
+                      child: CustomPaint(
+                        size: const Size(474, 744),
+                        painter: DashedBorderPainter(
+                          color: Colors.white,
+                          strokeWidth: 5,
+                          dashWidth: 10,
+                          dashSpace: 6,
                         ),
                       ),
                     ),
+                  ),
 
-                    // Foreground content (upright)
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 230),
-                          child: Text(
-                            CustomText.deslize,
-                            textAlign: TextAlign.center,
-                            style: GoogleFonts.josefinSans(
-                              fontSize: 32,
-                              fontWeight: FontWeight.w400,
-                              color: CustomColor.white,
-                              height: 1.2,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-
-                        // SlideButton replacing CustomButton
-                        const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 20),
-                          child: SlideButton(),
-                        ),
-
-                        const SizedBox(height: 20),
-                        Text(
-                          CustomText.desenvolvido,
+                  // ✳️ Foreground content
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(top: 230),
+                        child: Text(
+                          CustomText.deslize,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.josefinSans(
-                            fontSize: 14,
+                            fontSize: 32,
                             fontWeight: FontWeight.w400,
-                            color: CustomColor.white.withValues(alpha: 0.5),
+                            color: CustomColor.white,
+                            height: 1.2,
                           ),
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                      ),
+                      const SizedBox(height: 30),
+
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: SlideButton(),
+                      ),
+
+                      const SizedBox(height: 20),
+                      Text(
+                        CustomText.desenvolvido,
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.josefinSans(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          color: CustomColor.white.withValues(alpha: 0.5),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
   }
-
-
 }
+
+class DashedBorderPainter extends CustomPainter {
+  final Color color;
+  final double strokeWidth;
+  final double dashWidth;
+  final double dashSpace;
+
+  const DashedBorderPainter({
+    required this.color,
+    required this.strokeWidth,
+    required this.dashWidth,
+    required this.dashSpace,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke;
+
+    // Create dashed path
+    final path = Path()
+      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+
+    final dashPath = Path();
+    for (final metric in path.computeMetrics()) {
+      double distance = 0.0;
+      while (distance < metric.length) {
+        dashPath.addPath(metric.extractPath(distance, distance + dashWidth), Offset.zero);
+        distance += dashWidth + dashSpace;
+      }
+    }
+
+    canvas.drawPath(dashPath, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
 
 class SlideButton extends StatelessWidget {
   const SlideButton({super.key});

@@ -1,4 +1,4 @@
-import '../../const/export.dart';
+import '../../../const/export.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -8,7 +8,6 @@ class HomeScreen extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,
-
         body: Container(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(30),
@@ -104,7 +103,10 @@ class HomeScreen extends StatelessWidget {
                                     borderRadius: const BorderRadius.only(
                                       topLeft: Radius.circular(11),
                                     ),
-                                  ),
+                                    onTap: (){
+                                      Get.toNamed(RouteNameV1.materiaisServiceProvider);
+
+                                    },                                  ),
                                 ),
                                 const SizedBox(width: 10),
                                 Expanded(
@@ -114,7 +116,13 @@ class HomeScreen extends StatelessWidget {
                                     borderRadius: const BorderRadius.only(
                                       topRight: Radius.circular(11),
                                     ),
-                                  ),
+                                    onTap: (){
+                                      Get.toNamed(RouteNameV1.ferramentasServiceProvider);
+
+                                    },
+
+
+                                ),
                                 ),
                               ],
                             ),
@@ -123,11 +131,15 @@ class HomeScreen extends StatelessWidget {
                               children: [
                                 Expanded(
                                   child: CategoryCard(
-                                    icon: "assets/images/Serviços.svg",
+                                    icon: "assets/images/service_provider.svg",
                                     title: 'Serviços',
                                     borderRadius: const BorderRadius.only(
                                       bottomLeft: Radius.circular(11),
                                     ),
+                                    onTap: (){
+                                      Get.toNamed(RouteNameV1.serviceScreen);
+
+                                    },
                                   ),
                                 ),
                                 const SizedBox(width: 10),
@@ -138,6 +150,10 @@ class HomeScreen extends StatelessWidget {
                                     borderRadius: const BorderRadius.only(
                                       bottomRight: Radius.circular(11),
                                     ),
+                                    onTap: (){
+                                      Get.toNamed(RouteNameV1.acabamentoServiceProvider);
+
+                                    },
                                   ),
                                 ),
                               ],
@@ -167,6 +183,17 @@ class HomeScreen extends StatelessWidget {
                               child: QuickAccessCard(
                                 imageUrl: "assets/images/Vender.svg",
                                 title: 'Vender',
+                                onTap: () async {
+                                  String? token = StorageDesign.readItem(StorageDesign.token);
+
+                                  if (token == null || token.isEmpty) {
+                                    // User NOT logged in → go to Login
+                                    Get.toNamed(RouteNameV1.login);
+                                  } else {
+                                    // User IS logged in → go to Vender page
+                                    Get.toNamed(RouteNameV1.vender);
+                                  }
+                                },
                               ),
                             ),
                             const SizedBox(width: 20),
@@ -208,31 +235,47 @@ class SearchBarWidget extends StatelessWidget {
       children: [
         Expanded(
           child: Container(
-            height: 50,
+            width: double.infinity,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(217),
               color: const Color(0xFFEEEEEE),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 13),
+            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             child: Row(
               children: [
-                Icon(Icons.search_outlined),
-                const SizedBox(width: 19),
-                const Expanded(
-                  child: Text(
-                    'O que você está procurando?',
-                    style: TextStyle(
-                      color: Color(0xFF7E7878),
+                const Icon(
+                  Icons.search_outlined,
+                  color: Color(0xFF7F7F7F),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'O que você está procurando?',
+                      hintStyle: TextStyle(
+                        color: Color(0xFF7F7F7F),
+                        fontSize: 16,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Josefin Sans',
+                        height: 1.5,
+                      ),
+                      border: InputBorder.none,
+                    ),
+                    style: const TextStyle(
+                      color: Colors.black,
                       fontSize: 16,
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Josefin Sans',
-                      height: 1.5,
                     ),
+                    onChanged: (value) {
+                      // TODO: implement search filter logic here
+                    },
                   ),
                 ),
               ],
             ),
           ),
+
         ),
         const SizedBox(width: 3),
         Container(
@@ -252,6 +295,62 @@ class SearchBarWidget extends StatelessWidget {
     );
   }
 }
+
+class SearchBarWidgetMain extends StatelessWidget {
+  final String hintText;
+  final ValueChanged<String>? onChanged;
+
+  const SearchBarWidgetMain({
+    super.key,
+    required this.hintText,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(217),
+        color: const Color(0xFFEEEEEE),
+      ),
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+      child: Row(
+        children: [
+          const Icon(
+            Icons.search_outlined,
+            color: Color(0xFF7F7F7F),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: TextField(
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                  color: Color(0xFF7F7F7F),
+                  fontSize: 16,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Josefin Sans',
+                  height: 1.5,
+                ),
+                border: InputBorder.none,
+              ),
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                fontFamily: 'Josefin Sans',
+              ),
+              onChanged: onChanged,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 
 class RecentSearchChip extends StatelessWidget {
   final String text;
@@ -304,45 +403,50 @@ class CategoryCard extends StatelessWidget {
   final String icon;
   final String title;
   final BorderRadius borderRadius;
+  final VoidCallback? onTap; // 👈 Added onTap callback
 
   const CategoryCard({
     super.key,
     required this.icon,
     required this.title,
     required this.borderRadius,
+    this.onTap, // 👈 Optional parameter
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 66,
-      decoration: BoxDecoration(
-        borderRadius: borderRadius,
-        color: const Color(0xFFF4F3F3),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
-      child: Row(
-        children: [
-          CustomImageView(
-            imagePath: icon,
-            width: 24,
-            height: 24,
-            fit: BoxFit.contain,
-          ),
-          const SizedBox(width: 19),
-          Expanded(
-            child: Text(
-              title,
-              style: const TextStyle(
-                color: Colors.black,
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Josefin Sans',
-                height: 2,
+    return GestureDetector(
+      onTap: onTap, // 👈 Handle tap
+      child: Container(
+        height: 66,
+        decoration: BoxDecoration(
+          borderRadius: borderRadius,
+          color: const Color(0xFFF4F3F3),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 21),
+        child: Row(
+          children: [
+            CustomImageView(
+              imagePath: icon,
+              width: 24,
+              height: 24,
+              fit: BoxFit.contain,
+            ),
+            const SizedBox(width: 19),
+            Expanded(
+              child: Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Josefin Sans',
+                  height: 2,
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -430,44 +534,48 @@ class PromotionBanner extends StatelessWidget {
 class QuickAccessCard extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final VoidCallback? onTap;
 
   const QuickAccessCard({
     super.key,
     required this.imageUrl,
-    required this.title,
+    required this.title,  this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 119.9124755859375,
-      height: 103.28227233886719,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF4F3F3),
-        borderRadius: BorderRadius.circular(8.75),
-      ),
-      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          // Image on top
-          Expanded(
-            child: CustomImageView(imagePath: imageUrl, fit: BoxFit.contain),
-          ),
-          const SizedBox(height: 5),
-          // Title below image
-          Text(
-            title,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              fontFamily: 'Josefin Sans',
-              height: 1.2,
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        width: 119.9124755859375,
+        height: 103.28227233886719,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF4F3F3),
+          borderRadius: BorderRadius.circular(8.75),
+        ),
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // Image on top
+            Expanded(
+              child: CustomImageView(imagePath: imageUrl, fit: BoxFit.contain),
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
+            const SizedBox(height: 5),
+            // Title below image
+            Text(
+              title,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                fontFamily: 'Josefin Sans',
+                height: 1.2,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
       ),
     );
   }

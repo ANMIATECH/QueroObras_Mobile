@@ -9,8 +9,14 @@ class CustomImage {
   static String clapping = "$baseImage/clapping1.svg";
   static String welcomeLogo = "$baseImage/logo.png";
   static String logo = "$baseImage/img_5.png";
+  static String emoji = "$baseImage/emoji.svg";
+  static String inputCamera = "$baseImage/input_camera.svg";
+  static String recording = "$baseImage/recording.svg";
+  static String send = "$baseImage/sendbutton.svg";
   static String homeActive = "$baseImage/home_active.svg";
-  static String homeInactive = "$baseImage/home.svg";
+  static String menuActive = "$baseImage/active_menu.svg";
+  static String homeInactive = "$baseImage/dashboard.svg";
+  static String menuInactive = "$baseImage/menu.svg";
   static String orderActive = "$baseImage/order_active.svg";
   static String orderInactive = "$baseImage/order.svg";
   static String searchActive = "$baseImage/search_active.svg";

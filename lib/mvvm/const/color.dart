@@ -88,3 +88,70 @@ class SnackbarUtil {
     );
   }
 }
+
+class CustomInputField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final Widget icon;
+  final bool isPassword;
+  final Widget? customContent;
+  final TextInputType keyboardType;
+
+  const CustomInputField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    required this.icon,
+    this.isPassword = false,
+    this.customContent,
+    this.keyboardType = TextInputType.text,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: const Color(0xFFFAF7F7),
+        borderRadius: BorderRadius.circular(217.391),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 18),
+        child: Row(
+          children: [
+            icon,
+            const SizedBox(width: 10),
+            Expanded(
+              child: isPassword && customContent != null
+                  ? customContent!
+                  : TextField(
+                controller: controller,
+                obscureText: isPassword,
+                keyboardType: keyboardType,
+                style: const TextStyle(
+                  color: CustomColor.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  fontFamily: 'Josefin Sans',
+                ),
+                decoration: InputDecoration(
+                  hintText: hintText,
+                  hintStyle: const TextStyle(
+                    color: Color(0xFFB1B1B1),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: 'Josefin Sans',
+                  ),
+                  border: InputBorder.none,
+                  contentPadding: EdgeInsets.zero,
+                  isDense: true,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+

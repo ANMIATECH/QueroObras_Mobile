@@ -1,121 +1,174 @@
 import '../../const/export.dart';
 
+import '../../const/export.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
     final controller = Get.put(OnboardingController());
+    final screenWidth = MediaQuery.of(context).size.width;
+    final orientation = MediaQuery.of(context).orientation;
 
     return SafeArea(
       child: Scaffold(
-        body: Column(
-          children: [
-            Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Obx(() => CustomProgressIndicator(width: screenWidth * controller.getProgress())),
-                  const SizedBox(height: 40),
-                  Obx(() => SizedBox(
-                    width: 250,
-                    height: 250,
-                    child: CustomImageView(imagePath: controller.images[controller.currentStep.value]),
-                  )),
-                ],
+        body: orientation == Orientation.portrait
+            ? _buildPortraitLayout(context, controller, screenWidth)
+            : _buildLandscapeLayout(context, controller, screenWidth),
+      ),
+    );
+  }
+
+  // ===================== PORTRAIT LAYOUT =====================
+  Widget _buildPortraitLayout(
+      BuildContext context, OnboardingController controller, double screenWidth) {
+    return Column(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Obx(() => CustomProgressIndicator(width: screenWidth * controller.getProgress())),
+              const SizedBox(height: 40),
+              Obx(() => SizedBox(
+                width: 250,
+                height: 250,
+                child: CustomImageView(
+                    imagePath: controller.images[controller.currentStep.value]),
+              )),
+            ],
+          ),
+        ),
+
+        // Bottom section
+        Expanded(
+          flex: 4,
+          child: _buildBottomSection(context, controller),
+        ),
+      ],
+    );
+  }
+
+  // ===================== LANDSCAPE LAYOUT =====================
+  Widget _buildLandscapeLayout(
+      BuildContext context, OnboardingController controller, double screenWidth) {
+    return Row(
+      children: [
+        Expanded(
+          flex: 3,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Obx(() => CustomProgressIndicator(width: screenWidth * 0.4 * controller.getProgress())),
+              const SizedBox(height: 20),
+              Obx(() => SizedBox(
+                width: 180,
+                height: 180,
+                child: CustomImageView(
+                    imagePath: controller.images[controller.currentStep.value]),
+              )),
+            ],
+          ),
+        ),
+        Expanded(
+          flex: 4,
+          child: _buildBottomSection(context, controller),
+        ),
+      ],
+    );
+  }
+
+  // ===================== BOTTOM SECTION =====================
+  Widget _buildBottomSection(BuildContext context, OnboardingController controller) {
+    return Stack(
+      alignment: Alignment.center,
+      children: [
+        // Rotated orange background
+        Positioned(
+          left: -55,
+          top: 0,
+          child: Transform.rotate(
+            angle: 84.329 * 3.14159 / 180,
+            child: Container(
+              width: 474,
+              height: 771,
+              decoration: const BoxDecoration(color: CustomColor.primary),
+            ),
+          ),
+        ),
+
+        // Dashed border
+        Positioned(
+          left: -51,
+          top: 5,
+          child: Transform.rotate(
+            angle: 84.329 * 3.14159 / 180,
+            child: CustomPaint(
+              size: const Size(474, 744),
+              painter: DashedBorderPainter(
+                color: CustomColor.primary,
+                strokeWidth: 5,
+                dashWidth: 10,
+                dashSpace: 6,
               ),
             ),
+          ),
+        ),
 
-            Expanded(
-              flex: 4,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // Rotated orange background
-                  Positioned(
-                    left: -55,
-                    top: 0,
-                    child: Transform.rotate(
-                      angle: 84.329 * 3.14159 / 180,
-                      child: Container(
-                        width: 474,
-                        height: 771,
-                        decoration: const BoxDecoration(color: CustomColor.primary),
-                      ),
-                    ),
-                  ),
-
-                  // Dashed border
-                  Positioned(
-                    left: -51,
-                    top: 5,
-                    child: Transform.rotate(
-                      angle: 84.329 * 3.14159 / 180,
-                      child: CustomPaint(
-                        size: const Size(474, 744),
-                        painter: DashedBorderPainter(
-                          color: CustomColor.primary,
-                          strokeWidth: 5,
-                          dashWidth: 10,
-                          dashSpace: 6,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // Foreground content
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 230),
-                        child: Obx(() => Text(
-                          controller.texts[controller.currentStep.value],
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.josefinSans(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w400,
-                            color: CustomColor.white,
-                            height: 1.2,
-                          ),
-                        )),
-                      ),
-                      const SizedBox(height: 30),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Obx(() => CustomButton(
-                          isLoading: controller.isButtonLoading.value,
-                          width: double.infinity,
-                          height: 65,
-                          text: CustomText.continuar,
-                          onPressed: () async {
-                            await controller.continueToNext();
-                          },
-                        )),
-                      ),
-                      const SizedBox(height: 20),
-                      Text(
-                        CustomText.desenvolvido,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.josefinSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: CustomColor.white.withValues(alpha: 0.5),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+        // Foreground content
+        Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                  top: MediaQuery.of(context).size.height * 0.25),
+              child: Obx(() => Text(
+                controller.texts[controller.currentStep.value],
+                textAlign: TextAlign.center,
+                style: GoogleFonts.josefinSans(
+                  fontSize: 32,
+                  fontWeight: FontWeight.w400,
+                  color: CustomColor.white,
+                  height: 1.2,
+                ),
+              )),
+            ),
+            const SizedBox(height: 30),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Obx(() => CustomOnboardButton(
+                isLoading: controller.isButtonLoading.value,
+                width: double.infinity,
+                height: 65,
+                text: CustomText.continuar,
+                onPressed: () async {
+                  await controller.continueToNext();
+                },
+              )),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              CustomText.desenvolvido,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.josefinSans(
+                fontSize: 14,
+                fontWeight: FontWeight.w400,
+                color: CustomColor.white.withValues(alpha: 0.5),
               ),
             ),
           ],
         ),
-      ),
+      ],
     );
   }
 }
+
+// ===================== CUSTOM WIDGETS =====================
 
 class CustomProgressIndicator extends StatelessWidget {
   final double width;
@@ -146,6 +199,8 @@ class CustomProgressIndicator extends StatelessWidget {
     );
   }
 }
+
+
 
 
 class DashedBorderPainter extends CustomPainter {

@@ -92,183 +92,52 @@ class CustomImageView extends StatelessWidget {
 
   Widget _buildImageView() {
     if (imagePath != null) {
-      switch (imagePath!.imageType) {
+      final type = imagePath!.imageType;
+      switch (type) {
         case ImageType.svg:
-          return SizedBox(
-            height: height,
-            width: width,
-            child: SvgPicture.asset(
+          if (imagePath!.startsWith('http')) {
+            return SvgPicture.network(
+              imagePath!,
+              height: height,
+              width: width,
+              fit: fit ?? BoxFit.contain,
+              placeholderBuilder: (context) =>
+              const Center(child: CircularProgressIndicator()),
+              colorFilter: color != null
+                  ? ColorFilter.mode(color!, BlendMode.srcIn)
+                  : null,
+            );
+          } else {
+            return SvgPicture.asset(
               imagePath!,
               height: height,
               width: width,
               fit: fit ?? BoxFit.contain,
               colorFilter: color != null
-                  ? ColorFilter.mode(
-                      color ?? Colors.transparent, BlendMode.srcIn)
+                  ? ColorFilter.mode(color!, BlendMode.srcIn)
                   : null,
-            ),
-          );
+            );
+          }
         case ImageType.file:
-          return Image.file(
-            File(imagePath!),
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.cover,
-            color: color,
-          );
+          return Image.file(File(imagePath!), height: height, width: width, fit: fit);
         case ImageType.network:
           return CachedNetworkImage(
+            imageUrl: imagePath!,
             height: height,
             width: width,
             fit: fit,
-            imageUrl: imagePath!,
-            color: color,
-            placeholder: (context, url) => SizedBox(
-              height: 30,
-              width: 30,
-              child: LinearProgressIndicator(
-                color: Colors.grey.shade200,
-                backgroundColor: Colors.grey.shade100,
-              ),
-            ),
-            errorWidget: (context, url, error) => Image.asset(
-              placeHolder,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.cover,
-            ),
+            placeholder: (context, url) => const CircularProgressIndicator(),
+            errorWidget: (context, url, error) => Image.asset(placeHolder, height: height, width: width, fit: fit),
           );
         case ImageType.png:
         default:
-          return Image.asset(
-            imagePath!,
-            height: height,
-            width: width,
-            fit: fit ?? BoxFit.cover,
-            color: color,
-          );
+          return Image.asset(imagePath!, height: height, width: width, fit: fit);
       }
     }
     return const SizedBox();
   }
 }
 
-class CustomImageView2 extends StatelessWidget {
-  CustomImageView2(
-      {super.key,
-      this.imagePath,
-      this.height,
-      this.width,
-      this.color,
-      this.fit,
-      this.type,
-      this.alignment,
-      this.onTap,
-      this.radius,
-      this.margin,
-      this.border,
-      this.placeHolder = 'assets/images/image_not_found.png'});
-
-  ///[imagePath] is required parameter for showing image
-  String? imagePath;
-
-  double? height;
-
-  double? width;
-
-  Color? color;
-  String? type;
-
-  BoxFit? fit;
-
-  final String placeHolder;
-
-  Alignment? alignment;
-
-  VoidCallback? onTap;
-
-  EdgeInsetsGeometry? margin;
-
-  BorderRadius? radius;
-
-  BoxBorder? border;
-
-  @override
-  Widget build(BuildContext context) {
-    return alignment != null
-        ? Align(alignment: alignment!, child: _buildWidget())
-        : _buildWidget();
-  }
-
-  Widget _buildWidget() {
-    return Padding(
-      padding: margin ?? EdgeInsets.zero,
-      child: InkWell(
-        onTap: onTap,
-        child: _buildCircleImage(),
-      ),
-    );
-  }
-
-  ///build the image with border radius
-  dynamic _buildCircleImage() {
-    if (radius != null) {
-      return ClipRRect(
-        borderRadius: radius ?? BorderRadius.zero,
-        child: _buildImageWithBorder(),
-      );
-    } else {
-      return _buildImageWithBorder();
-    }
-  }
-
-  ///build the image with border and border radius style
-  Widget _buildImageWithBorder() {
-    if (border != null) {
-      return Container(
-        decoration: BoxDecoration(
-          border: border,
-          borderRadius: radius,
-        ),
-        child: _buildImageView(),
-      );
-    } else {
-      return _buildImageView();
-    }
-  }
-
-  Widget _buildImageView() {
-    return type == "svg"
-        ? SvgPicture.network(
-            imagePath!,
-            width: width,
-            height: height,
-            fit: BoxFit.cover,
-          )
-        : CachedNetworkImage(
-            height: height,
-            width: width,
-            fit: fit,
-            imageUrl: imagePath ??         "https://pbs.twimg.com/media/D8dDZukXUAAXLdY.jpg"
-      ,
-            color: color,
-            placeholder: (context, url) => SizedBox(
-              height: 30,
-              width: 30,
-              child: LinearProgressIndicator(
-                color: Colors.grey.shade200,
-                backgroundColor: Colors.grey.shade100,
-              ),
-            ),
-            errorWidget: (context, url, error) => Image.asset(
-              placeHolder,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.cover,
-            ),
-          );
-  }
-}
 
 extension ImageTypeExtension on String {
   ImageType get imageType {
@@ -482,14 +351,14 @@ class CustomImageViewProfile extends StatelessWidget {
 }
 
 
-class CustomButton extends StatelessWidget {
+class CustomOnboardButton extends StatelessWidget {
   final double width;
   final double height;
   final String text;
   final bool isLoading;
   final VoidCallback onPressed;
 
-  const CustomButton({
+  const CustomOnboardButton({
     super.key,
     required this.width,
     required this.height,
@@ -520,6 +389,107 @@ class CustomButton extends StatelessWidget {
                 fontWeight: FontWeight.w700,
                 color: const Color(0xFF16577F),
               ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomButton extends StatefulWidget {
+  final String text;
+  final bool isLoading;
+  final VoidCallback? onPressed;
+
+  const CustomButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+    this.isLoading = false,
+  });
+
+  @override
+  State<CustomButton> createState() => _CustomButtonState();
+}
+
+class _CustomButtonState extends State<CustomButton>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController _controller;
+  late Animation<double> _fadeAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+
+    _fadeAnimation = Tween<double>(begin: 0.2, end: 1.0)
+        .animate(CurvedAnimation(
+      parent: _controller,
+      curve: Curves.easeInOut,
+    ));
+
+    // Start animation if loading
+    if (widget.isLoading) {
+      _controller.repeat(reverse: true);
+    }
+  }
+
+  @override
+  void didUpdateWidget(covariant CustomButton oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    // Start/stop animation depending on loading state
+    if (widget.isLoading && !_controller.isAnimating) {
+      _controller.repeat(reverse: true);
+    } else if (!widget.isLoading && _controller.isAnimating) {
+      _controller.stop();
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final bool isDisabled = widget.onPressed == null || widget.isLoading;
+
+    return GestureDetector(
+      onTap: isDisabled ? null : widget.onPressed,
+      child: Container(
+        width: double.infinity,
+        height: 60,
+        decoration: BoxDecoration(
+          color: isDisabled ? Colors.grey : CustomColor.primary,
+          borderRadius: BorderRadius.circular(217.391),
+        ),
+        child: Center(
+          child: widget.isLoading
+              ? FadeTransition(
+            opacity: _fadeAnimation,
+            child: Text(
+              'Loading...',
+              style: GoogleFonts.josefinSans(
+                fontSize: 16,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          )
+              : Text(
+            widget.text,
+            style: GoogleFonts.josefinSans(
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+              color: Colors.white,
             ),
           ),
         ),

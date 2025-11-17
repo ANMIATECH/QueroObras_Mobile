@@ -1,4 +1,16 @@
 export 'package:queroobras_mobile/mvvm/api_management/api_url.dart';
+export '../screens/dashboard/home/acabamento_services.dart';
+export '../screens/dashboard/home/ferramentas_services.dart';
+export '../screens/dashboard/home/vendor_screen.dart';
+export '../screens/dashboard/home/vender_itemdetails.dart';
+export '../controller/vendor_controller.dart';
+export '../screens/dashboard/home/create_vender.dart';
+export 'package:google_maps_flutter/google_maps_flutter.dart';
+export 'package:geolocator/geolocator.dart';
+export '../screens/dashboard/profile/profile_screen.dart';
+export '../controller/login_controller.dart';
+
+
 
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
 export 'package:queroobras_mobile/mvvm/const/export.dart';
@@ -6,15 +18,31 @@ export 'package:google_fonts/google_fonts.dart';
 export 'dart:ui' show PathMetric;
 export '../screens/onboarding/splash_screen.dart';
 export '../controller/onboarding_controller.dart';
-export '../screens/home/home_screen.dart';
+export '../screens/dashboard/home/home_screen.dart';
 export '../controller/bottomnav_controller.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/order/order_item.dart';
+export '../screens/dashboard/order/order.dart';
+export '../controller/product_controller.dart';
+export '../screens/dashboard/order/product_details.dart';
+export '../screens/dashboard/search/search_screen.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/chat/chat_card.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/chat/chat_bubble.dart';
+export '../screens/dashboard/chat/chat.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/chat/one_on_onechat.dart';
+export '../screens/dashboard/service/service.dart';
+export '../screens/auth/otp_verification.dart';
+export '../screens/dashboard/home/serviceprovider_request.dart';
+export '../screens/dashboard/home/materiais_services.dart';
 
 export 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
 export 'package:queroobras_mobile/mvvm/const/route.dart';
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:flutter/services.dart';
 export 'package:queroobras_mobile/mvvm/const/theme.dart';
-
+export '../controller/auth_controller.dart';
+export '../screens/auth/login_screen.dart';
+export '../screens/auth/registration.dart';
+export '../screens/auth/resetpassword.dart';
 export '../screens/onboarding/welcome_screen.dart' hide DashedBorderPainter;
 export 'package:queroobras_mobile/mvvm/const/storage.dart';
 export 'package:queroobras_mobile/mvvm/responsive/responsive.dart';

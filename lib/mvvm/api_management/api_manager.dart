@@ -85,7 +85,8 @@ class ApiManager implements ApiReuse {
           Uri.parse('${ApiReuse.baseUrl}$endpoint');
       final headers = {
         'Content-Type': 'application/json',
-        // 'User-Agent': d,
+        'Accept': 'application/json',
+
         if (bearerToken == true) 'Authorization': 'Bearer $token',
       };
 

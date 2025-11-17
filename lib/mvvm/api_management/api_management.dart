@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:http/http.dart' as http; // Keep http for Response and MultipartFile
 abstract class ApiReuse {
-  static String baseUrl = "https://test-api.dubballup.com/";
+  static String baseUrl = "https://queroobras.popopipo.com/api/";
   Future<http.Response> post(
       String endpoint, Map<String, dynamic> body, bool bearerToken);
   Future<http.Response> read(String endpoint, bool bearerToken);
