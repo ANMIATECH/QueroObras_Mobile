@@ -57,7 +57,7 @@ class OtpVerificationScreen extends StatelessWidget {
                         // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(5, (index) {
+                          children: List.generate(6, (index) {
                             return Flexible(
                               child: Container(
                                 height: 55,

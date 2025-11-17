@@ -15,8 +15,8 @@ class LoginController extends GetxController {
   final TextEditingController cnpjController = TextEditingController();
   final TextEditingController cepController = TextEditingController();
   final TextEditingController serviceController = TextEditingController();
-  final otpControllers = List.generate(5, (_) => TextEditingController());
-  final focusNodes = List.generate(5, (_) => FocusNode());
+  final otpControllers = List.generate(6, (_) => TextEditingController());
+  final focusNodes = List.generate(6, (_) => FocusNode());
 
   var isLoading = false.obs;
 
@@ -412,10 +412,20 @@ class LoginController extends GetxController {
       var response = await _apiManager.post(ApiUrl.verifyOtp, body, false);
       isLoading.value = false;
 
+      // 🔍 PRINT EVERYTHING
+      print("-----------------------------------------------------------");
+      print("📤 OTP VERIFY REQUEST BODY: $body");
+      print("📩 RAW RESPONSE BODY: ${response.body}");
+      print("📩 STATUS CODE: ${response.statusCode}");
+      print("📩 HEADERS: ${response.headers}");
+      print("-----------------------------------------------------------");
+
       var message;
       try {
         message = jsonDecode(response.body);
-      } catch (_) {
+        print("📩 DECODED JSON: $message");
+      } catch (e) {
+        print("❌ JSON PARSE ERROR: $e");
         message = {"error": {"message": "Invalid server response"}};
       }
 
@@ -426,11 +436,28 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        // Navigate to reset password screen
         Get.toNamed(RouteNameV1.resetPasswordPin, arguments: email);
 
+        var token = message["data"]["token"];
+        StorageDesign.createItem(StorageDesign.token, token);
+
       } else {
-        var errorMessage = message["error"]["message"] ?? "OTP verification failed";
+        // Default message
+        String errorMessage = "OTP verification failed";
+
+        if (message["error"] != null) {
+          if (message["error"]["details"] != null) {
+            final details = message["error"]["details"] as Map<String, dynamic>;
+            if (details.isNotEmpty) {
+              errorMessage = details.values.first[0].toString();
+            }
+          } else if (message["error"]["message"] != null) {
+            errorMessage = message["error"]["message"].toString();
+          }
+        }
+
+        print("❌ FINAL ERROR MESSAGE: $errorMessage");
+
         SnackbarUtil.showSnackbar(
           title: "Verification Failed",
           message: errorMessage,
@@ -439,12 +466,99 @@ class LoginController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
+
+      print("⚠️ verifyForgetPasswordOtp Exception: $e");
+
       SnackbarUtil.showSnackbar(
         title: "Verification Failed",
         message: "$e",
         type: SnackbarType.error,
       );
+    }
+  }
+
+  Future verifyPasswordOtp(String otp, {required String email}) async {
+    if (otp.trim().isEmpty) {
+      SnackbarUtil.showSnackbar(
+        title: "Invalid OTP",
+        message: "Please enter the OTP before proceeding.",
+        type: SnackbarType.error,
+      );
+      return;
+    }
+
+    var body = {
+      "email": email.trim(),
+      "otp": otp.trim(),
+    };
+
+    try {
+      isLoading.value = true;
+      var response = await _apiManager.post(ApiUrl.verifyOtp, body, false);
+      isLoading.value = false;
+
+      // 🔍 PRINT EVERYTHING
+      print("-----------------------------------------------------------");
+      print("📤 OTP VERIFY REQUEST BODY: $body");
+      print("📩 RAW RESPONSE BODY: ${response.body}");
+      print("📩 STATUS CODE: ${response.statusCode}");
+      print("📩 HEADERS: ${response.headers}");
+      print("-----------------------------------------------------------");
+
+      var message;
+      try {
+        message = jsonDecode(response.body);
+        print("📩 DECODED JSON: $message");
+      } catch (e) {
+        print("❌ JSON PARSE ERROR: $e");
+        message = {"error": {"message": "Invalid server response"}};
+      }
+
+      if (response.statusCode == 200) {
+        SnackbarUtil.showSnackbar(
+          title: "OTP Verified",
+          message: "OTP verification successful for $email",
+          type: SnackbarType.success,
+        );
+
+        Get.offAllNamed(RouteNameV1.bottomNav, arguments: email);
+
+        var token = message["token"];
+        StorageDesign.createItem(StorageDesign.token, token);
+
+      } else {
+        // Default message
+        String errorMessage = "OTP verification failed";
+
+        if (message["error"] != null) {
+          if (message["error"]["details"] != null) {
+            final details = message["error"]["details"] as Map<String, dynamic>;
+            if (details.isNotEmpty) {
+              errorMessage = details.values.first[0].toString();
+            }
+          } else if (message["error"]["message"] != null) {
+            errorMessage = message["error"]["message"].toString();
+          }
+        }
+
+        print("❌ FINAL ERROR MESSAGE: $errorMessage");
+
+        SnackbarUtil.showSnackbar(
+          title: "Verification Failed",
+          message: errorMessage,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+
       print("⚠️ verifyForgetPasswordOtp Exception: $e");
+
+      SnackbarUtil.showSnackbar(
+        title: "Verification Failed",
+        message: "$e",
+        type: SnackbarType.error,
+      );
     }
   }
 
@@ -490,7 +604,6 @@ class LoginController extends GetxController {
         body["category_id"] = selectedRoleStatus.value; // int is allowed now
       }
 
-      // Remove null or empty values
       body.removeWhere((key, value) => value == null || value.toString().isEmpty);
 
       isLoading.value = true;
@@ -513,8 +626,6 @@ class LoginController extends GetxController {
 
         Get.to(() => SignUpOtpVerification(email: email));
 
-        var token = message["data"]["token"];
-        StorageDesign.createItem(StorageDesign.token, token);
       } else {
         // Extract detailed error message if available
         String errorMessage = "Signup failed";

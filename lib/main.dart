@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
             getPages: RouteNameV1.getPages(), // Route Management
             initialRoute: !StorageService.has(StorageDesign.token)
                 ? RouteNameV1.getStarted
-                : RouteNameV1.onboarding, // Web Routes Handling
+                : RouteNameV1.bottomNav, // Web Routes Handling
           );
         });
   }
