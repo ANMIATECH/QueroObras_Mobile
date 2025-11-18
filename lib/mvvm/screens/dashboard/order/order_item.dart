@@ -77,7 +77,14 @@ class OrderItem extends StatelessWidget {
               CustomImageView(imagePath: CustomImage.cancel),
               const SizedBox(height: 9),
               GestureDetector(onTap: (){
-                Get.toNamed(RouteNameV1.productDetail);
+                String? token = StorageDesign.readItem(StorageDesign.token);
+
+                if (token == null || token.isEmpty) {
+                  // User NOT logged in → go to Login
+                  Get.toNamed(RouteNameV1.login);
+                } else {
+                  Get.toNamed(RouteNameV1.productDetail);
+                }
 
               },
                 child: Container(

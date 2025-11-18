@@ -1,5 +1,6 @@
 import '../const/export.dart';
 import '../screens/auth/signuoOtp_verification.dart';
+import '../screens/dashboard/home/servicesproviders_bycategory.dart';
 
 class RouteNameV1 {
   static String getStarted = '/getStarted';
@@ -16,6 +17,7 @@ class RouteNameV1 {
   static String createAccount = '/createAccount';
   static String onboarding = '/';
   static String serviceScreen = '/serviceScreen';
+  static String serviceProviderByCategoryScreen = '/serviceProviderByCategoryScreen';
   static String serviceRequestScreen = '/serviceRequestScreen';
   static String acabamentoServiceProvider = '/acabamentoServiceProvider';
   static String materiaisServiceProvider = '/materiaisServiceProvider';
@@ -36,6 +38,7 @@ class RouteNameV1 {
       GetPage(name: home, page: () => HomeScreen()),
       GetPage(name: profileEdit, page: () => ProfileEdit()),
       GetPage(name: bottomNav, page: () => BottomNavScreen()),
+      GetPage(name: serviceProviderByCategoryScreen, page: () => ServicesProvidersByCategory(slug: '',)),
       GetPage(name: serviceProviderAvailability, page: () => ServiceProviderAvailability()),
       GetPage(name: serviceProviderReview, page: () => ServiceProviderReview()),
       GetPage(name: productDetail, page: () => ProductDetailsScreen()),

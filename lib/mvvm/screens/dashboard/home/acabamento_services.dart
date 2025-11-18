@@ -250,7 +250,7 @@ class ProviderCardA extends StatelessWidget {
                 Text(
                   provider.role,
                   style: const TextStyle(
-                    color: Color(0xFF7E7878),
+                    color: Colors.black,
                     fontSize: 14,
                     fontWeight: FontWeight.w400,
                     fontFamily: 'Josefin Sans',

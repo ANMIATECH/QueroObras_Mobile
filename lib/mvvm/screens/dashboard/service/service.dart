@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../../const/custom_image_view.dart';
+import '../../../const/route.dart';
 import '../../../controller/service_controller.dart';
 import '../home/home_screen.dart';
+import '../home/servicesproviders_bycategory.dart';
 import 'service_card.dart';
 
 import 'package:flutter/material.dart';
@@ -93,7 +95,9 @@ class ServicesScreen extends StatelessWidget {
                       return InkWell(
                         onTap: () {
                           print("Tapped: ${category['name']}");
+                          final slug = category['slug'];
 
+                          Get.to(() => ServicesProvidersByCategory(slug: slug));
                         },
                         borderRadius: BorderRadius.circular(6),
                         child: Container(
@@ -105,7 +109,7 @@ class ServicesScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               CustomImageView(
-                                imagePath: "https://yourdomain.com/${category['avatar']}",
+                                imagePath: category['avatar'],
                                 width: 25,
                                 height: 25,
                               ),

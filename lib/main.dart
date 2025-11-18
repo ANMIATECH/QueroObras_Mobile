@@ -29,9 +29,9 @@ class MyApp extends StatelessWidget {
             }),
             darkTheme: CAppTheme.darkMoodTheme,
             getPages: RouteNameV1.getPages(), // Route Management
-            initialRoute: !StorageService.has(StorageDesign.token)
-                ? RouteNameV1.getStarted
-                : RouteNameV1.bottomNav, // Web Routes Handling
+            initialRoute: StorageService.has(StorageDesign.token)
+                ? RouteNameV1.bottomNav
+                : RouteNameV1.getStarted, // Web Routes Handling
           );
         });
   }
