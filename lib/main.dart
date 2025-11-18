@@ -1,9 +1,10 @@
 import '../mvvm/const/export.dart';
-import 'mvvm/controller/login_controller.dart';
+import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(LoginController());
+  Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
   runApp(const MyApp());
@@ -24,8 +25,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             theme: CAppTheme.lightMoodTheme,
             initialBinding: BindingsBuilder(() {
-              // Get.put(AuthControllerV1());
-              // Get.put(PushNotificationControllerGet());
+
             }),
             darkTheme: CAppTheme.darkMoodTheme,
             getPages: RouteNameV1.getPages(), // Route Management

@@ -9,8 +9,10 @@ export 'package:google_maps_flutter/google_maps_flutter.dart';
 export 'package:geolocator/geolocator.dart';
 export '../screens/dashboard/profile/profile_screen.dart';
 export '../controller/login_controller.dart';
+export '../screens/dashboard/profile/availability.dart';
+export '../screens/dashboard/profile/profile_edit.dart';
 
-
+export '../screens/dashboard/profile/review.dart';
 
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
 export 'package:queroobras_mobile/mvvm/const/export.dart';

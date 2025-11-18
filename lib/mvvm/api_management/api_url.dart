@@ -4,6 +4,7 @@ class ApiUrl {
   static String serviceCategory = "v1/categories";
   static String logout = "auth/login";
   static String signup = "v1/register";
+  static String popularCategory = "v1/category/popular";
   static String resendOtp = "v1/password/otp/request";
   static String verifyOtp = "v1/otp/verify";
   static String identity = "onboard/identity";

@@ -7,7 +7,8 @@ class RouteNameV1 {
   static String vender = '/vender';
   static String createVender = '/createVender';
   static String venderDetail = '/venderDetail';
-  static String home = '/dashboard';
+  static String home = '/home';
+  static String profileEdit = '/profileEdit';
   static String bottomNav = '/bottomNav';
   static String welcome = '/welcome';
   static String oneOnOneChat = '/oneOnOneChat';
@@ -21,6 +22,8 @@ class RouteNameV1 {
   static String ferramentasServiceProvider = '/ferramentasServiceProvider';
 
   static String forgetPassword = '/forgetPassword';
+  static String serviceProviderAvailability = '/serviceProviderAvailability';
+  static String serviceProviderReview = '/serviceProviderReview';
   static String resetPasswordPin = '/resetPasswordPin';
   static String changePassword = '/changePassword';
   static String otpPin = '/otpPin';
@@ -31,7 +34,10 @@ class RouteNameV1 {
       GetPage(name: onboarding, page: () => OnboardingScreen()),
       GetPage(name: welcome, page: () => WelcomeScreen()),
       GetPage(name: home, page: () => HomeScreen()),
+      GetPage(name: profileEdit, page: () => ProfileEdit()),
       GetPage(name: bottomNav, page: () => BottomNavScreen()),
+      GetPage(name: serviceProviderAvailability, page: () => ServiceProviderAvailability()),
+      GetPage(name: serviceProviderReview, page: () => ServiceProviderReview()),
       GetPage(name: productDetail, page: () => ProductDetailsScreen()),
       GetPage(name: oneOnOneChat, page: () => OneOnOneChat()),
       GetPage(name: serviceScreen, page: () => ServicesScreen()),
