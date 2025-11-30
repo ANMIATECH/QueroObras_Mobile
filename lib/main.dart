@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
             }),
             darkTheme: CAppTheme.darkMoodTheme,
             getPages: RouteNameV1.getPages(), // Route Management
-            initialRoute: StorageService.has(StorageDesign.token)
+            initialRoute: !StorageService.has(StorageDesign.token)
                 ? RouteNameV1.bottomNav
                 : RouteNameV1.getStarted, // Web Routes Handling
           );

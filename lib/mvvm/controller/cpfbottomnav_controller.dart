@@ -1,6 +1,7 @@
 import '../const/export.dart';
+import '../screens/dashboard/cnpj/cnpj_home.dart';
 
-class BottomNavController extends GetxController {
+class CPfBottomNavController extends GetxController {
   var selectedIndex = 0.obs;
 
   void changeIndex(int index) {
@@ -8,10 +9,10 @@ class BottomNavController extends GetxController {
   }
 }
 
-class BottomNavScreen extends StatelessWidget {
-  BottomNavScreen({super.key});
+class CpfBottomNavScreen extends StatelessWidget {
+  CpfBottomNavScreen({super.key});
 
-  final BottomNavController controller = Get.put(BottomNavController());
+  final CPfBottomNavController controller = Get.put(CPfBottomNavController());
 
   // Screens for navigation
   final List<Widget> screens = [
@@ -87,7 +88,6 @@ class BottomNavScreen extends StatelessWidget {
                   );
                 }
 
-                // Other tabs
                 return GestureDetector(
                   onTap: () => controller.changeIndex(index),
                   child: Column(

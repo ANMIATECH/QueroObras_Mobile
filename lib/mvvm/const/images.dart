@@ -21,8 +21,8 @@ class CustomImage {
   static String orderInactive = "$baseImage/order.svg";
   static String searchActive = "$baseImage/search_active.svg";
   static String searchInactive = "$baseImage/search.svg";
-  static String profileActive = "$baseImage/profile_active.svg";
-  static String profileInactive = "$baseImage/profile.svg";
+  static String profileActive = "$baseImage/profileActiveNav.svg";
+  static String profileInactive = "$baseImage/profileNav.svg";
   static String chat = "$baseImage/chat.svg";
   static String cancel = "$baseImage/cancel.svg";
   static String notification = "$baseImage/notification.svg";

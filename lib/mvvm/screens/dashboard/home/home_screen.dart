@@ -10,20 +10,26 @@ class HomeScreen extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Color.fromRGBO(22, 87, 127, 0.1), // rgba(22, 87, 127, 0.1)
+                Color(0xFFFFFFFF), // #FFFFFF
+              ],
+              stops: [0.0, 1.0387], // 103.87% converted to 1.0387
+            ),
           ),
           child: Column(
             children: [
+              // Main Content
               Expanded(
                 child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 19),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const SizedBox(height: 5),
-                        // Logo
                         Container(
                           width: 53,
                           height: 35,
@@ -35,22 +41,88 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 10),
-                        // Search Bar
-                        const SearchBarWidget(),
+                        // Search Bar Section
+                        Row(
+                          children: [
+                            Expanded(
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(217),
+                                  color: const Color(0xFFEEEEEE),
+                                ),
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 19,
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.search_outlined,
+                                      color: Color(0xFF7F7F7F),
+                                    ),
+                                    const SizedBox(width: 19),
+                                    Expanded(
+                                      child: TextField(
+                                        decoration: const InputDecoration(
+                                          hintText: 'O que você está procurando?',
+                                          hintStyle: TextStyle(
+                                            color: Color(0xFF7F7F7F),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Josefin Sans',
+                                            height: 1.5,
+                                          ),
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w400,
+                                          fontFamily: 'Josefin Sans',
+                                        ),
+                                        onChanged: (value) {
+                                          // TODO: implement search filter logic here
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 3),
+                            Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFEEEEEE,
+                                ), // background color
+                                borderRadius: BorderRadius.circular(
+                                  999,
+                                ), // optional, if you want rounded corners
+                              ),
+                              child: Center(
+                                child: CustomImageView(
+                                  imagePath: CustomImage.notification,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+
                         const SizedBox(height: 25),
+
                         // Recent Search Section
-                        const Text(
+                        Text(
                           'Busca recente',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
                             fontFamily: 'Josefin Sans',
-                            height: 1.5,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
+
                         const SizedBox(height: 20),
-                        // Recent Search Chips
                         SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
@@ -79,105 +151,196 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 20),
-                        // Featured Categories Section
-                        const Text(
+                        Text(
                           'Categorias em destaque',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
                             fontFamily: 'Josefin Sans',
-                            height: 1.5,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
+
                         const SizedBox(height: 20),
-                        // Categories Grid
                         Column(
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CategoryCard(
-                                    icon: "assets/images/materials.svg",
-                                    title: 'Materiais',
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(11),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              width: 400,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFF9761E,
+                                ).withValues(alpha: 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: "assets/images/s_home.svg",
                                     ),
-                                    onTap: (){
-                                      Get.toNamed(RouteNameV1.materiaisServiceProvider);
+                                    const SizedBox(width: 10),
 
-                                    },                                  ),
+                                    Text(
+                                      "Loja/ Materials",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.7,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: CategoryCard(
-                                    icon: "assets/images/Ferramentas.svg",
-                                    title: 'Ferramentas',
-                                    borderRadius: const BorderRadius.only(
-                                      topRight: Radius.circular(11),
-                                    ),
-                                    onTap: (){
-                                      Get.toNamed(RouteNameV1.ferramentasServiceProvider);
-
-                                    },
-
-
-                                ),
-                                ),
-                              ],
+                              ),
                             ),
                             const SizedBox(height: 10),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: CategoryCard(
-                                    icon: "assets/images/service_provider.svg",
-                                    title: 'Serviços',
-                                    borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(11),
+                            AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              width: 400,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFF9761E,
+                                ).withValues(alpha: 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: "assets/images/s_service.svg",
                                     ),
-                                    onTap: (){
-                                      Get.toNamed(RouteNameV1.serviceScreen);
+                                    const SizedBox(width: 10),
 
-                                    },
-                                  ),
+                                    Text(
+                                      "Serviços",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.7,
+                                      ),
+                                    )
+                                  ],
                                 ),
-                                const SizedBox(width: 10),
-                                Expanded(
-                                  child: CategoryCard(
-                                    icon: "assets/images/Acabamento.svg",
-                                    title: 'Acabamento',
-                                    borderRadius: const BorderRadius.only(
-                                      bottomRight: Radius.circular(11),
-                                    ),
-                                    onTap: (){
-                                      Get.toNamed(RouteNameV1.acabamentoServiceProvider);
-
-                                    },
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
                           ],
                         ),
+
                         const SizedBox(height: 20),
-                        // Promotion Banner
-                        const PromotionBanner(),
+
+                        // Categories Grid
+                        Column(
+                          children: [
+
+                          ],
+                        ),
+
                         const SizedBox(height: 20),
+
+                        // Promotions Section
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: const Color(0xFF16577F),
+                          ),
+                          padding: const EdgeInsets.fromLTRB(19, 8, 19, 0),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                flex: 62,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'PROMOÇÕES',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 24,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      'Há um desconto de 60% em alguns prestadores de serviço.',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.w400,
+                                        height: 1.7,
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                        color: Colors.white,
+                                      ),
+                                      padding: const EdgeInsets.fromLTRB(
+                                        39,
+                                        9,
+                                        39,
+                                        18,
+                                      ),
+                                      child: Text(
+                                        'Ver',
+                                        style: TextStyle(
+                                          color: Colors.black,
+                                          fontSize: 16,
+                                          fontFamily: 'Josefin Sans',
+                                          fontWeight: FontWeight.w400,
+                                        ),
+                                      ),
+                                    ),
+                                    const SizedBox(height: 20),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 20),
+                              Expanded(
+                                flex: 38,
+                                child: CustomImageView(
+                                  imagePath: "assets/images/service_provider.png",
+                                  width: 137,
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        const SizedBox(height: 20),
+
                         // Quick Access Section
-                        const Text(
+                        Text(
                           'Acesso rápido',
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 16,
-                            fontWeight: FontWeight.w500,
                             fontFamily: 'Josefin Sans',
-                            height: 1.5,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
+
                         const SizedBox(height: 20),
-                        // Quick Access Cards
+                        // Quick Access Images
                         Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
                             Expanded(
                               child: QuickAccessCard(
@@ -212,7 +375,6 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 13),
                       ],
                     ),
                   ),

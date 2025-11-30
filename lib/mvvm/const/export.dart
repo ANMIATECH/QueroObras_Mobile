@@ -21,7 +21,7 @@ export 'dart:ui' show PathMetric;
 export '../screens/onboarding/splash_screen.dart';
 export '../controller/onboarding_controller.dart';
 export '../screens/dashboard/home/home_screen.dart';
-export '../controller/bottomnav_controller.dart';
+export '../controller/cnpjbottomnav_controller.dart';
 export 'package:queroobras_mobile/mvvm/screens/dashboard/order/order_item.dart';
 export '../screens/dashboard/order/order.dart';
 export '../controller/product_controller.dart';

@@ -1,30 +1,73 @@
+import 'package:http/http.dart' as http;
+import 'package:image_picker/image_picker.dart';
+
 import '../const/export.dart';
 import '../screens/auth/signuoOtp_verification.dart';
 
 class LoginController extends GetxController {
+  var isSignupFormValid = false.obs;
+
   final ApiManager _apiManager = ApiManager();
   final emailController = TextEditingController();
   final resetEmailController = TextEditingController();
+  final companyTypeController = TextEditingController();
+  final companyNameController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final fullNameController = TextEditingController();
+  final legalRepNameController = TextEditingController(); // CNPJ
+  final tradeNameController = TextEditingController(); // CNPJ
+  final motherNameController = TextEditingController();
+  final birthDateController = TextEditingController();
+  final addressController = TextEditingController();
+  final businessEmailController = TextEditingController();
+  final cepController = TextEditingController();
+  final stateRegistrationController = TextEditingController(); // CNPJ
+  final phoneNumberController = TextEditingController();
+  final cpfController = TextEditingController();
+  final cnpjController = TextEditingController();
+  final serviceController = TextEditingController();
   final ValueNotifier<bool> rememberMeNotifier = ValueNotifier<bool>(false);
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController cpfController = TextEditingController();
-  final TextEditingController userStatusController = TextEditingController();
-  final TextEditingController cnpjController = TextEditingController();
-  final TextEditingController cepController = TextEditingController();
-  final TextEditingController serviceController = TextEditingController();
   final otpControllers = List.generate(6, (_) => TextEditingController());
   final focusNodes = List.generate(6, (_) => FocusNode());
 
   var isLoading = false.obs;
 
+  XFile? cnpjDoc;
+  XFile? driverLicense;
+  XFile? avatar;
+
+  Future pickCnpjDoc() async {
+    final picker = ImagePicker();
+    cnpjDoc = await picker.pickImage(source: ImageSource.gallery);
+    update();
+  }
+
+  Future pickDriverLicense() async {
+    final picker = ImagePicker();
+    driverLicense = await picker.pickImage(source: ImageSource.gallery);
+    update();
+  }
+
+  Future pickAvatar() async {
+    final picker = ImagePicker();
+    avatar = await picker.pickImage(source: ImageSource.gallery);
+    update();
+  }
+
+
   void onOtpChanged(String value, int index) {
-    if (value.isNotEmpty && index < 4) {
-      focusNodes[index + 1].requestFocus();
-    } else if (value.isEmpty && index > 0) {
-      focusNodes[index - 1].requestFocus();
+    if (value.isNotEmpty) {
+      if (index < otpControllers.length - 1) {
+        focusNodes[index + 1].requestFocus();
+      } else {
+        // Last input → close keyboard automatically
+        focusNodes[index].unfocus();
+      }
+    } else {
+      if (index > 0) {
+        focusNodes[index - 1].requestFocus();
+      }
     }
   }
 
@@ -65,9 +108,25 @@ class LoginController extends GetxController {
 
   @override
   void onClose() {
+    fullNameController.dispose();
     emailController.dispose();
-    passwordController.dispose();
+    businessEmailController.dispose();
     resetEmailController.dispose();
+    companyTypeController.dispose();
+    companyNameController.dispose();
+    legalRepNameController.dispose();
+    tradeNameController.dispose();
+    motherNameController.dispose();
+    birthDateController.dispose();
+    addressController.dispose();
+    cepController.dispose();
+    stateRegistrationController.dispose();
+    phoneNumberController.dispose();
+    passwordController.dispose();
+    confirmPasswordController.dispose();
+    cpfController.dispose();
+    cnpjController.dispose();
+    serviceController.dispose();
     super.onClose();
     _timer?.cancel();
     super.onClose();
@@ -89,17 +148,21 @@ class LoginController extends GetxController {
 
   RxBool isButtonLoading = false.obs;
 
-  RxString selectedDocumentType = ''.obs; // 'CPF' or 'CNPJ'
+  RxString selectedDocumentType = RxString('CPF');
+  RxString selectedUserStatus = RxString('CPF');
 
-  final List<String> userStatusOptions = [
-    'Cliente',
-    'Prestador de serviço',
-  ];
+  final List<String> userStatusOptions = ['CPF', 'CNPJ'];
 
-  RxString selectedUserStatus = 'Cliente'.obs;
+  void setUserStatus(String newStatus) {
+    selectedUserStatus.value = newStatus;
 
-  void setUserStatus(String value) {
-    selectedUserStatus.value = value;
+    if (newStatus == "CPF") {
+      selectedDocumentType.value = "CPF";
+      cnpjController.clear(); // clear CNPJ if switching to CPF
+    } else if (newStatus == "CNPJ") {
+      selectedDocumentType.value = "CNPJ";
+      cpfController.clear(); // clear CPF if switching to CNPJ
+    }
   }
 
 
@@ -110,7 +173,6 @@ class LoginController extends GetxController {
 
   void handleSubmit() {
     if (formKey.currentState?.validate() ?? false) {
-      // Handle password reset logic here
       print('Reset password for: ${emailController.text}');
     }}
 
@@ -149,27 +211,63 @@ class LoginController extends GetxController {
   }
 
 
-// Add at the top of your controller
-  var isSignupFormValid = false.obs;
 
-// Updated _validateSignupForm
   void _validateSignupForm() {
-    isSignupFormValid.value =
+    // Base required fields
+    bool baseFieldsValid =
         fullNameController.text.isNotEmpty &&
             emailController.text.isNotEmpty &&
             passwordController.text.isNotEmpty &&
-            confirmPasswordController.text.isNotEmpty;
+            confirmPasswordController.text.isNotEmpty &&
+            phoneNumberController.text.isNotEmpty;
+
+    // Service provider fields
+    bool serviceFieldsValid = true;
+
+    if (selectedUserStatus.value == "Prestador de serviço") {
+      if (selectedDocumentType.value == "CPF") {
+        serviceFieldsValid = cpfController.text.isNotEmpty;
+      } else if (selectedDocumentType.value == "CNPJ") {
+        serviceFieldsValid = cnpjController.text.isNotEmpty &&
+            companyNameController.text.isNotEmpty &&
+            legalRepNameController.text.isNotEmpty &&
+            tradeNameController.text.isNotEmpty &&
+            motherNameController.text.isNotEmpty &&
+            birthDateController.text.isNotEmpty &&
+            cepController.text.isNotEmpty &&
+            addressController.text.isNotEmpty;
+      }
+
+      // Category (role) is required for service provider
+      serviceFieldsValid = serviceFieldsValid && selectedRoleStatus.value != 0;
+    }
+
+    isSignupFormValid.value = baseFieldsValid && serviceFieldsValid;
   }
-// Call this whenever relevant field changes
+
   void setupSignupValidation() {
-    emailController.addListener(_validateSignupForm);
+    // Base fields
     fullNameController.addListener(_validateSignupForm);
+    emailController.addListener(_validateSignupForm);
     passwordController.addListener(_validateSignupForm);
     confirmPasswordController.addListener(_validateSignupForm);
+    phoneNumberController.addListener(_validateSignupForm);
+
+    // Conditional fields
     cpfController.addListener(_validateSignupForm);
     cnpjController.addListener(_validateSignupForm);
+    companyNameController.addListener(_validateSignupForm);
+    legalRepNameController.addListener(_validateSignupForm);
+    tradeNameController.addListener(_validateSignupForm);
+    motherNameController.addListener(_validateSignupForm);
+    birthDateController.addListener(_validateSignupForm);
+    cepController.addListener(_validateSignupForm);
+    addressController.addListener(_validateSignupForm);
+
+    // Observables
     selectedUserStatus.listen((_) => _validateSignupForm());
     selectedRoleStatus.listen((_) => _validateSignupForm());
+    selectedDocumentType.listen((_) => _validateSignupForm());
   }
 
 
@@ -413,12 +511,10 @@ class LoginController extends GetxController {
       isLoading.value = false;
 
       // 🔍 PRINT EVERYTHING
-      print("-----------------------------------------------------------");
       print("📤 OTP VERIFY REQUEST BODY: $body");
       print("📩 RAW RESPONSE BODY: ${response.body}");
       print("📩 STATUS CODE: ${response.statusCode}");
       print("📩 HEADERS: ${response.headers}");
-      print("-----------------------------------------------------------");
 
       var message;
       try {
@@ -521,38 +617,28 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        Get.offAllNamed(RouteNameV1.bottomNav, arguments: email);
-
         var token = message["token"];
-        StorageDesign.createItem(StorageDesign.token, token);
-
-      } else {
-        // Default message
-        String errorMessage = "OTP verification failed";
-
-        if (message["error"] != null) {
-          if (message["error"]["details"] != null) {
-            final details = message["error"]["details"] as Map<String, dynamic>;
-            if (details.isNotEmpty) {
-              errorMessage = details.values.first[0].toString();
-            }
-          } else if (message["error"]["message"] != null) {
-            errorMessage = message["error"]["message"].toString();
-          }
+        if (token != null) {
+          StorageDesign.createItem(StorageDesign.token, token);
         }
 
-        print("❌ FINAL ERROR MESSAGE: $errorMessage");
+        String? userStatus = message["user"]?["user_status"]?.toString().toLowerCase();
 
-        SnackbarUtil.showSnackbar(
-          title: "Verification Failed",
-          message: errorMessage,
-          type: SnackbarType.error,
-        );
+        print("🟦 USER STATUS FROM SERVER: $userStatus");
+
+        if (userStatus == "cpf") {
+          print("➡ Navigating to CPF Dashboard");
+          Get.offAllNamed(RouteNameV1.cpfProfile, arguments: email);
+
+        } else if (userStatus == "cnpj") {
+          print("➡ Navigating to CNPJ Dashboard");
+          Get.offAllNamed(RouteNameV1.cnpjProfile, arguments: email);
+        }
       }
+
     } catch (e) {
       isLoading.value = false;
 
-      print("⚠️ verifyForgetPasswordOtp Exception: $e");
 
       SnackbarUtil.showSnackbar(
         title: "Verification Failed",
@@ -562,77 +648,98 @@ class LoginController extends GetxController {
     }
   }
 
-
-  Future<void> signUp() async {
-    _validateSignupForm(); // validate form before submitting
+  Future signUp() async {
+    _validateSignupForm();
 
     if (!isSignupFormValid.value) {
       SnackbarUtil.showSnackbar(
-        title: "Signup Failed",
-        message: "Please fill all required fields correctly.",
+        title: "Falha no Cadastro",
+        message: "Por favor, preencha todos os campos obrigatórios corretamente.",
         type: SnackbarType.error,
       );
       return;
     }
 
     try {
-      final email = emailController.text.trim();
       final fullName = fullNameController.text.trim();
       final password = passwordController.text.trim();
       final confirmPassword = confirmPasswordController.text.trim();
       final phoneNumber = phoneNumberController.text.trim();
 
-      // Base payload
       var body = <String, dynamic>{
         "name": fullName,
-        "email": email,
         "phone_number": phoneNumber,
         "password": password,
         "password_confirmation": confirmPassword,
-        "user_status": selectedUserStatus.value,
+        "user_status": selectedDocumentType.value, // CPF ou CNPJ
       };
 
-      // Only add service provider fields if applicable
-      if (selectedUserStatus.value == "Prestador de serviço") {
-        if (selectedDocumentType.value == "CPF") {
+      if (selectedDocumentType.value == "CPF") {
+        if (cpfController.text.trim().isNotEmpty) {
           body["cpf"] = cpfController.text.trim();
-        } else if (selectedDocumentType.value == "CNPJ") {
+        }
+        // Add other CPF-specific fields
+        body.addAll({
+          "trade_name": tradeNameController.text.trim(),
+          "mother_name": motherNameController.text.trim(),
+          "email": emailController.text.trim(),
+          "address": addressController.text.trim(),
+          "birth_date": birthDateController.text.trim(),
+          "zip_code": cepController.text.trim(),
+        });
+      } else if (selectedDocumentType.value == "CNPJ") {
+        if (cnpjController.text.trim().isNotEmpty) {
           body["cnpj"] = cnpjController.text.trim();
         }
-
-        body["zip_code"] = cepController.text.trim();
-        body["category_id"] = selectedRoleStatus.value; // int is allowed now
+        // Add other CNPJ-specific fields
+        body.addAll({
+          "corporate_name": companyNameController.text.trim(),
+          "legal_representative_name": legalRepNameController.text.trim(),
+          "trade_name": tradeNameController.text.trim(),
+          "mother_name": motherNameController.text.trim(),
+          "email": emailController.text.trim(),
+          "address": addressController.text.trim(),
+          "birth_date": birthDateController.text.trim(),
+          "zip_code": cepController.text.trim(),
+          "state_registration": stateRegistrationController.text.trim(),
+        });
       }
 
       body.removeWhere((key, value) => value == null || value.toString().isEmpty);
+
+
+      if (selectedRoleStatus.value != 0) {
+        body["category_id"] = selectedRoleStatus.value;
+      }
+      print("📦 Body to send: $body");
+
 
       isLoading.value = true;
       var response = await _apiManager.post(ApiUrl.signup, body, false);
       isLoading.value = false;
 
-      var message = jsonDecode(response.body);
       print("📩 Raw response body: ${response.body}");
       print("📌 Status code: ${response.statusCode}");
+
+      final message = jsonDecode(response.body);
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         passwordController.clear();
         confirmPasswordController.clear();
+        fullNameController.clear();
 
         SnackbarUtil.showSnackbar(
-          title: "Account Created Successfully",
-          message: "Please verify your email using the OTP sent to you.",
+          title: "Conta criada com sucesso",
+          message: "Por favor, verifique seu e-mail usando o OTP enviado.",
           type: SnackbarType.success,
         );
 
-        Get.to(() => SignUpOtpVerification(email: email));
-
+        Get.to(() => SignUpOtpVerification(email: body["email"]));
       } else {
-        // Extract detailed error message if available
-        String errorMessage = "Signup failed";
+        String errorMessage = "Falha no cadastro";
         if (message["error"]?["details"] != null) {
           final details = message["error"]["details"] as Map<String, dynamic>;
           if (details.isNotEmpty) {
-            // Get first error message
             errorMessage = details.values.first[0].toString();
           }
         } else if (message["error"]?["message"] != null) {
@@ -640,7 +747,7 @@ class LoginController extends GetxController {
         }
 
         SnackbarUtil.showSnackbar(
-          title: "Signup Failed",
+          title: "Falha no Cadastro",
           message: errorMessage,
           type: SnackbarType.error,
         );
@@ -648,7 +755,7 @@ class LoginController extends GetxController {
     } catch (e) {
       isLoading.value = false;
       SnackbarUtil.showSnackbar(
-        title: "Signup Failed",
+        title: "Falha no Cadastro",
         message: "$e",
         type: SnackbarType.error,
       );
@@ -685,6 +792,100 @@ class LoginController extends GetxController {
       );
     }
   }
+
+  Future uploadProfilePicNDoc() async {
+    try {
+      if (cnpjDoc == null || driverLicense == null || avatar == null) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "All documents are required",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      isLoading.value = true;
+
+      var request = http.MultipartRequest("POST", Uri.parse(ApiUrl.picNDoc));
+
+      // Attach files
+      request.files.add(
+        await http.MultipartFile.fromPath("cnpj_document", cnpjDoc!.path),
+      );
+
+      request.files.add(
+        await http.MultipartFile.fromPath("identifican_driver_license", driverLicense!.path),
+      );
+
+      request.files.add(
+        await http.MultipartFile.fromPath("avatar", avatar!.path),
+      );
+
+      // Add token if needed
+      String? token = await StorageDesign.readItem(StorageDesign.token);
+      if (token != null) {
+        request.headers['Authorization'] = "Bearer $token";
+      }
+
+      // Send
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      isLoading.value = false;
+
+      print("RAW RESPONSE STATUS: ${response.statusCode}");
+      print("RAW RESPONSE BODY: ${response.body}");
+
+      dynamic message;
+      try {
+        message = jsonDecode(response.body);
+      } catch (e) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "Invalid JSON response",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      // SUCCESS
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        SnackbarUtil.showSnackbar(
+          title: "Success",
+          message: "Documents uploaded successfully",
+          type: SnackbarType.success,
+        );
+
+        Get.offAllNamed(RouteNameV1.bottomNav);
+      }
+      // FAILED
+      else {
+        String errorMsg = "Upload failed";
+
+        if (message is Map &&
+            message.containsKey("error") &&
+            message["error"].containsKey("message")) {
+          errorMsg = message["error"]["message"];
+        }
+
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: errorMsg,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+      print("UPLOAD ERROR: $e");
+
+      SnackbarUtil.showSnackbar(
+        title: "Upload Failed",
+        message: "$e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
 }
 
 
