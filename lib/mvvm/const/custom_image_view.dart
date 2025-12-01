@@ -400,13 +400,15 @@ class CustomOnboardButton extends StatelessWidget {
 class CustomButton extends StatefulWidget {
   final String text;
   final bool isLoading;
+  final bool isActive; // NEW
   final VoidCallback? onPressed;
 
   const CustomButton({
     super.key,
     required this.text,
-    required this.onPressed,
+    this.onPressed,
     this.isLoading = false,
+    this.isActive = true, // default active
   });
 
   @override
@@ -415,7 +417,6 @@ class CustomButton extends StatefulWidget {
 
 class _CustomButtonState extends State<CustomButton>
     with SingleTickerProviderStateMixin {
-
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
 
@@ -428,13 +429,10 @@ class _CustomButtonState extends State<CustomButton>
       duration: const Duration(milliseconds: 800),
     );
 
-    _fadeAnimation = Tween<double>(begin: 0.2, end: 1.0)
-        .animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    _fadeAnimation = Tween<double>(begin: 0.2, end: 1.0).animate(
+      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
+    );
 
-    // Start animation if loading
     if (widget.isLoading) {
       _controller.repeat(reverse: true);
     }
@@ -444,7 +442,6 @@ class _CustomButtonState extends State<CustomButton>
   void didUpdateWidget(covariant CustomButton oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    // Start/stop animation depending on loading state
     if (widget.isLoading && !_controller.isAnimating) {
       _controller.repeat(reverse: true);
     } else if (!widget.isLoading && _controller.isAnimating) {
@@ -460,43 +457,48 @@ class _CustomButtonState extends State<CustomButton>
 
   @override
   Widget build(BuildContext context) {
-    final bool isDisabled = widget.onPressed == null || widget.isLoading;
+    final bool disabled = !widget.isActive;
 
     return GestureDetector(
-      onTap: isDisabled ? null : widget.onPressed,
-      child: Container(
-        width: double.infinity,
-        height: 60,
-        decoration: BoxDecoration(
-          color: isDisabled ? Colors.grey : CustomColor.primary,
-          borderRadius: BorderRadius.circular(217.391),
-        ),
-        child: Center(
-          child: widget.isLoading
-              ? FadeTransition(
-            opacity: _fadeAnimation,
-            child: Text(
-              'Loading...',
+        onTap: (disabled || widget.isLoading) ? null : widget.onPressed,
+        child: Container(
+          width: double.infinity,
+          height: 60,
+          decoration: BoxDecoration(
+            // 🔥 logic: keep primary while loading
+            color: widget.isLoading
+                ? CustomColor.primary
+                : disabled
+                ? Colors.grey
+                : CustomColor.primary,
+            borderRadius: BorderRadius.circular(217.391),
+          ),
+          child: Center(
+            child: widget.isLoading
+                ? FadeTransition(
+              opacity: _fadeAnimation,
+              child: Text(
+                'Loading...',
+                style: GoogleFonts.josefinSans(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                  color: Colors.white,
+                ),
+              ),
+            )
+                : Text(
+              widget.text,
               style: GoogleFonts.josefinSans(
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
                 color: Colors.white,
               ),
             ),
-          )
-              : Text(
-            widget.text,
-            style: GoogleFonts.josefinSans(
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-              color: Colors.white,
-            ),
           ),
-        ),
-      ),
-    );
-  }
+        ));
+    }
 }
+
 
 
 

@@ -98,7 +98,7 @@ class HomeScreen extends StatelessWidget {
                                 ), // background color
                                 borderRadius: BorderRadius.circular(
                                   999,
-                                ), // optional, if you want rounded corners
+                                ),
                               ),
                               child: Center(
                                 child: CustomImageView(
@@ -160,98 +160,97 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-
                         const SizedBox(height: 20),
                         Column(
                           children: [
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                              width: 400,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFF9761E,
-                                ).withValues(alpha: 1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: "assets/images/s_home.svg",
-                                    ),
-                                    const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: (){
+                                Get.toNamed(RouteNameV1.materiaisServiceProvider);
 
-                                    Text(
-                                      "Loja/ Materials",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: 'Josefin Sans',
-                                        fontWeight: FontWeight.bold,
-                                        height: 1.7,
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
+                                width: 400,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFFF9761E,
+                                  ).withValues(alpha: 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CustomImageView(
+                                        imagePath: "assets/images/s_home.svg",
                                       ),
-                                    )
-                                  ],
+                                      const SizedBox(width: 10),
+
+                                      Text(
+                                        "Loja/ Materials",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontFamily: 'Josefin Sans',
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.7,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                             const SizedBox(height: 10),
-                            AnimatedContainer(
-                              duration: const Duration(milliseconds: 300),
-                              curve: Curves.easeOut,
-                              width: 400,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFF9761E,
-                                ).withValues(alpha: 1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomImageView(
-                                      imagePath: "assets/images/s_service.svg",
-                                    ),
-                                    const SizedBox(width: 10),
+                            GestureDetector(
+                              onTap: (){
+                                Get.toNamed(RouteNameV1.serviceScreen);
 
-                                    Text(
-                                      "Serviços",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 20,
-                                        fontFamily: 'Josefin Sans',
-                                        fontWeight: FontWeight.bold,
-                                        height: 1.7,
+                              },
+                              child: AnimatedContainer(
+                                duration: const Duration(milliseconds: 300),
+                                curve: Curves.easeOut,
+                                width: 400,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFFF9761E,
+                                  ).withValues(alpha: 1),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      CustomImageView(
+                                        imagePath: "assets/images/s_service.svg",
                                       ),
-                                    )
-                                  ],
+                                      const SizedBox(width: 10),
+
+                                      Text(
+                                        "Serviços",
+                                        style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 20,
+                                          fontFamily: 'Josefin Sans',
+                                          fontWeight: FontWeight.bold,
+                                          height: 1.7,
+                                        ),
+                                      )
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
                           ],
                         ),
-
                         const SizedBox(height: 20),
-
-                        // Categories Grid
-                        Column(
-                          children: [
-
-                          ],
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Promotions Section
                         Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20),
@@ -364,6 +363,18 @@ class HomeScreen extends StatelessWidget {
                               child: QuickAccessCard(
                                 imageUrl: "assets/images/Meu_pedido.svg",
                                 title: 'Meu pedido',
+                                onTap: () async {
+                                  String? token = StorageDesign.readItem(StorageDesign.token);
+
+                                  if (token == null || token.isEmpty) {
+                                    // User NOT logged in → go to Login
+                                    Get.toNamed(RouteNameV1.login);
+                                  } else {
+                                    // User IS logged in → go to Vender page
+                                    Get.toNamed(RouteNameV1.meuPedido);
+                                  }
+                                },
+
                               ),
                             ),
                             const SizedBox(width: 20),

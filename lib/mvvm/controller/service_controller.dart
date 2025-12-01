@@ -3,6 +3,8 @@ import '../const/export.dart';
 class ServiceController extends GetxController {
   final ApiManager _apiManager = ApiManager();
   RxList<dynamic> categories = <dynamic>[].obs;
+  RxList<dynamic> cCategories = <dynamic>[].obs;
+  RxList<dynamic> aCategories = <dynamic>[].obs;
   RxList providers = [].obs;
   var categoryName = ''.obs;
   RxList filteredProviders = [].obs;
@@ -35,7 +37,8 @@ class ServiceController extends GetxController {
     super.onInit();
     getPopularServiceProvider();
     getCurrentLocation();
-    getPopularServiceProvider();
+    getConstructionServiceProvider();
+    getAcabamentoServiceProvider();
   }
   @override
   void onClose() {
@@ -69,6 +72,70 @@ class ServiceController extends GetxController {
     }
   }
 
+  Future<void> getConstructionServiceProvider() async {
+    try {
+      print("📡 Fetching service categories...");
+      var response = await _apiManager.read(ApiUrl.constructionCategory, false);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        cCategories.value = data["categories"] ?? [];
+      } else {
+        var message = jsonDecode(response.body);
+        var error =
+            message["error"]?["message"] ?? "Failed to fetch categories";
+
+        SnackbarUtil.showSnackbar(
+          title: "Fetch Failed",
+          message: error,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future<void> getAcabamentoServiceProvider() async {
+    try {
+      print("📡 Fetching service categories...");
+
+      var response = await _apiManager.read(ApiUrl.acabamentoCategory, false);
+
+      // 🔥 PRINT FULL RAW RESPONSE HERE
+      print("🔍 Acabamento Response: ${response.body}");
+      print("🔗 Requesting: ${ApiUrl.acabamentoCategory}");
+
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        aCategories.value = data["categories"] ?? [];
+
+        print("✅ Parsed Acabamento Categories: $aCategories");
+      } else {
+        var message = jsonDecode(response.body);
+        var error =
+            message["error"]?["message"] ?? "Failed to fetch categories";
+
+        SnackbarUtil.showSnackbar(
+          title: "Fetch Failed",
+          message: error,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
+  }
+
   Future<void> getPopularServiceProviderBySlug(String slug) async {
     try {
       print("📡 Fetching providers for slug: $slug");
@@ -81,7 +148,7 @@ class ServiceController extends GetxController {
         var data = jsonDecode(response.body);
 
         providers.value = data["users"] ?? [];
-        filteredProviders.value = providers; // initialize filtered list
+        filteredProviders.value = List.from(providers);
 
         categoryName.value = data["category"]?["name"] ?? "";
         print("📌 Category name set to: ${categoryName.value}");

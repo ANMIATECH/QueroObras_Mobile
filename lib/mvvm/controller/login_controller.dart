@@ -6,6 +6,8 @@ import '../screens/auth/signuoOtp_verification.dart';
 
 class LoginController extends GetxController {
   var isSignupFormValid = false.obs;
+  final RxBool agree = false.obs;
+
 
   final ApiManager _apiManager = ApiManager();
   final emailController = TextEditingController();
@@ -623,7 +625,9 @@ class LoginController extends GetxController {
         }
 
         String? userStatus = message["user"]?["user_status"]?.toString().toLowerCase();
-
+        if (userStatus != null) {
+          StorageDesign.createItem("user_status", userStatus);
+        }
         print("🟦 USER STATUS FROM SERVER: $userStatus");
 
         if (userStatus == "cpf") {

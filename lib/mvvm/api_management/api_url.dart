@@ -6,6 +6,8 @@ class ApiUrl {
   static String signup = "v1/register";
   static String picNDoc = "v1/user/onboard";
   static String popularCategory = "v1/category/popular";
+  static String acabamentoCategory = "v1/category/finishing-services";
+  static String constructionCategory = "v1/category/construction-services";
   static String serviceProviderBySlug = "v1/category/eletricista/users";
   static String resendOtp = "v1/password/otp/request";
   static String verifyOtp = "v1/otp/verify";

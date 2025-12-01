@@ -3,12 +3,14 @@ import '../controller/cpfbottomnav_controller.dart';
 import '../screens/auth/cnpjprofilepic_update.dart';
 import '../screens/auth/profilepic_update.dart';
 import '../screens/auth/signuoOtp_verification.dart';
+import '../screens/dashboard/home/meuPedido.dart';
 import '../screens/dashboard/home/servicesproviders_bycategory.dart';
 
 class RouteNameV1 {
   static String getStarted = '/getStarted';
   static String login = '/login';
   static String vender = '/vender';
+  static String meuPedido = '/meuPedido';
   static String cpfProfile = '/cpfProfile';
   static String cnpjProfile = '/cnpjProfile';
   static String createVender = '/createVender';
@@ -56,6 +58,7 @@ class RouteNameV1 {
       GetPage(name: login, page: () => LoginScreen()),
       GetPage(name: signOtpPin, page: () => SignUpOtpVerification(email:  Get.arguments as String,)),
       GetPage(name: vender, page: () => VenderScreen()),
+      GetPage(name: meuPedido, page: () => OrderTrackingScreen()),
       GetPage(name: createVender, page: () => VendorFormScreen()),
       GetPage(name: venderDetail, page: () => VenderItemDetails()),
       GetPage(

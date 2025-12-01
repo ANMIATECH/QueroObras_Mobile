@@ -16,23 +16,37 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(393, 852),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, child) {
-          return GetMaterialApp(
-            title: 'Quero Obra',
-            debugShowCheckedModeBanner: false,
-            theme: CAppTheme.lightMoodTheme,
-            initialBinding: BindingsBuilder(() {
+      designSize: const Size(393, 852),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        final String? token = StorageService.has(StorageDesign.token)
+            ? StorageService.read(StorageDesign.token)
+            : null;
 
-            }),
-            darkTheme: CAppTheme.darkMoodTheme,
-            getPages: RouteNameV1.getPages(), // Route Management
-            initialRoute: !StorageService.has(StorageDesign.token)
-                ? RouteNameV1.bottomNav
-                : RouteNameV1.getStarted, // Web Routes Handling
-          );
-        });
+        final String? userStatus = StorageService.has("user_status")
+            ? StorageService.read("user_status")
+            : null;
+        String initialRoute = RouteNameV1.getStarted;
+
+        if (token != null && token.isNotEmpty) {
+          if (userStatus == "cpf") {
+            initialRoute = RouteNameV1.bottomNavCpf;
+          } else if (userStatus == "cnpj") {
+            initialRoute = RouteNameV1.bottomNav;
+          }
+        }
+
+        return GetMaterialApp(
+          title: 'Quero Obra',
+          debugShowCheckedModeBanner: false,
+          theme: CAppTheme.lightMoodTheme,
+          darkTheme: CAppTheme.darkMoodTheme,
+          getPages: RouteNameV1.getPages(),
+
+          initialRoute: initialRoute,
+        );
+      },
+    );
   }
 }

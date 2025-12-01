@@ -136,6 +136,7 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   child: CustomButton(
                     text: 'Entrar',
+                    isLoading: controller.isLoading.value,
                     onPressed: () async {
                       if (controller.profileImage.value == null ||
                           controller.cnpjDocumentImage.value == null) {

@@ -51,6 +51,28 @@ class AuthController extends GetxController {
     }
   }
 
+  Future<void> pickCpfDocumentImage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp', 'bmp', 'tiff'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        documentImage.value = File(result.files.single.path!); // 👈 FIXED
+      } else {
+        print("No file selected");
+      }
+    } catch (e) {
+      print("File picking error: $e");
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: "Failed to pick file: $e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
 
   final otpControllers = List.generate(5, (_) => TextEditingController());
   final focusNodes = List.generate(5, (_) => FocusNode());
@@ -93,6 +115,40 @@ class AuthController extends GetxController {
 
 
   Future<void> getServiceCategory() async {
+    try {
+      var response = await _apiManager.read(ApiUrl.serviceCategory, false);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        var categories = data['categories'] as List<dynamic>? ?? [];
+
+        // Safely map names and ignore nulls
+        userRoleOptions.value =
+            categories.map((cat) => (cat['name'] ?? '').toString())
+                .where((name) => name.isNotEmpty)
+                .toList();
+
+      } else {
+        var message = jsonDecode(response.body);
+        var error = message["error"]?["message"] ?? "Failed to fetch categories";
+
+        SnackbarUtil.showSnackbar(
+          title: "Fetch Failed",
+          message: error,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e, stackTrace) {
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future<void> getReformaeConstruoServiceCategory() async {
     try {
       var response = await _apiManager.read(ApiUrl.serviceCategory, false);
 

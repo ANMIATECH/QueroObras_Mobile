@@ -10,12 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ServicesScreen extends StatelessWidget {
-  ServicesScreen({super.key});
-
-  final ServiceController controller = Get.find<ServiceController>();
+  const ServicesScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final ServiceController controller = Get.find<ServiceController>();
+    controller.getConstructionServiceProvider();
+    controller.getAcabamentoServiceProvider();
+
     return Scaffold(
       appBar: AppBar(
         title: const Padding(
@@ -76,10 +78,9 @@ class ServicesScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-            // POPULAR CATEGORIES FROM API
+            // Construction CATEGORIES FROM API
             Obx(
-                  () => SliverPadding(
+              () => SliverPadding(
                 padding: const EdgeInsets.all(20),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -88,254 +89,235 @@ class ServicesScreen extends StatelessWidget {
                     mainAxisSpacing: 15,
                     childAspectRatio: 1,
                   ),
-                  delegate: SliverChildBuilderDelegate(
-                        (context, index) {
-                      final category = controller.categories[index];
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final category = controller.categories[index];
 
-                      return InkWell(
-                        onTap: () {
-                          print("Tapped: ${category['name']}");
-                          final slug = category['slug'];
+                    return InkWell(
+                      onTap: () {
+                        print("Tapped: ${category['name']}");
+                        final slug = category['slug'];
 
-                          Get.to(() => ServicesProvidersByCategory(slug: slug));
-                        },
-                        borderRadius: BorderRadius.circular(6),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(6),
-                            color: const Color(0xFFF4F3F3),
-                          ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              CustomImageView(
-                                imagePath: category['avatar'],
-                                width: 25,
-                                height: 25,
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                category["name"] ?? "Serviço",
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                  color: Colors.black,
-                                  fontFamily: 'Josefin Sans',
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    childCount: controller.categories.length,
+                        Get.to(() => ServicesProvidersByCategory(slug: slug));
+                      },
+                      borderRadius: BorderRadius.circular(6),
+                      child: ServiceCard(
+                        imageUrl: category['avatar'],
+                        // title:  category["name"] ?? "Serviço",
+                      ),
+                    );
+                  }, childCount: controller.categories.length),
+                ),
+              ),
+            ),
+            const SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 20),
+                child: Text(
+                  'Serviços de Reforma e Construção',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Josefin Sans',
                   ),
                 ),
               ),
             ),
 
-            //
-            // // Reforma e Construção Section
-            // const SliverToBoxAdapter(
-            //   child: Padding(
-            //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            //     child: Text(
-            //       'Serviços de Reforma e Construção',
-            //       style: TextStyle(
-            //         fontSize: 16,
-            //         color: Colors.black,
-            //         fontWeight: FontWeight.w500,
-            //         fontFamily: 'Josefin Sans',
-            //       ),
-            //     ),
-            //   ),
-            // ),
-            //
-            // SliverPadding(
-            //   padding: const EdgeInsets.symmetric(horizontal: 20),
-            //   sliver: SliverGrid(
-            //     gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-            //       crossAxisCount: 4,
-            //       crossAxisSpacing: 15,
-            //       mainAxisSpacing: 15,
-            //       childAspectRatio: 1,
-            //     ),
-            //     delegate: SliverChildBuilderDelegate(
-            //           (context, index) => SServiceCard(
-            //         iconUrl: 'assets/images/house.svg',
-            //         text: 'Fundação e\nEstrutura',
-            //       ),
-            //       childCount: 6,
-            //     ),
-            //   ),
-            // ),
-            //
-            // // Serviços de Acabamento Section
-            // SliverToBoxAdapter(
-            //   child: Padding(
-            //     padding: const EdgeInsets.symmetric(
-            //       horizontal: 20,
-            //       vertical: 20,
-            //     ),
-            //     child: Column(
-            //       crossAxisAlignment: CrossAxisAlignment.start,
-            //       children: [
-            //         const Text(
-            //           'Serviços de Acabamento',
-            //           style: TextStyle(
-            //             fontSize: 16,
-            //             color: Colors.black,
-            //             fontWeight: FontWeight.w500,
-            //             fontFamily: 'Josefin Sans',
-            //           ),
-            //         ),
-            //         const SizedBox(height: 20),
-            //
-            //         // Finishing Service Row
-            //         Row(
-            //           children: [
-            //             Container(
-            //               width: 78.82,
-            //               height: 78.5,
-            //               decoration: BoxDecoration(
-            //                 borderRadius: BorderRadius.circular(6),
-            //                 color: const Color(0xFFF4F3F3),
-            //               ),
-            //               child: Column(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 children: [
-            //                   CustomImageView(
-            //                     imagePath: 'assets/images/house.svg',
-            //                     width: 25,
-            //                     height: 25,
-            //                   ),
-            //                   const SizedBox(height: 4),
-            //                   const Text(
-            //                     'Pintura e Textura',
-            //                     textAlign: TextAlign.center,
-            //                     style: TextStyle(
-            //                       fontSize: 12,
-            //                       color: Colors.black,
-            //                       fontWeight: FontWeight.w500,
-            //                       fontFamily: 'Josefin Sans',
-            //                       height: 1.5,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //             const SizedBox(width: 15),
-            //             Container(
-            //               width: 78.82,
-            //               height: 78.5,
-            //               decoration: BoxDecoration(
-            //                 borderRadius: BorderRadius.circular(6),
-            //                 color: const Color(0xFFF4F3F3),
-            //               ),
-            //               child: Column(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 children: [
-            //                   CustomImageView(
-            //                     imagePath: 'assets/images/house.svg',
-            //                     width: 25,
-            //                     height: 25,
-            //                   ),
-            //                   const SizedBox(height: 4),
-            //                   const Text(
-            //                     'Instalação de Pocia',
-            //                     textAlign: TextAlign.center,
-            //                     style: TextStyle(
-            //                       fontSize: 12,
-            //                       color: Colors.black,
-            //                       fontWeight: FontWeight.w500,
-            //                       fontFamily: 'Josefin Sans',
-            //                       height: 1.5,
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //             const SizedBox(width: 15),
-            //             Container(
-            //               width: 161,
-            //               height: 78.5,
-            //               decoration: BoxDecoration(
-            //                 borderRadius: BorderRadius.circular(6),
-            //                 color: const Color(0xFFF9761E),
-            //               ),
-            //               child: const Column(
-            //                 mainAxisAlignment: MainAxisAlignment.center,
-            //                 children: [
-            //                   Text(
-            //                     'Precisa de ajuda agora?\n Solicitar Agora',
-            //                     textAlign: TextAlign.center,
-            //                     style: TextStyle(
-            //                       fontSize: 12,
-            //                       color: Colors.white,
-            //                       fontWeight: FontWeight.w500,
-            //                       fontFamily: 'Josefin Sans',
-            //                     ),
-            //                   ),
-            //                 ],
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         const SizedBox(height: 20),
-            //
-            //         // Additional Services
-            //         const Text(
-            //           'Serviços de Reforma e Construção',
-            //           style: TextStyle(
-            //             fontSize: 16,
-            //             color: Colors.black,
-            //             fontWeight: FontWeight.w500,
-            //             fontFamily: 'Josefin Sans',
-            //           ),
-            //         ),
-            //         const SizedBox(height: 20),
-            //
-            //         Row(
-            //           children: [
-            //             Expanded(
-            //               child: SServiceCard(
-            //                 imageUrl: "assets/images/lighting.svg",
-            //                 text: 'Eletricista',
-            //               ),
-            //             ),
-            //             const SizedBox(width: 15),
-            //             Expanded(
-            //               child: SServiceCard(
-            //                 imageUrl:
-            //                 'assets/images/tapwater.svg',
-            //                 text: 'Encanador',
-            //               ),
-            //             ),
-            //             const SizedBox(width: 15),
-            //             Expanded(
-            //               child: SServiceCard(
-            //                 imageUrl:
-            //                 'assets/images/construction.svg',
-            //                 text: 'Pedreiro',
-            //               ),
-            //             ),
-            //             const SizedBox(width: 15),
-            //             Expanded(
-            //               child: SServiceCard(
-            //                 imageUrl:
-            //                 'assets/images/paintbrush.svg',
-            //                 text: 'Pintor',
-            //               ),
-            //             ),
-            //           ],
-            //         ),
-            //         const SizedBox(height: 40),
-            //       ],
-            //     ),
-            //   ),
-            // ),          ],
-        ]),
+            Obx(
+              () => SliverPadding(
+                padding: const EdgeInsets.all(20),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 4,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 1,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final category = controller.cCategories[index];
+
+                    return InkWell(
+                      onTap: () {
+                        print("Tapped: ${category['name']}");
+                        final slug = category['slug'];
+                        Get.to(() => ServicesProvidersByCategory(slug: slug));
+                      },
+                      borderRadius: BorderRadius.circular(6),
+                      child: Column(
+                        children: [
+                          ServiceCard(
+                            imageUrl: category['avatar'],
+                            // title: category["name"] ?? "Serviço",
+                          ),
+                        ],
+                      ),
+                    );
+                  }, childCount: controller.cCategories.length),
+                ),
+              ),
+            ),
+
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 20,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Serviços de Acabamento',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: Colors.black,
+                        fontWeight: FontWeight.w500,
+                        fontFamily: 'Josefin Sans',
+                      ),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    Obx(() {
+                      final list = controller.aCategories;
+
+                      if (list.length < 2) return const SizedBox();
+
+                      return Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          // ITEM 1
+                          InkWell(
+                            onTap: () {
+                              Get.to(
+                                () => ServicesProvidersByCategory(
+                                  slug: list[0]['slug'],
+                                ),
+                              );
+                            },
+                            child: ServiceCard(imageUrl: list[0]['avatar']),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          // ITEM 2
+                          InkWell(
+                            onTap: () {
+                              Get.to(
+                                    () => ServicesProvidersByCategory(
+                                  slug: list[1]['slug'],
+                                ),
+                              );
+                            },
+                            child: ServiceCard(imageUrl: list[1]['avatar']),
+                          ),
+
+                          const SizedBox(width: 12),
+
+                          // ORANGE BOX
+                          Expanded(
+                            child: Container(
+                              height: 78.5,
+                              width:191,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(6),
+                                color: const Color(0xFFF9761E),
+                              ),
+                              child: const Center(
+                                child: Text(
+                                  'Precisa de ajuda agora?\nSolicitar Agora',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontFamily: 'Josefin Sans',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    }),
+
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class ServiceCard extends StatelessWidget {
+  final String imageUrl;
+  // final String title;
+  final double? width;
+  final double? height;
+  final EdgeInsets? padding;
+  final TextAlign? textAlign;
+  final bool multiLine;
+
+  const ServiceCard({
+    super.key,
+    required this.imageUrl,
+    // this.title,
+    this.width = 89,
+    this.height,
+    this.padding,
+    this.textAlign = TextAlign.center,
+    this.multiLine = false,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final aspectRatio = height != null ? (width! / height!) : 1.156;
+
+    return SizedBox(
+      width: width,
+      child: AspectRatio(
+        aspectRatio: aspectRatio,
+        child: Container(
+          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(6),
+                  child: CustomImageView(
+                    imagePath: imageUrl,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              ),
+              // Positioned.fill(
+              //   child: Container(
+              //     padding: padding ?? const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
+              //     child: Column(
+              //       mainAxisAlignment: MainAxisAlignment.end,
+              //       children: [
+              //         Text(
+              //           title,
+              //           textAlign: textAlign,
+              //           style: const TextStyle(
+              //             fontSize: 12,
+              //             color: Colors.white,
+              //             fontWeight: FontWeight.w500,
+              //             fontFamily: 'Josefin Sans',
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ),
+              // ),
+            ],
+          ),
+        ),
       ),
     );
   }

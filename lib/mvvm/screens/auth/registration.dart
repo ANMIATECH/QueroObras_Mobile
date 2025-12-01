@@ -529,13 +529,21 @@ class RegistrationScreen extends StatelessWidget {
 
 
                   const SizedBox(height: 34),
+                  Obx(() {
+                    return AgreeInputDesign(
+                      value: controllers.agree.value,
+                      onChanged: (v) => controllers.agree.value = v,
+                    );
+                  }),
+                  const SizedBox(height: 34),
                   Obx(
                         () => CustomButton(
                       text: CustomText.entrar,
                       isLoading: controllers.isLoading.value,
-                      onPressed: () async {
-                        await controllers.signUp();
-                      },
+                      isActive: controllers.agree.value,  // 🔥 button only active when checked
+                      onPressed: controllers.agree.value
+                          ? () async => await controllers.signUp()
+                          : null, // 🔒 prevents click
                     ),
                   ),
 
@@ -804,6 +812,94 @@ class InputDesign extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class AgreeInputDesign extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const AgreeInputDesign({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // CUSTOM CHECKBOX BOX
+          Container(
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                color: const Color(0xFFB1B1B1),
+                width: 2,
+              ),
+              color: value ? const Color(0xFFF9761E) : Colors.transparent,
+            ),
+            child: value
+                ? const Icon(
+              Icons.check,
+              size: 14,
+              color: Colors.white,
+            )
+                : null,
+          ),
+          const SizedBox(width: 10),
+
+          // TEXT
+          Expanded(
+            child: RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                style: const TextStyle(
+                  fontFamily: 'Josefin Sans',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF828282),
+                  height: 1.0,
+                ),
+                children: [
+                  const TextSpan(text: 'Accept '),
+
+                  // TERMS LINK
+                  TextSpan(
+                    text: 'terms',
+                    style: const TextStyle(color: Color(0xFFF9761E)),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print("Terms tapped");
+                        // TODO: Navigate to Terms screen
+                      },
+                  ),
+
+                  const TextSpan(text: ' and '),
+
+                  // CONDITIONS LINK
+                  TextSpan(
+                    text: 'condition',
+                    style: const TextStyle(color: Color(0xFFF9761E)),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print("Condition tapped");
+                        // TODO: Navigate to Condition screen
+                      },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

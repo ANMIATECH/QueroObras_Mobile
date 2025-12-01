@@ -81,7 +81,7 @@ class ProfileUploadScreen extends StatelessWidget {
 
                 // ✔ Document Upload
                 GestureDetector(
-                  onTap: () => controller.pickDocumentImage(),
+                  onTap: () => controller.pickCpfDocumentImage(),
                   child: Obx(() {
                     return Container(
                       width: double.infinity,
@@ -112,7 +112,7 @@ class ProfileUploadScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Upload Id or Driver\'s License',
+                              'Upload CNPJ document ',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -136,7 +136,9 @@ class ProfileUploadScreen extends StatelessWidget {
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   child: CustomButton(
                     text: 'Entrar',
+                    isLoading: controller.isLoading.value,
                     onPressed: () {
+
                       if (controller.profileImage.value == null ||
                           controller.documentImage.value == null) {
                         Get.snackbar("Error",
