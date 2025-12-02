@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
-import 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
+import '/mvvm/const/export.dart';
+
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -24,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: Column(
                           children: [
-                            const MenuSection(),
+                            const ProfileMenuSection(),
                             const SizedBox(height: 87),
                           ],
                         ),
@@ -54,7 +54,6 @@ class ProfileHeader extends StatelessWidget {
       height: 284,
       child: Stack(
         children: [
-          // Orange background with curved bottom
           Positioned(
             left: -2,
             top: 0,
@@ -70,6 +69,7 @@ class ProfileHeader extends StatelessWidget {
               ),
             ),
           ),
+
           // Profile image
           Positioned(
             left: (maxWidth - 105) / 2,
@@ -83,8 +83,8 @@ class ProfileHeader extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(100),
-                child: CustomImageView(imagePath:
-                  'assets/images/profile_dummy.png',
+                child: CustomImageView(
+                  imagePath: 'assets/images/profile_dummy.png',
                   width: 105,
                   height: 105,
                   fit: BoxFit.cover,
@@ -92,18 +92,18 @@ class ProfileHeader extends StatelessWidget {
               ),
             ),
           ),
-          // User information
+
+          // User info translated
           Positioned(
             left: (maxWidth - 241) / 2,
             top: 205,
             child: SizedBox(
-              width: 241,
               height: 79,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'UserName',
+                    'Nome do Usuário',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,
@@ -115,7 +115,7 @@ class ProfileHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'Electician',
+                    'Eletricista',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: const Color(0xFF787878),
@@ -127,7 +127,7 @@ class ProfileHeader extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    'User ID:2203494 | Turkey, Istanbul',
+                    'ID do Usuário: 2203494 | Turquia, Istambul',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: const Color(0xFF787878),
@@ -147,9 +147,8 @@ class ProfileHeader extends StatelessWidget {
   }
 }
 
-
-class MenuSection extends StatelessWidget {
-  const MenuSection({super.key});
+class ProfileMenuSection extends StatelessWidget {
+  const ProfileMenuSection({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -171,44 +170,61 @@ class MenuSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(21, 19.5, 18, 18.5),
             child: Column(
               children: [
-                MenuItemWidget(
-                  icon: Icons.edit,
-                  title: 'Wallet',
+                ProfileMenuItemWidget(
+                  icon: Icons.account_balance_wallet_outlined,
+                  title: 'Carteira',
                   hasArrow: true,
                 ),
                 const SizedBox(height: 10),
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.edit,
-                  title: 'Edit Profil',
+                  title: 'Editar Perfil',
                   hasArrow: true,
+                  onTap: (){
+                    Get.toNamed(RouteNameV1.serviceProviderAvailability, );
+
+                  },
+
                 ),
                 const SizedBox(height: 10),
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.person_add_alt_1,
-                  title: 'Availability',
-                  subtitle: 'Today from 09AM-6PM',
+                  title: 'Disponibilidade',
+                  subtitle: 'Hoje das 09h às 18h',
                   hasArrow: true,
                   isExpanded: true,
+                  onTap: (){
+                    Get.toNamed(RouteNameV1.profileEdit, );
+
+                  },
+
                 ),
                 const SizedBox(height: 10),
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.star_border,
-                  title: 'Review',
+                  title: 'Avaliações',
                   hasArrow: true,
+                  onTap: (){
+                    Get.toNamed(RouteNameV1.serviceProviderReview, );
+
+                  },
+
                 ),
                 const SizedBox(height: 10),
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.language,
-                  title: 'Language',
-                  subtitle: 'Portuguese',
+                  title: 'Idioma',
+                  subtitle: 'Português',
                   hasArrow: true,
                   isExpanded: true,
                 ),
               ],
             ),
           ),
+
           const SizedBox(height: 12),
-          // Bottom menu section
+
+          // Bottom menu
           Container(
             width: containerWidth,
             decoration: BoxDecoration(
@@ -219,16 +235,16 @@ class MenuSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(21, 25, 18, 25),
             child: Column(
               children: [
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.delete,
-                  title: 'Delete Account',
+                  title: 'Excluir Conta',
                   hasArrow: false,
                   titleFontSize: 14,
                 ),
                 const SizedBox(height: 10),
-                MenuItemWidget(
+                ProfileMenuItemWidget(
                   icon: Icons.logout,
-                  title: 'Log out',
+                  title: 'Sair',
                   hasArrow: false,
                   titleFontSize: 14,
                 ),
@@ -242,15 +258,17 @@ class MenuSection extends StatelessWidget {
 }
 
 
-class MenuItemWidget extends StatelessWidget {
+
+class ProfileMenuItemWidget extends StatelessWidget {
   final IconData icon;
   final String title;
   final String? subtitle;
   final bool hasArrow;
   final bool isExpanded;
   final double titleFontSize;
+  final VoidCallback? onTap;
 
-  const MenuItemWidget({
+  const ProfileMenuItemWidget({
     super.key,
     required this.icon,
     required this.title,
@@ -258,103 +276,100 @@ class MenuItemWidget extends StatelessWidget {
     this.hasArrow = false,
     this.isExpanded = false,
     this.titleFontSize = 16,
+    this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
-      child: isExpanded && subtitle != null
-          ? Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Row(
-                children: [
-                  Icon(
-                    icon,
-                    size: 24,
-                    color: Colors.black,
-                  ),
-                  const SizedBox(width: 10),
-                  Text(
-                    title,
-                    style: TextStyle(
+    return InkWell(
+      onTap: onTap, // ✅ ADD TAP HERE
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
+        child: isExpanded && subtitle != null
+            ? Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    Icon(icon, size: 24, color: Colors.black),
+                    const SizedBox(width: 10),
+                    Text(
+                      title,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: titleFontSize,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Josefin Sans',
+                        height: 24 / titleFontSize,
+                      ),
+                    ),
+                  ],
+                ),
+                if (hasArrow)
+                  Transform.rotate(
+                    angle: 1.5708,
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 18,
                       color: Colors.black,
-                      fontSize: titleFontSize,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Josefin Sans',
-                      height: 24 / titleFontSize,
                     ),
                   ),
-                ],
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 34, top: 5),
+              child: Text(
+                subtitle!,
+                style: const TextStyle(
+                  color: Color(0xFF8C8C8C),
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Josefin Sans',
+                  height: 24 / 14,
+                ),
               ),
-              if (hasArrow)
-                Transform.rotate(
-                  angle: 1.5708, // 90 degrees in radians
-                  child: Icon(
-                    Icons.arrow_forward_ios,
-                    size: 18,
+            ),
+          ],
+        )
+            : Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 24, color: Colors.black),
+                const SizedBox(width: 10),
+                Text(
+                  title,
+                  style: TextStyle(
                     color: Colors.black,
+                    fontSize: titleFontSize,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Josefin Sans',
+                    height: 24 / titleFontSize,
                   ),
                 ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 34, top: 5),
-            child: Text(
-              subtitle!,
-              style: const TextStyle(
-                color: Color(0xFF8C8C8C),
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                fontFamily: 'Josefin Sans',
-                height: 24 / 14,
-              ),
+              ],
             ),
-          ),
-        ],
-      )
-          : Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              Icon(
-                icon,
-                size: 24,
-                color: Colors.black,
-              ),
-              const SizedBox(width: 10),
-              Text(
-                title,
-                style: TextStyle(
+            if (hasArrow)
+              Transform.rotate(
+                angle: 1.5708,
+                child: Icon(
+                  Icons.arrow_forward_ios,
+                  size: 18,
                   color: Colors.black,
-                  fontSize: titleFontSize,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Josefin Sans',
-                  height: 24 / titleFontSize,
                 ),
               ),
-            ],
-          ),
-          if (hasArrow)
-            Transform.rotate(
-              angle: 1.5708, // 90 degrees in radians
-              child: Icon(
-                Icons.arrow_forward_ios,
-                size: 18,
-                color: Colors.black,
-              ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

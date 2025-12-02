@@ -1,9 +1,10 @@
 import '../mvvm/const/export.dart';
-import 'mvvm/controller/login_controller.dart';
+import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Get.put(LoginController());
+  Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
   runApp(const MyApp());
@@ -15,24 +16,37 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-        designSize: const Size(393, 852),
-        minTextAdapt: true,
-        splitScreenMode: true,
-        builder: (_, child) {
-          return GetMaterialApp(
-            title: 'Quero Obra',
-            debugShowCheckedModeBanner: false,
-            theme: CAppTheme.lightMoodTheme,
-            initialBinding: BindingsBuilder(() {
-              // Get.put(AuthControllerV1());
-              // Get.put(PushNotificationControllerGet());
-            }),
-            darkTheme: CAppTheme.darkMoodTheme,
-            getPages: RouteNameV1.getPages(), // Route Management
-            initialRoute: !StorageService.has(StorageDesign.token)
-                ? RouteNameV1.getStarted
-                : RouteNameV1.onboarding, // Web Routes Handling
-          );
-        });
+      designSize: const Size(393, 852),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) {
+        final String? token = StorageService.has(StorageDesign.token)
+            ? StorageService.read(StorageDesign.token)
+            : null;
+
+        final String? userStatus = StorageService.has("user_status")
+            ? StorageService.read("user_status")
+            : null;
+        String initialRoute = RouteNameV1.getStarted;
+
+        if (token != null && token.isNotEmpty) {
+          if (userStatus == "cpf") {
+            initialRoute = RouteNameV1.bottomNavCpf;
+          } else if (userStatus == "cnpj") {
+            initialRoute = RouteNameV1.bottomNav;
+          }
+        }
+
+        return GetMaterialApp(
+          title: 'Quero Obra',
+          debugShowCheckedModeBanner: false,
+          theme: CAppTheme.lightMoodTheme,
+          darkTheme: CAppTheme.darkMoodTheme,
+          getPages: RouteNameV1.getPages(),
+
+          initialRoute: initialRoute,
+        );
+      },
+    );
   }
 }

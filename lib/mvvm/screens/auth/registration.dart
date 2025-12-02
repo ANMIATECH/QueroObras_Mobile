@@ -14,349 +14,545 @@ class RegistrationScreen extends StatelessWidget {
           child: Container(
             width: double.infinity,
             constraints: BoxConstraints(
-              minHeight:
-                  MediaQuery.of(context).size.height -
+              minHeight: MediaQuery.of(context).size.height -
                   MediaQuery.of(context).padding.top,
             ),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 81),
-                      Container(
-                        width: double.infinity,
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(
-                                  width: 128,
-                                  height: 83.9,
-                                  child: CustomImageView(
-                                    imagePath: "assets/images/logo.png",
-                                  ),
-                                ),
-                                const SizedBox(height: 21),
-                                Container(
-                                  width: 187,
-                                  height: 47,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(23.37),
-                                    color: const Color(0x0016577F),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      CustomText.cadastrar,
-                                      style: TextStyle(
-                                        color: CustomColor.primary,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'Josefin Sans',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 41),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 81),
 
-                            // ================================
-                            // USER FORM FIELDS
-                            // ================================
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Nome',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: controllers.fullNameController,
-                                  hintText: 'Nome completo',
-                                  icon: CustomImageView(
-                                    imagePath: "assets/images/input_name.svg",
-                                  ),
-                                  keyboardType: TextInputType.text,
-                                ),
-
-                                const SizedBox(height: 14),
-
-                                Obx(
-                                  () => CustomDropdown(
-                                    label: 'Status do usuário',
-                                    selectedValue:
-                                    controllers.selectedUserStatus.value,
-                                    options: controllers.userStatusOptions,
-                                    customIcon: CustomImageView(
-                                      imagePath:
-                                          "assets/images/input_status.svg",
-                                    ),
-                                    onChanged: (String newValue) {
-                                      controllers.selectedUserStatus.value =
-                                          newValue;
-                                      if (newValue == 'Prestador de serviço') {
-                                        Get.dialog(
-                                          Dialog(
-                                            backgroundColor: Colors.transparent,
-                                            child: InputDesign(
-                                              onCpfTap: () {
-                                                controllers
-                                                        .selectedDocumentType
-                                                        .value =
-                                                    'CPF';
-                                                Get.back();
-                                              },
-                                              onCnpjTap: () {
-                                                controllers
-                                                        .selectedDocumentType
-                                                        .value =
-                                                    'CNPJ';
-                                                Get.back();
-                                              },
-                                            ),
-                                          ),
-                                        );
-                                      } else {
-                                        controllers.selectedDocumentType.value =
-                                            '';
-                                      }
-                                    },
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                const Text(
-                                  'Endereço de e-mail',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: controllers.emailController,
-                                  hintText: 'exemplo@dominio.com',
-                                  icon: CustomImageView(
-                                    imagePath: "assets/images/input_email.svg",
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                ),
-
-                                // ✅ Conditional CPF/CNPJ & CEP fields
-                                Obx(() {
-                                  if (controllers.selectedUserStatus.value ==
-                                          'Prestador de serviço' &&
-                                      controllers
-                                          .selectedDocumentType
-                                          .isNotEmpty) {
-                                    return Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 14),
-                                        Text(
-                                          controllers.selectedDocumentType.value,
-                                          style: const TextStyle(
-                                            color: CustomColor.sprimary,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Josefin Sans',
-                                          ),
-                                        ),
-                                        const SizedBox(height: 14),
-                                        CustomInputField(
-                                          controller:
-                                          controllers
-                                                      .selectedDocumentType
-                                                      .value ==
-                                                  'CPF'
-                                              ? controllers.cpfController
-                                              : controllers.cnpjController,
-                                          hintText:
-                                          controllers
-                                                      .selectedDocumentType
-                                                      .value ==
-                                                  'CPF'
-                                              ? 'CPF'
-                                              : 'CNPJ',
-                                          icon: CustomImageView(
-                                            imagePath:
-                                                "assets/images/input_ced.svg",
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                        const SizedBox(height: 14),
-                                        const Text(
-                                          'CEP CODE',
-                                          style: TextStyle(
-                                            color: CustomColor.sprimary,
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.w700,
-                                            fontFamily: 'Josefin Sans',
-                                          ),
-                                        ),
-                                        const SizedBox(height: 14),
-                                        CustomInputField(
-                                          controller: controllers.cepController,
-                                          hintText: 'CEP',
-                                          icon: CustomImageView(
-                                            imagePath:
-                                                "assets/images/input_ced.svg",
-                                          ),
-                                          keyboardType: TextInputType.number,
-                                        ),
-                                        const SizedBox(height: 14),
-                                        Obx(
-                                              () => CustomDropdown(
-                                            label: 'Função',
-                                            selectedValue: controllers.selectedRoleStatus.value == 0
-                                                ? null
-                                                : controllers.userRoleList
-                                                .firstWhere(
-                                                  (e) => e.id == controllers.selectedRoleStatus.value,
-                                              orElse: () => CategoryModel(id: 0, name: ""),
-                                            )
-                                                .name,
-                                            options: controllers.userRoleList.map((item) => item.name).toList(),
-                                            customIcon: CustomImageView(
-                                              imagePath: "assets/images/input_status.svg",
-                                            ),
-                                            onChanged: (String selectedName) {
-                                              final selected = controllers.userRoleList.firstWhere(
-                                                    (item) => item.name == selectedName,
-                                                orElse: () => CategoryModel(id: 0, name: ""),
-                                              );
-                                              controllers.selectedRoleStatus.value = selected.id;
-                                            },
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  }
-                                  return const SizedBox.shrink();
-                                }),
-                                const SizedBox(height: 14),
-                                const Text(
-                                  'Número',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: controllers.phoneNumberController,
-                                  hintText: '000 000 000 00',
-                                  icon: CustomImageView(
-                                    imagePath: "assets/images/input_number.svg",
-                                  ),
-                                  keyboardType: TextInputType.phone,
-                                ),
-
-                                const SizedBox(height: 14),
-                                const Text(
-                                  'Senha',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: controllers.passwordController,
-                                  hintText: '*********',
-                                  icon: CustomImageView(
-                                    imagePath:
-                                        "assets/images/input_password.svg",
-                                  ),
-                                  isPassword: true,
-                                ),
-                                const SizedBox(height: 14),
-                                const Text(
-                                  'Confirmar senha',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: controllers.confirmPasswordController,
-                                  hintText: '*********',
-                                  icon: CustomImageView(
-                                    imagePath:
-                                        "assets/images/input_password.svg",
-                                  ),
-                                  isPassword: true,
-                                ),
-                              ],
-                            ),
-
-                            const SizedBox(height: 34),
-                            Obx(() => CustomButton(
-                              text: CustomText.entrar,
-                              isLoading: controllers.isLoading.value,
-                              onPressed: () async {
-                                await controllers.signUp();
-                              },
-                            )),
-
-                          ],
+                  // LOGO & TITLE
+                  SizedBox(
+                    width: 128,
+                    height: 83.9,
+                    child: CustomImageView(imagePath: "assets/images/logo.png"),
+                  ),
+                  const SizedBox(height: 21),
+                  Container(
+                    width: 187,
+                    height: 47,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(23.37),
+                      color: const Color(0x0016577F),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        CustomText.cadastrar,
+                        style: TextStyle(
+                          color: CustomColor.primary,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Josefin Sans',
                         ),
                       ),
-                      const SizedBox(height: 40),
+                    ),
+                  ),
+                  const SizedBox(height: 41),
 
-                      // NAVIGATION LINK
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Já tem uma conta? ',
+                  // =====================
+                  // TIPO DE CADASTRO
+                  // =====================
+                  Obx(() => CustomDropdown(
+                    label: 'Tipo de cadastro',
+                    selectedValue: controllers.selectedUserStatus.value,
+                    options: controllers.userStatusOptions,
+                    customIcon: CustomImageView(
+                      imagePath: "assets/images/input_status.svg",
+                    ),
+                    onChanged: (String newValue) {
+                      controllers.setUserStatus(newValue); // sync both selectedUserStatus & selectedDocumentType
+                    },
+                  )),
+                  const SizedBox(height: 14),
+
+                  Obx(() {
+                    final doc = controllers.selectedDocumentType.value;
+
+                    if (doc == 'CNPJ') {
+                      // =========================
+                      // CNPJ Fields
+                      // =========================
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Nome',
                               style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Josefin Sans',
-                              ),
-                            ),
-                            TextSpan(
-                              text: CustomText.entrar,
-                              style: const TextStyle(
-                                color: Color(0xFFF9761E),
-                                fontSize: 14,
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Josefin Sans',
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.toNamed(RouteNameV1.login);
-                                },
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.fullNameController,
+                            hintText: 'Nome completo',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Razão Social',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.companyNameController,
+                            hintText: 'Razão Social',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Nome do Representante Legal',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.legalRepNameController,
+                            hintText: 'Representante Legal',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Nome Fantasia',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.tradeNameController,
+                            hintText: 'Nome Fantasia',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Endereço de e-mail',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.emailController,
+                            hintText: 'exemplo@dominio.com',
+                            icon: CustomImageView(imagePath: "assets/images/input_email.svg"),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Nome da Mãe',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.motherNameController,
+                            hintText: 'Nome da mãe',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Data de nascimento',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.birthDateController,
+                            hintText: 'dd/mm/aaaa',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                            keyboardType: TextInputType.datetime,
+
+                          ),
+                          const SizedBox(height: 14),
+
+                          Obx(() => CustomDropdown(
+                            label: 'Função',
+                            selectedValue: controllers.selectedRoleStatus.value == 0
+                                ? null
+                                : controllers.userRoleList
+                                .firstWhere(
+                                  (e) => e.id == controllers.selectedRoleStatus.value,
+                              orElse: () => CategoryModel(id: 0, name: ""),
+                            )
+                                .name,
+                            options:
+                            controllers.userRoleList.map((item) => item.name).toList(),
+                            customIcon: CustomImageView(
+                              imagePath: "assets/images/input_status.svg",
                             ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
+                            onChanged: (String selectedName) {
+                              final selected = controllers.userRoleList.firstWhere(
+                                    (item) => item.name == selectedName,
+                                orElse: () => CategoryModel(id: 0, name: ""),
+                              );
+                              controllers.selectedRoleStatus.value = selected.id;
+                            },
+                          )),
+                          const SizedBox(height: 14),
+
+                          const Text('CNPJ',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.cnpjController,
+                            hintText: 'CNPJ',
+                            icon: CustomImageView(imagePath: "assets/images/input_ced.svg"),
+                            keyboardType: TextInputType.text,
+                          ),
+                          const SizedBox(height: 14),
+                          const Text('CEP',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.cepController,
+                            hintText: 'CEP',
+                            icon: CustomImageView(imagePath: "assets/images/input_ced.svg"),
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Inscrição Estadual',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.stateRegistrationController,
+                            hintText: 'Inscrição Estadual',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Endereço',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.addressController,
+                            hintText: 'Endereço',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Número',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.phoneNumberController,
+                            hintText: 'Número',
+                            icon: CustomImageView(imagePath: "assets/images/input_number.svg"),
+                            keyboardType: TextInputType.number,
+
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Senha',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.passwordController,
+                            hintText: 'Senha',
+                            icon: CustomImageView(imagePath: "assets/images/input_password.svg"),
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Confirmar senha',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.confirmPasswordController,
+                            hintText: 'Confirmar senha',
+                            icon: CustomImageView(imagePath: "assets/images/input_password.svg"),
+                            isPassword: true,
+                          ),
+                        ],
+                      );
+                    } else if (doc == 'CPF') {
+                      // =========================
+                      // CPF Fields
+                      // =========================
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Nome',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.fullNameController,
+                            hintText: 'Nome completo',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Nome da Empresa',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.companyNameController,
+                            hintText: 'Nome da Empresa',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Nome da Mãe',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.motherNameController,
+                            hintText: 'Nome da mãe',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('E-mail Comercial',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.emailController,
+                            hintText: 'exemplo@dominio.com',
+                            icon: CustomImageView(imagePath: "assets/images/input_email.svg"),
+                            keyboardType: TextInputType.emailAddress,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Endereço',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.addressController,
+                            hintText: 'Endereço',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Data de nascimento',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.birthDateController,
+                            hintText: 'dd/mm/aaaa',
+                            icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          ),
+                          const SizedBox(height: 14),
+
+                          Obx(() => CustomDropdown(
+                            label: 'Função',
+                            selectedValue: controllers.selectedRoleStatus.value == 0
+                                ? null
+                                : controllers.userRoleList
+                                .firstWhere(
+                                  (e) => e.id == controllers.selectedRoleStatus.value,
+                              orElse: () => CategoryModel(id: 0, name: ""),
+                            )
+                                .name,
+                            options:
+                            controllers.userRoleList.map((item) => item.name).toList(),
+                            customIcon: CustomImageView(
+                              imagePath: "assets/images/input_status.svg",
+                            ),
+                            onChanged: (String selectedName) {
+                              final selected = controllers.userRoleList.firstWhere(
+                                    (item) => item.name == selectedName,
+                                orElse: () => CategoryModel(id: 0, name: ""),
+                              );
+                              controllers.selectedRoleStatus.value = selected.id;
+                            },
+                          )),
+                          const SizedBox(height: 14),
+
+                          const Text('CPF',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.cpfController,
+                            hintText: 'CPF',
+                            icon: CustomImageView(imagePath: "assets/images/input_ced.svg"),
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('CEP',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.cepController,
+                            hintText: 'CEP',
+                            icon: CustomImageView(imagePath: "assets/images/input_ced.svg"),
+                            keyboardType: TextInputType.number,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Número',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.phoneNumberController,
+                            hintText: 'Número',
+                            icon: CustomImageView(imagePath: "assets/images/input_number.svg"),
+                            keyboardType: TextInputType.number,
+
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Senha',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.passwordController,
+                            hintText: 'Senha',
+                            icon: CustomImageView(imagePath: "assets/images/input_password.svg"),
+                            isPassword: true,
+                          ),
+                          const SizedBox(height: 14),
+
+                          const Text('Confirmar senha',
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              )),
+                          const SizedBox(height: 14),
+                          CustomInputField(
+                            controller: controllers.confirmPasswordController,
+                            hintText: 'Confirmar senha',
+                            icon: CustomImageView(imagePath: "assets/images/input_password.svg"),
+                            isPassword: true,
+                          ),
+                        ],
+                      );
+                    }
+
+                    return const SizedBox.shrink();
+                  }),
+
+
+                  const SizedBox(height: 34),
+                  Obx(() {
+                    return AgreeInputDesign(
+                      value: controllers.agree.value,
+                      onChanged: (v) => controllers.agree.value = v,
+                    );
+                  }),
+                  const SizedBox(height: 34),
+                  Obx(
+                        () => CustomButton(
+                      text: CustomText.entrar,
+                      isLoading: controllers.isLoading.value,
+                      isActive: controllers.agree.value,  // 🔥 button only active when checked
+                      onPressed: controllers.agree.value
+                          ? () async => await controllers.signUp()
+                          : null, // 🔒 prevents click
+                    ),
                   ),
-                ),
-              ],
+
+                  const SizedBox(height: 40),
+                ],
+              ),
             ),
           ),
         ),
@@ -619,6 +815,94 @@ class InputDesign extends StatelessWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+
+class AgreeInputDesign extends StatelessWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  const AgreeInputDesign({
+    super.key,
+    required this.value,
+    required this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => onChanged(!value),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // CUSTOM CHECKBOX BOX
+          Container(
+            width: 18,
+            height: 18,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                color: const Color(0xFFB1B1B1),
+                width: 2,
+              ),
+              color: value ? const Color(0xFFF9761E) : Colors.transparent,
+            ),
+            child: value
+                ? const Icon(
+              Icons.check,
+              size: 14,
+              color: Colors.white,
+            )
+                : null,
+          ),
+          const SizedBox(width: 10),
+
+          // TEXT
+          Expanded(
+            child: RichText(
+              textAlign: TextAlign.start,
+              text: TextSpan(
+                style: const TextStyle(
+                  fontFamily: 'Josefin Sans',
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF828282),
+                  height: 1.0,
+                ),
+                children: [
+                  const TextSpan(text: 'Accept '),
+
+                  // TERMS LINK
+                  TextSpan(
+                    text: 'terms',
+                    style: const TextStyle(color: Color(0xFFF9761E)),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print("Terms tapped");
+                        // TODO: Navigate to Terms screen
+                      },
+                  ),
+
+                  const TextSpan(text: ' and '),
+
+                  // CONDITIONS LINK
+                  TextSpan(
+                    text: 'condition',
+                    style: const TextStyle(color: Color(0xFFF9761E)),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        print("Condition tapped");
+                        // TODO: Navigate to Condition screen
+                      },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -1,91 +1,75 @@
-import 'package:flutter/material.dart';
-import 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
+import '/mvvm/const/export.dart';
 
 class ServiceProviderReview extends StatelessWidget {
   const ServiceProviderReview({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Example review data (Brazil Portuguese)
     final List<Map<String, dynamic>> reviews = [
       {
         'name': 'David Lion',
-        'avatar': 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
+        'avatar':
+        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
         'rating': 2,
-        'text': 'Your service was good but i noticed that you didn\'t finished on the expected time.',
+        'text':
+        'Seu serviço foi bom, mas percebi que você não terminou no tempo esperado.',
       },
       {
         'name': 'Brooklyn Simmons',
-        'avatar': 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 2,
-        'text': 'Your service was good but i noticed that you didn\'t finished on the expected time.',
+        'avatar':
+        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
+        'rating': 4,
+        'text':
+        'Excelente trabalho! Fiquei muito satisfeito com o serviço.',
       },
       {
         'name': 'Floyd Miles',
-        'avatar': 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 2,
-        'text': 'Your service was good but i noticed that you didn\'t finished on the expected time.',
-      },
-      {
-        'name': 'Savannah Nguyen',
-        'avatar': 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 2,
-        'text': 'Your service was good but i noticed that you didn\'t finished on the expected time.',
-      },
-      {
-        'name': 'Marvin McKinney',
-        'avatar': 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 2,
-        'text': 'Your service was good but i noticed that you didn\'t finished on the expected time.',
+        'avatar':
+        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
+        'rating': 3,
+        'text': 'O serviço foi bom, mas ainda há espaço para melhorias.',
       },
     ];
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        color: Colors.white,
-      ),
-      width: double.infinity,
-      child: Column(
-        children: [
-          // Navigation Bar with Status Bar
-          SizedBox(
-            width: double.infinity,
-            child: Stack(
-              children: [
-                // Background blur effect
-                Positioned.fill(
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white.withValues(alpha: 0.0),
-                    ),
-                    child: Container(
-                      height: 56,
-                    ),
-                  ),
-                ),
-                // Status Bar
-              ],
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: GestureDetector(
+            onTap: () => Navigator.of(context).pop(),
+            child: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.black,
+              size: 20,
             ),
           ),
-
-          // Navigation Header
-          const NavigationHeader(),
-
-          // Reviews Section
-          Container(
-            width: double.infinity,
-            constraints: const BoxConstraints(maxWidth: 400),
-            margin: const EdgeInsets.only(top: 43),
-            child: Column(
-              children: reviews.map((review) => ReviewCard(
-                customerName: review['name'],
-                avatarUrl: review['avatar'],
-                rating: review['rating'],
-                reviewText: review['text'],
-              )).toList(),
+          title: const Text(
+            'Avaliações', // 🇧🇷 translated
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 32,
+              fontWeight: FontWeight.w700,
+              fontFamily: 'Josefin Sans',
+              height: 0.75,
             ),
           ),
-        ],
+          centerTitle: false,
+        ),
+        body: ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
+          itemCount: 8,
+          itemBuilder: (context, index) {
+            final review = reviews[index % reviews.length];
+            return ReviewCard(
+              customerName: review['name'],
+              avatarUrl: review['avatar'],
+              rating: review['rating'],
+              reviewText: review['text'], // Already translated
+            );
+          },
+        ),
       ),
     );
   }
@@ -193,62 +177,24 @@ class ReviewCard extends StatelessWidget {
 
 
 class StarRating extends StatelessWidget {
-  final int rating;
+  final int rating; // Rating from 0 to 5
 
   const StarRating({super.key, required this.rating});
 
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisSize: MainAxisSize.min,
       children: List.generate(5, (index) {
-        return Container(
-          margin: const EdgeInsets.only(right: 1),
-          child: CustomImageView(imagePath:
-            index < rating
-                ? 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/54409e2e0b395cdfc88c19a769886092cba49227?placeholderIfAbsent=true'
-                : 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/e433c28472ee75cbce2c2c55475dc2d5ee312676?placeholderIfAbsent=true',
-            width: 24,
-            height: 24,
+        return Padding(
+          padding: const EdgeInsets.only(right: 2),
+          child: Icon(
+            index < rating ? Icons.star : Icons.star_border,
+            color: Colors.amber,
+            size: 24,
           ),
         );
       }),
-    );
-  }
-}
-
-class NavigationHeader extends StatelessWidget {
-  const NavigationHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      constraints: const BoxConstraints(maxWidth: 400),
-      margin: const EdgeInsets.only(top: 9),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            children: [
-              CustomImageView(imagePath:
-              'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/e9f990078ea3a5ddcf8edd0be204095ae69da213?placeholderIfAbsent=true',
-                width: 24,
-                height: 24,
-              ),
-              const SizedBox(width: 23),
-              const Text(
-                'Review',
-                style: TextStyle(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                  fontFamily: 'Josefin Sans',
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
     );
   }
 }

@@ -59,7 +59,7 @@ class OnboardingController extends GetxController {
       Future.delayed(const Duration(milliseconds: 500), () {
         print('Slide completed!');
         // Example: navigate to next screen
-        Get.offAllNamed(RouteNameV1.bottomNav);
+        Get.offAllNamed(RouteNameV1.bottomNavCpf);
       });
     } else {
       dragPosition.value = 0.0;

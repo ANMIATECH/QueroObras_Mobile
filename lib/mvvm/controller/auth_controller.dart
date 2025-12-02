@@ -1,18 +1,78 @@
+import 'package:image_picker/image_picker.dart';
+import 'package:http/http.dart' as http;
 import '../const/export.dart';
+import 'package:file_picker/file_picker.dart';
+
 
 class AuthController extends GetxController {
   final ApiManager _apiManager = ApiManager();
   final resetEmailController = TextEditingController();
 
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController fullNameController = TextEditingController();
-  final TextEditingController phoneNumberController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController confirmPasswordController = TextEditingController();
-  final ValueNotifier<bool> rememberMeNotifier = ValueNotifier<bool>(false);
-  final TextEditingController cpfController = TextEditingController();
-  final TextEditingController cnpjController = TextEditingController();
-  final TextEditingController cepController = TextEditingController();
+  Rx<File?> profileImage = Rx<File?>(null);
+  Rx<File?> documentImage = Rx<File?>(null);
+  Rx<File?> cnpjDocumentImage = Rx<File?>(null);
+
+  final ImagePicker picker = ImagePicker();
+
+  Future<void> pickProfileImage() async {
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      profileImage.value = File(picked.path);
+    }
+  }
+
+  Future<void> pickDocumentImage() async {
+    final picked = await picker.pickImage(source: ImageSource.gallery);
+    if (picked != null) {
+      documentImage.value = File(picked.path);
+    }
+  }
+
+
+  Future<void> pickCnpjDocumentImage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp', 'bmp', 'tiff'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        cnpjDocumentImage.value = File(result.files.single.path!); // 👈 FIXED
+      } else {
+        print("No file selected");
+      }
+    } catch (e) {
+      print("File picking error: $e");
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: "Failed to pick file: $e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future<void> pickCpfDocumentImage() async {
+    try {
+      FilePickerResult? result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['jpg', 'jpeg', 'png', 'pdf', 'webp', 'bmp', 'tiff'],
+      );
+
+      if (result != null && result.files.single.path != null) {
+        documentImage.value = File(result.files.single.path!); // 👈 FIXED
+      } else {
+        print("No file selected");
+      }
+    } catch (e) {
+      print("File picking error: $e");
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: "Failed to pick file: $e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
 
   final otpControllers = List.generate(5, (_) => TextEditingController());
   final focusNodes = List.generate(5, (_) => FocusNode());
@@ -56,18 +116,12 @@ class AuthController extends GetxController {
 
   Future<void> getServiceCategory() async {
     try {
-      print("📡 Fetching service categories...");
       var response = await _apiManager.read(ApiUrl.serviceCategory, false);
-
-      print("📩 Raw response body: ${response.body}");
-      print("📌 Status code: ${response.statusCode}");
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print("✅ JSON decoded: $data");
 
         var categories = data['categories'] as List<dynamic>? ?? [];
-        print("📂 Categories fetched: $categories");
 
         // Safely map names and ignore nulls
         userRoleOptions.value =
@@ -75,11 +129,9 @@ class AuthController extends GetxController {
                 .where((name) => name.isNotEmpty)
                 .toList();
 
-        print("🔹 userRoleOptions updated: ${userRoleOptions.value}");
       } else {
         var message = jsonDecode(response.body);
         var error = message["error"]?["message"] ?? "Failed to fetch categories";
-        print("❌ Error fetching categories: $error");
 
         SnackbarUtil.showSnackbar(
           title: "Fetch Failed",
@@ -88,8 +140,6 @@ class AuthController extends GetxController {
         );
       }
     } catch (e, stackTrace) {
-      print("⚠️ Exception in getServiceCategory(): $e");
-      print(stackTrace);
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: e.toString(),
@@ -97,6 +147,222 @@ class AuthController extends GetxController {
       );
     }
   }
+
+  Future<void> getReformaeConstruoServiceCategory() async {
+    try {
+      var response = await _apiManager.read(ApiUrl.serviceCategory, false);
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+
+        var categories = data['categories'] as List<dynamic>? ?? [];
+
+        // Safely map names and ignore nulls
+        userRoleOptions.value =
+            categories.map((cat) => (cat['name'] ?? '').toString())
+                .where((name) => name.isNotEmpty)
+                .toList();
+
+      } else {
+        var message = jsonDecode(response.body);
+        var error = message["error"]?["message"] ?? "Failed to fetch categories";
+
+        SnackbarUtil.showSnackbar(
+          title: "Fetch Failed",
+          message: error,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e, stackTrace) {
+      SnackbarUtil.showSnackbar(
+        title: "Error",
+        message: e.toString(),
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future uploadProfilePicNDoc() async {
+    try {
+      if (profileImage.value == null || documentImage.value == null) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "Both profile picture and document are required",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      isLoading.value = true;
+
+      // Build full URL like in read()
+      final url = Uri.parse('${ApiReuse.baseUrl}${ApiUrl.picNDoc}');
+
+      var request = http.MultipartRequest('POST', url);
+
+      // Add Authorization header
+      String? token = StorageDesign.readItem(StorageDesign.token);
+      if (token != null) {
+        request.headers['Authorization'] = "Bearer $token";
+      }
+
+      // Attach files
+      request.files.add(
+        await http.MultipartFile.fromPath("avatar", profileImage.value!.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "identifican_driver_license",
+          documentImage.value!.path,
+        ),
+      );
+
+      // Send request
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      isLoading.value = false;
+
+      print("UPLOAD STATUS: ${response.statusCode}");
+      print("UPLOAD BODY: ${response.body}");
+
+      dynamic message;
+      try {
+        message = jsonDecode(response.body);
+      } catch (e) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "Invalid JSON returned by server",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        SnackbarUtil.showSnackbar(
+          title: "Success",
+          message: "Documents uploaded successfully",
+          type: SnackbarType.success,
+        );
+        Get.offAllNamed(RouteNameV1.bottomNavCpf);
+      } else {
+        String errorMsg = "Upload failed";
+
+        if (message is Map &&
+            message.containsKey("error") &&
+            message["error"].containsKey("message")) {
+          errorMsg = message["error"]["message"];
+        }
+
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: errorMsg,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+
+      print("UPLOAD EXCEPTION: $e");
+      SnackbarUtil.showSnackbar(
+        title: "Upload Failed",
+        message: "$e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
+  Future uploadProfilePicNDocCnpj() async {
+    try {
+      if (profileImage.value == null || cnpjDocumentImage.value == null) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "Both profile picture and CNPJ document are required",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      isLoading.value = true;
+
+      // Build full URL
+      final url = Uri.parse('${ApiReuse.baseUrl}${ApiUrl.picNDoc}');
+
+      var request = http.MultipartRequest('POST', url);
+
+      // Add Authorization header
+      String? token = StorageDesign.readItem(StorageDesign.token);
+      if (token != null) {
+        request.headers['Authorization'] = "Bearer $token";
+      }
+
+      // Attach avatar and CNPJ document
+      request.files.add(
+        await http.MultipartFile.fromPath("avatar", profileImage.value!.path),
+      );
+      request.files.add(
+        await http.MultipartFile.fromPath(
+          "cnpj_document",
+          cnpjDocumentImage.value!.path,
+        ),
+      );
+
+      // Send request
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      isLoading.value = false;
+
+      print("UPLOAD STATUS: ${response.statusCode}");
+      print("UPLOAD BODY: ${response.body}");
+
+      dynamic message;
+      try {
+        message = jsonDecode(response.body);
+      } catch (e) {
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: "Invalid JSON returned by server",
+          type: SnackbarType.error,
+        );
+        return;
+      }
+
+      // SUCCESS
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        SnackbarUtil.showSnackbar(
+          title: "Success",
+          message: "Documents uploaded successfully",
+          type: SnackbarType.success,
+        );
+        Get.offAllNamed(RouteNameV1.bottomNav);
+      } else {
+        String errorMsg = "Upload failed";
+
+        if (message is Map &&
+            message.containsKey("error") &&
+            message["error"].containsKey("message")) {
+          errorMsg = message["error"]["message"];
+        }
+
+        SnackbarUtil.showSnackbar(
+          title: "Upload Failed",
+          message: errorMsg,
+          type: SnackbarType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+
+      print("UPLOAD EXCEPTION: $e");
+      SnackbarUtil.showSnackbar(
+        title: "Upload Failed",
+        message: "$e",
+        type: SnackbarType.error,
+      );
+    }
+  }
+
 
   @override
   void onClose() {
@@ -118,12 +384,11 @@ class AuthController extends GetxController {
 
 
   RxBool isButtonLoading = false.obs;
-  RxString selectedUserStatus = 'Cliente'.obs;
+  RxString selectedUserStatus = ''.obs;
   RxString selectedRoleStatus = ''.obs;
   RxString selectedDocumentType = ''.obs; // 'CPF' or 'CNPJ'
 
   final List<String> userStatusOptions = [
-    'Cliente',
     'Prestador de serviço',
   ];
 
@@ -131,10 +396,4 @@ class AuthController extends GetxController {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  void handleSubmit() {
-    if (formKey.currentState?.validate() ?? false) {
-      // Handle password reset logic here
-      print('Reset password for: ${emailController.text}');
-    }
-  }
 }

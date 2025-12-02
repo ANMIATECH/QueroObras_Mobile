@@ -66,6 +66,11 @@ class MaterialShopScreen extends StatelessWidget {
                             childAspectRatio: 0.8,
                           ),
                           itemBuilder: (context, index) => ProductCardM(
+                            onTap: (){
+                              Get.toNamed(RouteNameV1.productDetail);
+
+                            },
+
                             imageUrl:"assets/images/cement.png",
                             title: 'Título',
                             subtitle: 'Legenda',
@@ -97,6 +102,11 @@ class MaterialShopScreen extends StatelessWidget {
                             childAspectRatio: 0.8,
                           ),
                           itemBuilder: (context, index) => ProductCardM(
+                            onTap: (){
+                              Get.toNamed(RouteNameV1.productDetail);
+
+                            },
+
                             imageUrl: "assets/images/lawn_mower.png",
                             title: 'Título',
                             subtitle: 'Legenda',
@@ -128,6 +138,10 @@ class MaterialShopScreen extends StatelessWidget {
                             childAspectRatio: 0.8,
                           ),
                           itemBuilder: (context, index) => ProductCardM(
+                            onTap: (){
+                              Get.toNamed(RouteNameV1.productDetail);
+
+                            },
                             imageUrl: "assets/images/wooden_hammer.png",
                             title: 'Título',
                             subtitle: 'Legenda',
@@ -154,6 +168,7 @@ class ProductCardM extends StatelessWidget {
   final String subtitle;
   final String price;
   final double? topPadding;
+  final VoidCallback? onTap; // 👈 NEW
 
   const ProductCardM({
     super.key,
@@ -162,92 +177,98 @@ class ProductCardM extends StatelessWidget {
     required this.subtitle,
     required this.price,
     this.topPadding,
+    this.onTap, // 👈 NEW
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFFEEEEEE),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Image
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: CustomImageView(
-              imagePath: imageUrl,
-              width: 70,
-              height: 65, // 👈 reduced height slightly
-              fit: BoxFit.contain,
-            ),
-          ),
-          // Product Info
-          Expanded( // 👈 ensures content fits properly within each grid tile
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.only(top: 7, left: 4, right: 4, bottom: 2),
-              decoration: const BoxDecoration(color: Color(0xFFFBFAFA)),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, // 👈 balances layout
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                      Text(
-                        subtitle,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        price,
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                      const Text(
-                        'Carrinho',
-                        style: TextStyle(
-                          color: Color(0xFFF9761E),
-                          fontSize: 11,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: const Color(0xFFEEEEEE),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Image
+            Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: CustomImageView(
+                imagePath: imageUrl,
+                width: 70,
+                height: 65,
+                fit: BoxFit.contain,
               ),
             ),
-          ),
-        ],
+
+            // Product Info
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.only(top: 7, left: 4, right: 4, bottom: 2),
+                decoration: const BoxDecoration(color: Color(0xFFFBFAFA)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
+                        Text(
+                          subtitle,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          price,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
+                        const Text(
+                          'Carrinho',
+                          style: TextStyle(
+                            color: Color(0xFFF9761E),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

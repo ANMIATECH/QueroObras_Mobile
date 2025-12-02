@@ -9,8 +9,10 @@ export 'package:google_maps_flutter/google_maps_flutter.dart';
 export 'package:geolocator/geolocator.dart';
 export '../screens/dashboard/profile/profile_screen.dart';
 export '../controller/login_controller.dart';
+export '../screens/dashboard/profile/availability.dart';
+export '../screens/dashboard/profile/profile_edit.dart';
 
-
+export '../screens/dashboard/profile/review.dart';
 
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
 export 'package:queroobras_mobile/mvvm/const/export.dart';
@@ -19,7 +21,7 @@ export 'dart:ui' show PathMetric;
 export '../screens/onboarding/splash_screen.dart';
 export '../controller/onboarding_controller.dart';
 export '../screens/dashboard/home/home_screen.dart';
-export '../controller/bottomnav_controller.dart';
+export '../controller/cnpjbottomnav_controller.dart';
 export 'package:queroobras_mobile/mvvm/screens/dashboard/order/order_item.dart';
 export '../screens/dashboard/order/order.dart';
 export '../controller/product_controller.dart';

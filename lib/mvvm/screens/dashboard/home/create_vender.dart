@@ -1,3 +1,5 @@
+import 'package:queroobras_mobile/mvvm/screens/dashboard/home/upload_successful.dart';
+
 import '../../../const/export.dart';
 
 class VendorFormScreen extends StatelessWidget {
@@ -48,9 +50,108 @@ class VendorFormScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const ImageGallery(),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              width: 74.8125,
+                              height: 49.875,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F3F3),
+                                borderRadius: BorderRadius.circular(4.45),
+                                border: Border.all(
+                                  width: 0.89,
+                                  color: const Color(0x0D000000),
+                                ),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.camera_alt_outlined),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              width: 74.8125,
+                              height: 49.875,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F3F3),
+                                borderRadius: BorderRadius.circular(4.45),
+                                border: Border.all(
+                                  width: 0.89,
+                                  color: const Color(0x0D000000),
+                                ),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.camera_alt_outlined),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              width: 74.8125,
+                              height: 49.875,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F3F3),
+                                borderRadius: BorderRadius.circular(4.45),
+                                border: Border.all(
+                                  width: 0.89,
+                                  color: const Color(0x0D000000),
+                                ),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.camera_alt_outlined),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              width: 74.8125,
+                              height: 49.875,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF6F3F3),
+                                borderRadius: BorderRadius.circular(4.45),
+                                border: Border.all(
+                                  width: 0.89,
+                                  color: const Color(0x0D000000),
+                                ),
+                              ),
+                              child: IconButton(
+                                onPressed: () {},
+                                icon: Icon(Icons.camera_alt_outlined),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: Container(
+                              width: 74.8125,
+                              height: 49.875,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF16577F),
+                                borderRadius: BorderRadius.circular(4.45),
+                                border: Border.all(
+                                  width: 0.89,
+                                  color: const Color(0x0D000000),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: CustomImageView(height: 17,
+                                    width: 17,
+                                    imagePath: "assets/images/add.svg"),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 10),
+                        ],
+                      ),
                       const SizedBox(height: 20),
-
                       const Text(
                         'Name of the article',
                         style: TextStyle(
@@ -64,8 +165,7 @@ class VendorFormScreen extends StatelessWidget {
                       FormInputField(
                         controller: controller.nameController,
                         hintText: 'Nome completo',
-                        iconUrl:
-                            'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/fb4753ea2332e5437e9408b1130e2de59f521eb7?placeholderIfAbsent=true',
+                        iconUrl: "assets/images/tool.svg",
                       ),
                       const SizedBox(height: 20),
 
@@ -95,8 +195,7 @@ class VendorFormScreen extends StatelessWidget {
                       FormInputField(
                         controller: controller.quantityController,
                         hintText: 'How many items you have',
-                        iconUrl:
-                            'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/a84a0bd6672e79c110437efd07915f43c5c1458f?placeholderIfAbsent=true',
+                        iconUrl: "assets/images/price.svg",
                         iconWidth: 14,
                       ),
                       const SizedBox(height: 20),
@@ -114,8 +213,7 @@ class VendorFormScreen extends StatelessWidget {
                       FormInputField(
                         controller: controller.priceController,
                         hintText: 'Enter price',
-                        iconUrl:
-                            'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/5ba60caad6eb7e1df41ad8cfaebe06628481be23?placeholderIfAbsent=true',
+                        iconUrl: "assets/images/price.svg",
                         iconWidth: 14,
                       ),
                       const SizedBox(height: 20),
@@ -165,36 +263,13 @@ class VendorFormScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 20),
-
-                      // Publish Button
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(217),
-                          color: const Color(0xFFF9761E),
-                        ),
-                        child: TextButton(
-                          onPressed: controller.publishItem,
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 23,
-                              horizontal: 70,
-                            ),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(217),
-                            ),
-                          ),
-                          child: const Text(
-                            'Publish',
-                            style: TextStyle(
-                              fontFamily: 'Josefin Sans',
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
+                      CustomButton(
+                        text: 'Publish',
+                        onPressed: (){
+                          Get.to(()=>UploadSuccessScreen());
+                        },
                       ),
+
                       const SizedBox(height: 41),
                     ],
                   ),
@@ -269,36 +344,6 @@ class FormInputField extends StatelessWidget {
   }
 }
 
-class ImageGallery extends StatelessWidget {
-  const ImageGallery({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final List<String> imageUrls = [
-      'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/5671a58cba5440f23b5cb7a9fde5de63c8fca2bd?placeholderIfAbsent=true',
-    ];
-
-    return Row(
-      children: imageUrls
-          .map(
-            (url) => Container(
-              margin: const EdgeInsets.only(right: 6),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(4),
-                child: CustomImageView(
-                  imagePath: url,
-                  width: 75,
-                  height: 50,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          )
-          .toList(),
-    );
-  }
-}
-
 class DropdownField extends StatefulWidget {
   const DropdownField({super.key});
 
@@ -331,8 +376,7 @@ class _DropdownFieldState extends State<DropdownField> {
               Row(
                 children: [
                   CustomImageView(
-                    imagePath:
-                        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/f172e9dc86845c3fccd2e1c14f9098dc5a85642f?placeholderIfAbsent=true',
+                    imagePath: "assets/images/calender.svg",
                     width: 24,
                     height: 24,
                   ),
@@ -348,12 +392,7 @@ class _DropdownFieldState extends State<DropdownField> {
                   ),
                 ],
               ),
-              CustomImageView(
-                imagePath:
-                'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/c6d652b80f01e6b68b1e604566302c9bd07d19f0?placeholderIfAbsent=true',
-                width: 24,
-                height: 24,
-              ),
+              Icon(Icons.keyboard_arrow_down_outlined, color: Colors.white),
             ],
           ),
         ),

@@ -57,7 +57,7 @@ class OtpVerificationScreen extends StatelessWidget {
                         // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(5, (index) {
+                          children: List.generate(6, (index) {
                             return Flexible(
                               child: Container(
                                 height: 55,
@@ -147,7 +147,6 @@ class OtpVerificationScreen extends StatelessWidget {
                     isLoading: controller.isButtonLoading.value,
                     onPressed: () async {
                       controller.isButtonLoading.value = true;
-                      // Combine email + OTP verification
                       final otp = controller.otpControllers.map((c) => c.text).join();
                       await controller.verifyForgetPasswordOtp(otp, email: email);
                       controller.isButtonLoading.value = false;

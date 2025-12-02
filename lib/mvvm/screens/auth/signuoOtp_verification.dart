@@ -151,7 +151,7 @@ class SignUpOtpVerification extends StatelessWidget {
                       controller.otpControllers.map((c) => c.text).join();
 
                       // Call verification method
-                      await controller.verifyForgetPasswordOtp(
+                      await controller.verifyPasswordOtp(
                         otp,
                         email: email,
                       );
