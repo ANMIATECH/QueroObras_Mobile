@@ -1,332 +1,217 @@
 import '../../const/export.dart';
-
-import 'dart:math' as math;
-
+import 'package:slide_to_confirm/slide_to_confirm.dart';
 
 class WelcomeScreen extends StatelessWidget {
   const WelcomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final _ = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: CustomColor.white,
-        body: Column(
-          children: [
-            // TOP SECTION – Text + Image
-            Expanded(
-              flex: 3,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                    child: Text(
-                      'Bem-vindo ao Quero Obras, sua melhor ferramenta para todas as necessidades do seu ciclo de vida.',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        fontFamily: 'Josefin Sans',
-                        fontSize: 18,
-                        fontWeight: FontWeight.w300,
-                        color: const Color(0xFF16577F),
-                        height: 1.2,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-                  CustomImageView(
-                    imagePath: CustomImage.welcomeLogo,
-                  ),
-                ],
-              ),
-            ),
-
-            // BOTTOM SECTION – Orange Shape, Border, Button
-            Expanded(
-              flex: 4,
-              child: Stack(
-                alignment: Alignment.center,
-                children: [
-                  // 🟧 Rotated orange background
-                  Positioned(
-                    left: -55,
-                    top: 0,
-                    child: Transform.rotate(
-                      angle: 84.329 * math.pi / 180,
-                      child: Container(
-                        width: 474,
-                        height: 771,
-                        decoration: const BoxDecoration(
-                          color: CustomColor.sprimary,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // 🟠 Dashed border (rotated)
-                  Positioned(
-                    left: -51,
-                    top: 5,
-                    child: Transform.rotate(
-                      angle: 84.329 * math.pi / 180,
-                      child: CustomPaint(
-                        size: const Size(474, 744),
-                        painter: DashedBorderPainter(
-                          color: Colors.white,
-                          strokeWidth: 5,
-                          dashWidth: 10,
-                          dashSpace: 6,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                  // ✳️ Foreground content
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: CustomColor.white,
+      body: Stack(
+        children: [
+          Column(
+            children: <Widget>[
+              // TOP CONTENT
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 230),
-                        child: Text(
-                          CustomText.deslize,
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.josefinSans(
-                            fontSize: 32,
-                            fontWeight: FontWeight.w400,
-                            color: CustomColor.white,
-                            height: 1.2,
+                      verticalSpace(screenHeight * 0.05),
+
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  CustomText.bemVindo,
+                                  textAlign: TextAlign.center,
+                                  style: CustomFontStyle.developedByStyle(
+                                    context,
+                                  ).copyWith(color: CustomColor.primaryBlue),
+                                ),
+                                OnboardingIllustration(
+                                  imagePath: CustomImage.welcomeLogo,
+                                  screenWidth: screenWidth,
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                      const SizedBox(height: 30),
-
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: SlideButton(),
-                      ),
-
-                      const SizedBox(height: 20),
-                      Text(
-                        CustomText.desenvolvido,
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.josefinSans(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          color: CustomColor.white.withValues(alpha: 0.5),
                         ),
                       ),
                     ],
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
 
-class DashedBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
+              // BOTTOM CURVED SECTION
+              Expanded(
+                flex: 4,
+                child: Stack(
+                  children: [
+                    TextSeperatedTwo(title: CustomText.deslizeO),
 
-  const DashedBorderPainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.dashWidth,
-    required this.dashSpace,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
-
-    // Create dashed path
-    final path = Path()
-      ..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
-
-    final dashPath = Path();
-    for (final metric in path.computeMetrics()) {
-      double distance = 0.0;
-      while (distance < metric.length) {
-        dashPath.addPath(metric.extractPath(distance, distance + dashWidth), Offset.zero);
-        distance += dashWidth + dashSpace;
-      }
-    }
-
-    canvas.drawPath(dashPath, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-
-class SlideButton extends StatelessWidget {
-  const SlideButton({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(OnboardingController());
-    final screenWidth = MediaQuery.of(context).size.width;
-    final buttonWidth = (screenWidth - 40).clamp(300.0, 400.0);
-
-    return Container(
-      width: buttonWidth,
-      height: 72,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(100),
-      ),
-      child: Stack(
-        children: [
-          // Background text and arrows
-          Positioned.fill(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Começar',
-                  style: TextStyle(
-                    fontFamily: 'Josefin Sans',
-                    fontSize: 20,
-                    fontWeight: FontWeight.w500,
-                    color: const Color(0xFF00258B).withOpacity(0.56),
-                  ),
+                    // ANGLED DASHED LINE OVER THE SHAPE
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 40, // only paint area where dash should be
+                      child: CustomPaint(
+                        painter: SlantedDashedLinePainterTwo(),
+                      ),
+                    ),
+                  ],
                 ),
-                const SizedBox(width: 20),
-                CustomPaint(
-                  size: const Size(29, 12),
-                  painter: ArrowIconsPainter(),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
 
-          // Sliding button
-          Obx(() {
-            return Positioned(
-              left: 7 + controller.dragPosition.value,
-              top: 11,
-              child: GestureDetector(
-                onPanUpdate: (details) =>
-                    controller.onPanUpdate(details, buttonWidth),
-                onPanEnd: (_) => controller.onPanEnd(buttonWidth),
-                child: Container(
-                  width: 50,
-                  height: 50,
-                  decoration: const BoxDecoration(
-                    color: Color(0xFFF9761E),
-                    shape: BoxShape.circle,
-                  ),
-                  child: Stack(
-                    children: [
-                      Positioned.fill(
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.55),
-                            shape: BoxShape.circle,
-                          ),
-                        ),
-                      ),
-                      Center(
-                        child: CustomPaint(
-                          size: const Size(30, 30),
-                          painter: SendIconPainter(),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          }),
+          // STATUS BAR PLACEHOLDER
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 44,
+            child: Container(color: CustomColor.white),
+          ),
         ],
       ),
     );
   }
 }
 
-// Arrow painter
-class ArrowIconsPainter extends CustomPainter {
+class TextSeperatedTwo extends StatelessWidget {
+  const TextSeperatedTwo({super.key, required this.title});
+
+  final String title;
+
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()
-      ..color = const Color(0xFF16577F).withOpacity(0.4)
-      ..style = PaintingStyle.stroke
-      ..strokeCap = StrokeCap.round
-      ..strokeJoin = StrokeJoin.round;
+  Widget build(BuildContext context) {
+    return ClipPath(
+      clipper: BottomCurveClipperTwo(),
+      child: Container(
+        width: double.infinity,
+        color: CustomColor.primaryBlue,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: CustomFontStyle.onboardingHeading(context),
+              ),
+              const SizedBox(height: 32),
 
-    paint.strokeWidth = 1.33333;
-    Path path1 = Path();
-    path1.moveTo(0.666748, 3);
-    path1.lineTo(4.66675, 7);
-    path1.lineTo(0.666748, 11);
-    canvas.drawPath(path1, paint);
+              // 🚀 REPLACED PRIMARY BUTTON WITH SlideToConfirm 🚀
+              ConfirmationSlider(
+                // The widget to display inside the slider
+                text: CustomText.comecar,
 
-    paint.strokeWidth = 1.5;
-    Path path2 = Path();
-    path2.moveTo(10.6667, 2.5);
-    path2.lineTo(15.1667, 7);
-    path2.lineTo(10.6667, 11.5);
-    canvas.drawPath(path2, paint);
+                textStyle: CustomFontStyle.developedByStyle(context).copyWith(
+                  color: CustomColor.primaryBlueSlide.withValues(alpha: 0.56),
+                ),
+                // The color of the slider's track (the blue part)
+                backgroundColor: CustomColor.white,
+                // The color of the slider's background when confirmed
+                foregroundColor: CustomColor.primary,
+                // The color of the slider's icon (the orange part)
+                iconColor: CustomColor.white,
 
-    paint.strokeWidth = 2.0;
-    Path path3 = Path();
-    path3.moveTo(21.1667, 1);
-    path3.lineTo(27.1667, 7);
-    path3.lineTo(21.1667, 13);
-    canvas.drawPath(path3, paint);
+                height: 60,
+
+                onConfirmation: () {
+                                    Navigator.of(context).pushNamed(AppRoutes.login);
+
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              Text(
+                CustomText.developedBy,
+                style: CustomFontStyle.developedByStyle(
+                  context,
+                ).copyWith(color: CustomColor.white.withValues(alpha: 0.5)),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-// Send icon painter
-class SendIconPainter extends CustomPainter {
+class BottomCurveClipperTwo extends CustomClipper<Path> {
   @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint()..color = Colors.white..style = PaintingStyle.fill;
+  Path getClip(Size size) {
+    Path path = Path();
 
-    final centerX = size.width / 2;
-    final centerY = size.height / 2;
+    // Top-left lower
+    path.moveTo(0, 40);
 
-    final path = Path();
-    path.moveTo(centerX - 8, centerY - 6);
-    path.lineTo(centerX + 8, centerY);
-    path.lineTo(centerX - 8, centerY + 6);
-    path.lineTo(centerX - 4, centerY);
+    // Top-right higher
+    path.lineTo(size.width, 18);
+
+    // Down & around
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
     path.close();
-    canvas.drawPath(path, paint);
 
-    final detailPaint = Paint()
-      ..color = Colors.white.withOpacity(0.55)
-      ..style = PaintingStyle.fill;
+    return path;
+  }
 
-    final detailPath = Path();
-    detailPath.moveTo(centerX - 6, centerY - 4);
-    detailPath.lineTo(centerX + 6, centerY);
-    detailPath.lineTo(centerX - 6, centerY + 4);
-    detailPath.lineTo(centerX - 2, centerY);
-    detailPath.close();
-    canvas.drawPath(detailPath, detailPaint);
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+class SlantedDashedLinePainterTwo extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    const dashWidth = 8.0;
+    const dashSpace = 6.0;
+
+    final paint = Paint()
+      ..color = CustomColor.primaryBlue
+      ..strokeWidth = 2;
+
+    // Start + end = MUST match the clipper curve
+    const double yLeft = 28;
+    const double yRight = 10;
+
+    final double dx = size.width;
+    final double dy = yRight - yLeft;
+    final double lineLength = sqrt(dx * dx + dy * dy);
+
+    final double angle = atan2(dy, dx);
+
+    double distance = 0;
+
+    while (distance < lineLength) {
+      final double x1 = distance * cos(angle);
+      final double y1 = yLeft + distance * sin(angle);
+
+      final double x2 = (distance + dashWidth) * cos(angle);
+      final double y2 = yLeft + (distance + dashWidth) * sin(angle);
+
+      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), paint);
+
+      distance += dashWidth + dashSpace;
+    }
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
-
-
-
-
-

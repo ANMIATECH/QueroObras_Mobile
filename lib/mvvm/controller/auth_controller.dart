@@ -244,7 +244,7 @@ class AuthController extends GetxController {
           message: "Documents uploaded successfully",
           type: SnackbarType.success,
         );
-        Get.offAllNamed(RouteNameV1.bottomNavCpf);
+        // Get.offAllNamed(RouteNameV1.bottomNavCpf);
       } else {
         String errorMsg = "Upload failed";
 
@@ -335,7 +335,7 @@ class AuthController extends GetxController {
           message: "Documents uploaded successfully",
           type: SnackbarType.success,
         );
-        Get.offAllNamed(RouteNameV1.bottomNav);
+        // Get.offAllNamed(RouteNameV1.bottomNav);
       } else {
         String errorMsg = "Upload failed";
 

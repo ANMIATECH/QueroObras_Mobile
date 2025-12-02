@@ -67,7 +67,7 @@ class MaterialShopScreen extends StatelessWidget {
                           ),
                           itemBuilder: (context, index) => ProductCardM(
                             onTap: (){
-                              Get.toNamed(RouteNameV1.productDetail);
+                              // Get.toNamed(RouteNameV1.productDetail);
 
                             },
 
@@ -103,7 +103,7 @@ class MaterialShopScreen extends StatelessWidget {
                           ),
                           itemBuilder: (context, index) => ProductCardM(
                             onTap: (){
-                              Get.toNamed(RouteNameV1.productDetail);
+                              // Get.toNamed(RouteNameV1.productDetail);
 
                             },
 
@@ -139,7 +139,7 @@ class MaterialShopScreen extends StatelessWidget {
                           ),
                           itemBuilder: (context, index) => ProductCardM(
                             onTap: (){
-                              Get.toNamed(RouteNameV1.productDetail);
+                              // Get.toNamed(RouteNameV1.productDetail);
 
                             },
                             imageUrl: "assets/images/wooden_hammer.png",

@@ -7,7 +7,7 @@ Future<void> main() async {
   Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -20,31 +20,33 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        final String? token = StorageService.has(StorageDesign.token)
-            ? StorageService.read(StorageDesign.token)
-            : null;
+        // final String? token = StorageService.has(StorageDesign.token)
+        //     ? StorageService.read(StorageDesign.token)
+        //     : null;
 
-        final String? userStatus = StorageService.has("user_status")
-            ? StorageService.read("user_status")
-            : null;
-        String initialRoute = RouteNameV1.getStarted;
+        // final String? userStatus = StorageService.has("user_status")
+        //     ? StorageService.read("user_status")
+        //     : null;
+        // String initialRoute = RouteNameV1.getStarted;
 
-        if (token != null && token.isNotEmpty) {
-          if (userStatus == "cpf") {
-            initialRoute = RouteNameV1.bottomNavCpf;
-          } else if (userStatus == "cnpj") {
-            initialRoute = RouteNameV1.bottomNav;
-          }
-        }
+        // if (token != null && token.isNotEmpty) {
+        //   if (userStatus == "cpf") {
+        //     initialRoute = RouteNameV1.bottomNavCpf;
+        //   } else if (userStatus == "cnpj") {
+        //     initialRoute = RouteNameV1.bottomNav;
+        //   }
+        // }
 
         return GetMaterialApp(
           title: 'Quero Obra',
           debugShowCheckedModeBanner: false,
           theme: CAppTheme.lightMoodTheme,
           darkTheme: CAppTheme.darkMoodTheme,
-          getPages: RouteNameV1.getPages(),
+          // 1. Define the initial route (the screen that loads first)
+          initialRoute: AppRoutes.onboarding,
 
-          initialRoute: initialRoute,
+          // 2. Define the available routes using a Map<String, WidgetBuilder>
+          routes: AppRoutes.routes,
         );
       },
     );

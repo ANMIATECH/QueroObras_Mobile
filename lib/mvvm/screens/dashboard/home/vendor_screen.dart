@@ -21,7 +21,7 @@ class VenderScreen extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                Get.toNamed(RouteNameV1.createVender);
+                // Get.toNamed(RouteNameV1.createVender);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 15.0),
@@ -48,7 +48,7 @@ class VenderScreen extends StatelessWidget {
               // Add new item button
               GestureDetector(
                 onTap: (){
-                  Get.toNamed(RouteNameV1.createVender);
+                  // Get.toNamed(RouteNameV1.createVender);
 
                 },
                 child: Container(
@@ -130,7 +130,7 @@ class VenderScreen extends StatelessWidget {
                       imageUrl:
                           'assets/images/cement.png',
                       onTap: (){
-                        Get.toNamed(RouteNameV1.venderDetail);
+                        // Get.toNamed(RouteNameV1.venderDetail);
 
                       },
                     ),

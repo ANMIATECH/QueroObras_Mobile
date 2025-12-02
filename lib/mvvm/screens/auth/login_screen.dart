@@ -5,231 +5,44 @@ class LoginScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final lController = Get.put(LoginController());
+    // Note: Removed all references to 'ref', 'controller', and 'state'
+    // as per the requirement to omit the controller pattern.
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Container(
-            width: double.infinity,
-            constraints: BoxConstraints(
-              minHeight:
-                  MediaQuery.of(context).size.height -
-                  MediaQuery.of(context).padding.top,
-            ),
+      resizeToAvoidBottomInset: true,
+      backgroundColor: CustomColor.background,
+      body: GestureDetector(
+        // Tap outside TextField to close keyboard
+        onTap: () => FocusScope.of(context).unfocus(),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 81),
-                      Container(
-                        width: double.infinity,
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        child: Column(
-                          children: [
-                            Column(
-                              children: [
-                                SizedBox(
-                                  width: 128,
-                                  height: 83.9,
-                                  child: CustomImageView(
-                                    imagePath: "assets/images/logo.png",
-                                  ),
-                                ),
-                                const SizedBox(height: 21),
-                                Container(
-                                  width: 187,
-                                  height: 47,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(23.37),
-                                    color: const Color(0x0016577F),
-                                  ),
-                                  child: const Center(
-                                    child: Text(
-                                      CustomText.entrar,
-                                      style: TextStyle(
-                                        color: CustomColor.primary,
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'Josefin Sans',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 41),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  'Endereço de e-mail',
-                                  style: TextStyle(
-                                    color: CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: lController.emailController,
-                                  hintText: 'exemplo@dominio.com',
-                                  icon: CustomImageView(
-                                    imagePath: "assets/images/input_email.svg",
-                                  ),
-                                  keyboardType: TextInputType.emailAddress,
-                                ),
-                                const SizedBox(height: 14),
-                                const Text(
-                                  'Senha',
-                                  style: TextStyle(
-                                    color:CustomColor.sprimary,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w700,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                                const SizedBox(height: 14),
-                                CustomInputField(
-                                  controller: lController.passwordController,
-                                  hintText: '*********',
-                                  icon: CustomImageView(
-                                    imagePath:
-                                        "assets/images/input_password.svg",
-                                  ),
-                                  isPassword: true,
-                                ),
-                                const SizedBox(height: 14),
-
-                                // Remember me + Forgot password
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    ValueListenableBuilder<bool>(
-                                      valueListenable:
-                                      lController.rememberMeNotifier,
-                                      builder: (context, value, _) {
-                                        return Row(
-                                          children: [
-                                            GestureDetector(
-                                              onTap: () =>
-                                              lController
-                                                          .rememberMeNotifier
-                                                          .value =
-                                                      !value,
-                                              child: Container(
-                                                width: 16,
-                                                height: 16,
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                    color: const Color(
-                                                      0xFFB1B1B1,
-                                                    ),
-                                                    width: 2,
-                                                  ),
-                                                  color: value
-                                                      ? CustomColor.sprimary
-                                                      : Colors.transparent,
-                                                ),
-                                                child: value
-                                                    ? const Icon(
-                                                        Icons.check,
-                                                        size: 10,
-                                                        color: CustomColor.white,
-                                                      )
-                                                    : null,
-                                              ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                            const Text(
-                                              'Lembrar de mim',
-                                              style: TextStyle(
-                                                color: Color(0xFFB1B1B1),
-                                                fontSize: 14,
-                                                fontWeight: FontWeight.w600,
-                                                fontFamily: 'Josefin Sans',
-                                              ),
-                                            ),
-                                          ],
-                                        );
-                                      },
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        Get.toNamed(RouteNameV1.forgetPassword); // 👈🏽 Navigate using GetX route name
-
-                                      },
-                                      child: const Text(
-                                        'Esqueceu a senha?',
-                                        style: TextStyle(
-                                          color: CustomColor.sprimary,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: 'Josefin Sans',
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 34),
-                            Obx(() {
-                              return CustomButton(
-                                text: CustomText.entrar,
-                                isLoading: lController.isLoading.value,
-                                onPressed: lController.isFormValid.value
-                                    ? () {
-                                  FocusScope.of(context).unfocus();
-                                  lController.login();
-                                }
-                                    : null,
-                              );
-                            })
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 40),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          children: [
-                            const TextSpan(
-                              text: 'Não tem uma conta? ',
-                              style: TextStyle(
-                                color: Colors.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w400,
-                                fontFamily: 'Josefin Sans',
-                              ),
-                            ),
-                            TextSpan(
-                              text: 'Cadastrar-se',
-                              style: const TextStyle(
-                                color: Color(0xFFF9761E),
-                                fontSize: 14,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'Josefin Sans',
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () {
-                                  Get.toNamed(RouteNameV1.createAccount); // 👈🏽 Navigate using GetX route name
-                                },
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                verticalSpace(48), // Adjust as needed
+                _buildLogo(),
+                verticalSpace(32),
+                _buildTitle(context),
+                verticalSpace(24),
+                _buildEmailInput(context),
+                verticalSpace(16),
+                _buildPasswordInput(context),
+                verticalSpace(8),
+                _buildRememberAndForgot(context),
+                verticalSpace(32),
+                PrimaryButton(
+                  bgActive: CustomColor.primary,
+                  textColor: CustomColor.white,
+                  text: CustomText.enter,
+                  onPressed: () {
+                    // Navigator.of(context).pushNamed(AppRoutes.welcome);
+                  },
                 ),
+                verticalSpace(24),
+
+                _buildSignUpLink(context),
+                verticalSpace(24),
               ],
             ),
           ),
@@ -237,4 +50,168 @@ class LoginScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _buildLogo() {
+    // Assuming the logo is a local asset
+    return Image.asset(
+      CustomImage.welcomeLogo,
+      height: 60, // Adjust size based on image
+      errorBuilder: (context, error, stackTrace) =>
+          _buildLogoPlaceholder(context), // Fallback
+    );
+  }
+
+  Widget _buildLogoPlaceholder(BuildContext context) {
+    // Fallback widget if logo asset fails to load
+    return Container(
+      width: 60,
+      height: 60,
+      decoration: BoxDecoration(
+        color: CustomColor.primary.withValues(alpha: 0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: Text(
+          'QO',
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+            color: CustomColor.primary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTitle(BuildContext context) {
+    return Text(
+      CustomText.enter,
+      style: CustomFontStyle.primaryTitle(context).copyWith(fontSize: 18),
+    );
+  }
+
+  Widget _buildEmailInput(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          CustomText.emailAddress,
+          style: CustomFontStyle.body(context).copyWith(
+            fontWeight: FontWeight.w700,
+            color: CustomColor.primaryBlue,
+          ),
+        ),
+        verticalSpace(8),
+        CustomInputFieldLive(
+          hintText: 'exemplo@dominio.com',
+
+          prefixWidget: const Icon(
+            Icons.email_outlined,
+            color: CustomColor.hintText,
+          ),
+          keyboardType: TextInputType.emailAddress,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPasswordInput(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          CustomText.password,
+          style: CustomFontStyle.body(context).copyWith(
+            fontWeight: FontWeight.w700,
+            color: CustomColor.primaryBlue,
+          ),
+        ),
+        verticalSpace(8),
+        CustomInputFieldLive(
+          hintText: '*********',
+          prefixWidget: const Icon(
+            Icons.lock_outline,
+            color: CustomColor.hintText,
+          ),
+          keyboardType: TextInputType.text,
+          isPassword: true,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildRememberAndForgot(BuildContext context) {
+    // Using a simple Row for layout as Checkbox/State is removed
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            // Placeholder for Checkbox
+            Checkbox(
+              value: true, // Mock checked state
+              onChanged: (bool? newValue) {}, // Empty function
+              activeColor: CustomColor.primary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(4),
+              ),
+              visualDensity: VisualDensity.compact,
+            ),
+            Text(
+              CustomText.rememberMe,
+              style: CustomFontStyle.body(
+                context,
+              ).copyWith(fontSize: 14, color: CustomColor.textBlack),
+            ),
+          ],
+        ),
+        GestureDetector(
+          onTap: () {
+            // Handle forgot password tap
+          },
+          child: Text(
+            CustomText.forgotPassword,
+            style: CustomFontStyle.body(context).copyWith(
+              fontWeight: FontWeight.w700,
+              color: CustomColor.primaryBlue,
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSignUpLink(BuildContext context) {
+    return RichText(
+      textAlign: TextAlign.center,
+      text: TextSpan(
+        style: CustomFontStyle.body(context).copyWith(fontSize: 14),
+        children: [
+          TextSpan(
+            text: CustomText.dontHaveAccount,
+            style: CustomFontStyle.body(context).copyWith(
+              color: CustomColor.black,
+              fontSize: 16,
+              fontWeight: FontWeight.w300,
+            ),
+          ),
+          WidgetSpan(child: SizedBox(width: 4)),
+          TextSpan(
+            text: CustomText.signUp,
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.of(context).pushNamed(AppRoutes.registration);
+              },
+            style: CustomFontStyle.body(context).copyWith(
+              color: CustomColor.primary,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
+            // Add recognizer for navigation here if needed
+          ),
+        ],
+      ),
+    );
+  }
 }
+
+// A custom input field widget to match the design style

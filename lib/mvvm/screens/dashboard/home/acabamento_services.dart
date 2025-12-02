@@ -111,7 +111,7 @@ class ServiceProvidersScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: (){
-                                Get.toNamed(RouteNameV1.serviceRequestScreen);
+                                // Get.toNamed(RouteNameV1.serviceRequestScreen);
 
                               },
                               child: ProviderCardA(

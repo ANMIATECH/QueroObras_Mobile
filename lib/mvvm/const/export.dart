@@ -11,7 +11,7 @@ export '../screens/dashboard/profile/profile_screen.dart';
 export '../controller/login_controller.dart';
 export '../screens/dashboard/profile/availability.dart';
 export '../screens/dashboard/profile/profile_edit.dart';
-
+export 'dart:math';
 export '../screens/dashboard/profile/review.dart';
 
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
@@ -45,7 +45,7 @@ export '../controller/auth_controller.dart';
 export '../screens/auth/login_screen.dart';
 export '../screens/auth/registration.dart';
 export '../screens/auth/resetpassword.dart';
-export '../screens/onboarding/welcome_screen.dart' hide DashedBorderPainter;
+export '../screens/onboarding/welcome_screen.dart' ;
 export 'package:queroobras_mobile/mvvm/const/storage.dart';
 export 'package:queroobras_mobile/mvvm/responsive/responsive.dart';
 export 'package:queroobras_mobile/mvvm/const/images.dart';
@@ -63,3 +63,4 @@ export 'package:flutter/gestures.dart';
 export 'dart:io'; // Keep dart:io for HeaderValue
 export 'dart:async';
 export 'dart:convert';
+export 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;

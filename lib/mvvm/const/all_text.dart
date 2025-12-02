@@ -8,11 +8,27 @@ class CustomText {
   static const String encontre3 = 'Conecte-se com prestadores de serviço qualificados.';
   static const String encontre4 = 'Resolva qualquer problema de forma rápida e simples.';
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
-
+  static const String enter = 'Entrar';
+  static const String emailAddress = 'Endereço de e-mail';
+  static const String password = 'Senha';
+  static const String rememberMe = 'Lembrar de mim';
+  static const String forgotPassword = 'Esqueceu a senha?';
+  static const String orContinueWith = 'Ou continue com';
+  static const String dontHaveAccount = 'Não tem uma conta?';
+  static const String signUp = 'Cadastrar-se';
   static const String continuar = 'Continuar';
+  static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
   static const String cadastrar = 'Cadastrar-se';
   static const String desenvolvido = 'Desenvolvido por miatech.pro';
+
+   static const String screenTitle =
+      "Encontre o profissional certo para o seu problema.";
+  static const String continueButton = "Continuar";
+  static const String comecar= "Começar";
+  static const String developedBy = "Desenvolvido por miatech.pro";
+  static const String bemVindo = "Bem-vindo ao Quero Obras, sua melhor ferramenta para todas as necessidades do seu ciclo de vida.";
+
 
 
 }

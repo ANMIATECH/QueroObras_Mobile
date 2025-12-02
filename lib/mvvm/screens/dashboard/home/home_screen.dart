@@ -165,7 +165,7 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: (){
-                                Get.toNamed(RouteNameV1.materiaisServiceProvider);
+                                // Get.toNamed(RouteNameV1.materiaisServiceProvider);
 
                               },
                               child: AnimatedContainer(
@@ -208,7 +208,7 @@ class HomeScreen extends StatelessWidget {
                             const SizedBox(height: 10),
                             GestureDetector(
                               onTap: (){
-                                Get.toNamed(RouteNameV1.serviceScreen);
+                                // Get.toNamed(RouteNameV1.serviceScreen);
 
                               },
                               child: AnimatedContainer(
@@ -350,10 +350,10 @@ class HomeScreen extends StatelessWidget {
 
                                   if (token == null || token.isEmpty) {
                                     // User NOT logged in → go to Login
-                                    Get.toNamed(RouteNameV1.login);
+                                    // Get.toNamed(RouteNameV1.login);
                                   } else {
                                     // User IS logged in → go to Vender page
-                                    Get.toNamed(RouteNameV1.vender);
+                                    // Get.toNamed(RouteNameV1.vender);
                                   }
                                 },
                               ),
@@ -368,10 +368,10 @@ class HomeScreen extends StatelessWidget {
 
                                   if (token == null || token.isEmpty) {
                                     // User NOT logged in → go to Login
-                                    Get.toNamed(RouteNameV1.login);
+                                    // Get.toNamed(RouteNameV1.login);
                                   } else {
 
-                                    Get.toNamed(RouteNameV1.meuPedido);
+                                    // Get.toNamed(RouteNameV1.meuPedido);
                                   }
                                 },
 

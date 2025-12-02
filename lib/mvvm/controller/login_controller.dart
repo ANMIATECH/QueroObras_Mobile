@@ -311,7 +311,7 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        Get.offAllNamed(RouteNameV1.bottomNav);
+        // Get.offAllNamed(RouteNameV1.bottomNav);
 
         var token = message["data"]["token"];
         var userType = message["data"]["user"]["onboard_type"].toString();
@@ -386,7 +386,7 @@ class LoginController extends GetxController {
           );
 
           // Navigate to OTP screen, passing the email string
-          Get.toNamed(RouteNameV1.otpPin, arguments: userEmail);
+          // Get.toNamed(RouteNameV1.otpPin, arguments: userEmail);
 
           // Optionally clear controller after navigation
           resetEmailController.clear();
@@ -458,7 +458,7 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        Get.toNamed(RouteNameV1.otpPin, arguments: userEmail);
+        // Get.toNamed(RouteNameV1.otpPin, arguments: userEmail);
       }
       else {
         // Handle backend validation errors
@@ -531,7 +531,7 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        Get.toNamed(RouteNameV1.resetPasswordPin, arguments: email);
+        // Get.toNamed(RouteNameV1.resetPasswordPin, arguments: email);
 
         var token = message["data"]["token"];
         StorageDesign.createItem(StorageDesign.token, token);
@@ -622,11 +622,11 @@ class LoginController extends GetxController {
 
         if (userStatus == "cpf") {
           print("➡ Navigating to CPF Dashboard");
-          Get.offAllNamed(RouteNameV1.cpfProfile, arguments: email);
+          // Get.offAllNamed(RouteNameV1.cpfProfile, arguments: email);
 
         } else if (userStatus == "cnpj") {
           print("➡ Navigating to CNPJ Dashboard");
-          Get.offAllNamed(RouteNameV1.cnpjProfile, arguments: email);
+          // Get.offAllNamed(RouteNameV1.cnpjProfile, arguments: email);
         }
       }
 
@@ -850,7 +850,7 @@ class LoginController extends GetxController {
           type: SnackbarType.success,
         );
 
-        Get.offAllNamed(RouteNameV1.bottomNav);
+        // Get.offAllNamed(RouteNameV1.bottomNav);
       }
       // FAILED
       else {

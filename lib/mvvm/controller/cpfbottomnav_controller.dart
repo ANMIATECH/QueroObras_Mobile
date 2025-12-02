@@ -83,7 +83,7 @@ class CpfBottomNavScreen extends StatelessWidget {
                       StorageDesign.readItem(StorageDesign.token);
 
                       if (token == null || token.isEmpty) {
-                        Get.toNamed(RouteNameV1.login);
+                        // Get.toNamed(RouteNameV1.login);
                       } else {
                         controller.changeIndex(2);
                       }
@@ -115,7 +115,7 @@ class CpfBottomNavScreen extends StatelessWidget {
 
                     // Other tabs require login
                     if (token == null || token.isEmpty) {
-                      Get.toNamed(RouteNameV1.login);
+                      // Get.toNamed(RouteNameV1.login);
                       return;
                     }
 

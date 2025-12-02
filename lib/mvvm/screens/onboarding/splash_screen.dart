@@ -1,253 +1,284 @@
 import '../../const/export.dart';
 
-import '../../const/export.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
+// Define the content for each slide
+class OnboardingSlideData {
+  final String imagePath;
+  final String title;
 
-class OnboardingScreen extends StatelessWidget {
+  const OnboardingSlideData({required this.imagePath, required this.title});
+}
+
+const List<OnboardingSlideData> slideData = [
+  OnboardingSlideData(
+    imagePath: CustomImage.onboarding1,
+    title: CustomText.encontre,
+  ),
+  OnboardingSlideData(
+    imagePath: CustomImage.onboarding2,
+    title: CustomText.encontre2,
+  ),
+  OnboardingSlideData(
+    imagePath: CustomImage.onboarding3,
+    title: CustomText.encontre3,
+  ),
+  OnboardingSlideData(
+    imagePath: CustomImage.onboarding4,
+    title: CustomText.encontre4,
+  ),
+];
+
+// --- END MOCK CONSTANTS ---
+
+class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final controller = Get.put(OnboardingController());
-    final screenWidth = MediaQuery.of(context).size.width;
-    final orientation = MediaQuery.of(context).orientation;
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
+}
 
-    return SafeArea(
-      child: Scaffold(
-        body: orientation == Orientation.portrait
-            ? _buildPortraitLayout(context, controller, screenWidth)
-            : _buildLandscapeLayout(context, controller, screenWidth),
+class _OnboardingScreenState extends State<OnboardingScreen> {
+  // Page controller to manage auto-sliding and page tracking
+  late final PageController _pageController;
+  int _currentPage = 0;
+  final Duration _slideDuration = const Duration(seconds: 4);
+  final Duration _animationDuration = const Duration(milliseconds: 500);
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _startAutoSlide();
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _startAutoSlide() {
+    Future.delayed(_slideDuration, () {
+      if (!mounted) return;
+
+      int nextPage = (_currentPage + 1) % slideData.length;
+
+      _pageController
+          .animateToPage(
+            nextPage,
+            duration: _animationDuration,
+            curve: Curves.easeIn,
+          )
+          .then((_) {
+            // Recursively call the function to continue the sliding cycle
+            _startAutoSlide();
+          });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    return Scaffold(
+      backgroundColor: CustomColor.white,
+      body: Stack(
+        children: [
+          Column(
+            children: <Widget>[
+              // TOP CONTENT
+              Expanded(
+                flex: 5,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      verticalSpace(screenHeight * 0.05),
+                      _buildProgressBar(_currentPage / (slideData.length - 1)),
+                      verticalSpace(screenHeight * 0.05),
+
+                      Expanded(
+                        child: Center(
+                          child: Padding(
+                            padding: const EdgeInsets.all(20.0),
+                            child: PageView.builder(
+                              controller: _pageController,
+                              itemCount: slideData.length,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  _currentPage = index;
+                                });
+                              },
+                              itemBuilder: (context, index) => SvgPicture.asset(
+                                slideData[index].imagePath,
+                                width: screenWidth * 0.6,
+                                height: screenWidth * 0.6,
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              // BOTTOM CURVED SECTION
+              Expanded(
+                flex: 4,
+                child: Stack(
+                  children: [
+                    TextSeperated(title: slideData[_currentPage].title),
+
+                    // ANGLED DASHED LINE OVER THE SHAPE
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 40, // only paint area where dash should be
+                      child: CustomPaint(painter: SlantedDashedLinePainter()),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+
+          // STATUS BAR PLACEHOLDER
+          Positioned(
+            top: 0,
+            left: 0,
+            right: 0,
+            height: 44,
+            child: Container(color: Colors.white),
+          ),
+        ],
       ),
     );
   }
 
-  // ===================== PORTRAIT LAYOUT =====================
-  Widget _buildPortraitLayout(
-      BuildContext context, OnboardingController controller, double screenWidth) {
+  Widget _buildProgressBar(double progress) {
     return Column(
       children: [
-        Expanded(
-          flex: 3,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Obx(() => CustomProgressIndicator(width: screenWidth * controller.getProgress())),
-              const SizedBox(height: 40),
-              Obx(() => SizedBox(
-                width: 250,
-                height: 250,
-                child: CustomImageView(
-                    imagePath: controller.images[controller.currentStep.value]),
-              )),
-            ],
-          ),
-        ),
-
-        // Bottom section
-        Expanded(
-          flex: 4,
-          child: _buildBottomSection(context, controller),
-        ),
-      ],
-    );
-  }
-
-  // ===================== LANDSCAPE LAYOUT =====================
-  Widget _buildLandscapeLayout(
-      BuildContext context, OnboardingController controller, double screenWidth) {
-    return Row(
-      children: [
-        Expanded(
-          flex: 3,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Obx(() => CustomProgressIndicator(width: screenWidth * 0.4 * controller.getProgress())),
-              const SizedBox(height: 20),
-              Obx(() => SizedBox(
-                width: 180,
-                height: 180,
-                child: CustomImageView(
-                    imagePath: controller.images[controller.currentStep.value]),
-              )),
-            ],
-          ),
-        ),
-        Expanded(
-          flex: 4,
-          child: _buildBottomSection(context, controller),
-        ),
-      ],
-    );
-  }
-
-  // ===================== BOTTOM SECTION =====================
-  Widget _buildBottomSection(BuildContext context, OnboardingController controller) {
-    return Stack(
-      alignment: Alignment.center,
-      children: [
-        // Rotated orange background
-        Positioned(
-          left: -55,
-          top: 0,
-          child: Transform.rotate(
-            angle: 84.329 * 3.14159 / 180,
-            child: Container(
-              width: 474,
-              height: 771,
-              decoration: const BoxDecoration(color: CustomColor.primary),
-            ),
-          ),
-        ),
-
-        // Dashed border
-        Positioned(
-          left: -51,
-          top: 5,
-          child: Transform.rotate(
-            angle: 84.329 * 3.14159 / 180,
-            child: CustomPaint(
-              size: const Size(474, 744),
-              painter: DashedBorderPainter(
-                color: CustomColor.primary,
-                strokeWidth: 5,
-                dashWidth: 10,
-                dashSpace: 6,
-              ),
-            ),
-          ),
-        ),
-
-        // Foreground content
-        Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                  top: MediaQuery.of(context).size.height * 0.25),
-              child: Obx(() => Text(
-                controller.texts[controller.currentStep.value],
-                textAlign: TextAlign.center,
-                style: GoogleFonts.josefinSans(
-                  fontSize: 32,
-                  fontWeight: FontWeight.w400,
-                  color: CustomColor.white,
-                  height: 1.2,
-                ),
-              )),
-            ),
-            const SizedBox(height: 30),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              child: Obx(() => CustomOnboardButton(
-                isLoading: controller.isButtonLoading.value,
-                width: double.infinity,
-                height: 65,
-                text: CustomText.continuar,
-                onPressed: () async {
-                  await controller.continueToNext();
-                },
-              )),
-            ),
-            const SizedBox(height: 20),
-            Text(
-              CustomText.desenvolvido,
-              textAlign: TextAlign.center,
-              style: GoogleFonts.josefinSans(
-                fontSize: 14,
-                fontWeight: FontWeight.w400,
-                color: CustomColor.white.withValues(alpha: 0.5),
-              ),
-            ),
-          ],
+        verticalSpace(8),
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: CustomColor.borderGrey,
+          valueColor: AlwaysStoppedAnimation<Color>(CustomColor.primary),
+          minHeight: 6,
+          borderRadius: BorderRadius.circular(3),
         ),
       ],
     );
   }
 }
 
-// ===================== CUSTOM WIDGETS =====================
+class TextSeperated extends StatelessWidget {
+  const TextSeperated({super.key, required this.title});
 
-class CustomProgressIndicator extends StatelessWidget {
-  final double width;
-
-  const CustomProgressIndicator({super.key, required this.width});
+  final String title;
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          width: MediaQuery.of(context).size.width,
-          height: 10,
-          decoration: BoxDecoration(
-            color: CustomColor.pWhite,
-            borderRadius: BorderRadius.circular(30),
+    return ClipPath(
+      clipper: BottomCurveClipper(),
+      child: Container(
+        width: double.infinity,
+        color: CustomColor.primary,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: CustomFontStyle.onboardingHeading(context),
+              ),
+              const SizedBox(height: 32),
+
+              PrimaryButton(
+                text: CustomText.continueButton,
+                onPressed: () {
+                  Navigator.of(context).pushNamed(AppRoutes.welcome);
+                },
+              ),
+              const SizedBox(height: 16),
+
+              Text(
+                CustomText.developedBy,
+                style: CustomFontStyle.developedByStyle(
+                  context,
+                ).copyWith(color: CustomColor.white.withValues(alpha: 0.5)),
+              ),
+            ],
           ),
         ),
-        Container(
-          width: width,
-          height: 10,
-          decoration: BoxDecoration(
-            color: CustomColor.primary,
-            borderRadius: BorderRadius.circular(30),
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
 
+class BottomCurveClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
 
+    // Top-left lower
+    path.moveTo(0, 40);
 
+    // Top-right higher
+    path.lineTo(size.width, 18);
 
-class DashedBorderPainter extends CustomPainter {
-  final Color color;
-  final double strokeWidth;
-  final double dashWidth;
-  final double dashSpace;
+    // Down & around
+    path.lineTo(size.width, size.height);
+    path.lineTo(0, size.height);
+    path.close();
 
-  DashedBorderPainter({
-    required this.color,
-    required this.strokeWidth,
-    required this.dashWidth,
-    required this.dashSpace,
-  });
+    return path;
+  }
 
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
+}
+
+class SlantedDashedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
+    const dashWidth = 8.0;
+    const dashSpace = 6.0;
+
     final paint = Paint()
-      ..color = color
-      ..strokeWidth = strokeWidth
-      ..style = PaintingStyle.stroke;
+      ..color = CustomColor.primary
+      ..strokeWidth = 2;
 
-    final path = Path()..addRect(Rect.fromLTWH(0, 0, size.width, size.height));
+    // Start + end = MUST match the clipper curve
+    const double yLeft = 28;
+    const double yRight = 10;
 
-    // Create a dashed path
-    final dashPath = _createDashedPath(path, dashWidth, dashSpace);
-    canvas.drawPath(dashPath, paint);
-  }
+    final double dx = size.width;
+    final double dy = yRight - yLeft;
+    final double lineLength = sqrt(dx * dx + dy * dy);
 
-  Path _createDashedPath(Path source, double dashWidth, double dashSpace) {
-    final Path dest = Path();
-    for (final PathMetric metric in source.computeMetrics()) {
-      double distance = 0.0;
-      while (distance < metric.length) {
-        final double nextDash = distance + dashWidth;
-        dest.addPath(metric.extractPath(distance, nextDash), Offset.zero);
-        distance = nextDash + dashSpace;
-      }
+    final double angle = atan2(dy, dx);
+
+    double distance = 0;
+
+    while (distance < lineLength) {
+      final double x1 = distance * cos(angle);
+      final double y1 = yLeft + distance * sin(angle);
+
+      final double x2 = (distance + dashWidth) * cos(angle);
+      final double y2 = yLeft + (distance + dashWidth) * sin(angle);
+
+      canvas.drawLine(Offset(x1, y1), Offset(x2, y2), paint);
+
+      distance += dashWidth + dashSpace;
     }
-    return dest;
   }
 
   @override
-  bool shouldRepaint(covariant DashedBorderPainter oldDelegate) {
-    return oldDelegate.color != color ||
-        oldDelegate.strokeWidth != strokeWidth ||
-        oldDelegate.dashWidth != dashWidth ||
-        oldDelegate.dashSpace != dashSpace;
-  }
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

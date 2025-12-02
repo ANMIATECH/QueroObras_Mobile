@@ -175,7 +175,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                     topLeft: Radius.circular(11),
                                   ),
                                     onTap: (){
-                                      Get.toNamed(RouteNameV1.materiaisServiceProvider);
+                                      // Get.toNamed(RouteNameV1.materiaisServiceProvider);
 
                                     }
 
@@ -190,7 +190,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                     topRight: Radius.circular(11),
                                   ),
                                   onTap: (){
-                                    Get.toNamed(RouteNameV1.ferramentasServiceProvider);
+                                    // Get.toNamed(RouteNameV1.ferramentasServiceProvider);
 
                                   }
                                 ),
@@ -208,7 +208,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                     bottomLeft: Radius.circular(11),
                                   ),
                                   onTap: (){
-                                    Get.toNamed(RouteNameV1.acabamentoServiceProvider);
+                                    // Get.toNamed(RouteNameV1.acabamentoServiceProvider);
 
                                   }
                                 ),
@@ -321,9 +321,9 @@ class CnpjHomeScreen extends StatelessWidget {
                               String? token = StorageDesign.readItem(StorageDesign.token);
 
                               if (token == null || token.isEmpty) {
-                                Get.toNamed(RouteNameV1.login);
+                                // Get.toNamed(RouteNameV1.login);
                               } else {
-                                Get.toNamed(RouteNameV1.vender);
+                                // Get.toNamed(RouteNameV1.vender);
                               }
                             },
                           ),
