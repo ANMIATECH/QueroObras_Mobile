@@ -44,8 +44,8 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                           shape: BoxShape.circle,
                           image: controller.profileImage.value != null
                               ? DecorationImage(
-                            image: FileImage(
-                                controller.profileImage.value!),
+                            image:
+                            FileImage(controller.profileImage.value!),
                             fit: BoxFit.cover,
                           )
                               : null,
@@ -67,7 +67,7 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 const Text(
-                  'Upload your profile',
+                  'Envie sua foto de perfil',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15,
@@ -112,7 +112,7 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Upload CNPJ document ',
+                              'Envie o documento do CNPJ',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -132,18 +132,22 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                 const Spacer(),
 
                 Padding(
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20, vertical: 30),
                   child: CustomButton(
-                    text: 'Entrar',
+                    text: 'Continuar',
                     isLoading: controller.isLoading.value,
                     onPressed: () async {
                       if (controller.profileImage.value == null ||
                           controller.cnpjDocumentImage.value == null) {
-                        Get.snackbar("Error",
-                            "Please upload both profile picture and document");
+                        Get.snackbar(
+                          "Erro",
+                          "Por favor, envie a foto de perfil e o documento",
+                        );
+                        return;
                       }
-                  await    controller.uploadProfilePicNDocCnpj();
+
+                      await controller.uploadProfilePicNDocCnpj();
                     },
                   ),
                 ),
@@ -153,7 +157,8 @@ class CNPJProfileUploadScreen extends StatelessWidget {
         ),
       ),
     );
-  }}
+  }
+}
 
 class UploadIconPainter extends CustomPainter {
   @override

@@ -67,7 +67,7 @@ class ProfileUploadScreen extends StatelessWidget {
                 const SizedBox(height: 20),
 
                 const Text(
-                  'Upload your profile',
+                  'Envie sua foto de perfil',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 15,
@@ -112,7 +112,7 @@ class ProfileUploadScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             const Text(
-                              'Upload CNPJ document ',
+                              'Envie RG ou CNH',
                               style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 15,
@@ -135,16 +135,19 @@ class ProfileUploadScreen extends StatelessWidget {
                   padding:
                   const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
                   child: CustomButton(
-                    text: 'Entrar',
+                    text: 'Continuar',
                     isLoading: controller.isLoading.value,
                     onPressed: () {
-
                       if (controller.profileImage.value == null ||
                           controller.documentImage.value == null) {
-                        Get.snackbar("Error",
-                            "Please upload both profile picture and document");
+                        Get.snackbar(
+                          "Erro",
+                          "Por favor, envie a foto de perfil e o documento",
+                        );
+                        return;
                       }
-                           controller.uploadProfilePicNDoc();
+
+                      controller.uploadProfilePicNDoc();
                     },
                   ),
                 ),

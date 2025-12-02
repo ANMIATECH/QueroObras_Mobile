@@ -143,6 +143,7 @@ class RegistrationScreen extends StatelessWidget {
                                 fontSize: 15,
                                 fontWeight: FontWeight.w700,
                                 fontFamily: 'Josefin Sans',
+
                               )),
                           const SizedBox(height: 14),
                           CustomInputField(
@@ -180,6 +181,8 @@ class RegistrationScreen extends StatelessWidget {
                             controller: controllers.birthDateController,
                             hintText: 'dd/mm/aaaa',
                             icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                            keyboardType: TextInputType.datetime,
+
                           ),
                           const SizedBox(height: 14),
 

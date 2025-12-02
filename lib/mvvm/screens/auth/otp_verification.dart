@@ -147,7 +147,6 @@ class OtpVerificationScreen extends StatelessWidget {
                     isLoading: controller.isButtonLoading.value,
                     onPressed: () async {
                       controller.isButtonLoading.value = true;
-                      // Combine email + OTP verification
                       final otp = controller.otpControllers.map((c) => c.text).join();
                       await controller.verifyForgetPasswordOtp(otp, email: email);
                       controller.isButtonLoading.value = false;

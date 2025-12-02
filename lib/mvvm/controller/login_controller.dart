@@ -512,18 +512,15 @@ class LoginController extends GetxController {
       var response = await _apiManager.post(ApiUrl.verifyOtp, body, false);
       isLoading.value = false;
 
-      // 🔍 PRINT EVERYTHING
+
       print("📤 OTP VERIFY REQUEST BODY: $body");
       print("📩 RAW RESPONSE BODY: ${response.body}");
-      print("📩 STATUS CODE: ${response.statusCode}");
-      print("📩 HEADERS: ${response.headers}");
+
 
       var message;
       try {
         message = jsonDecode(response.body);
-        print("📩 DECODED JSON: $message");
       } catch (e) {
-        print("❌ JSON PARSE ERROR: $e");
         message = {"error": {"message": "Invalid server response"}};
       }
 
@@ -554,7 +551,6 @@ class LoginController extends GetxController {
           }
         }
 
-        print("❌ FINAL ERROR MESSAGE: $errorMessage");
 
         SnackbarUtil.showSnackbar(
           title: "Verification Failed",
@@ -595,20 +591,14 @@ class LoginController extends GetxController {
       var response = await _apiManager.post(ApiUrl.verifyOtp, body, false);
       isLoading.value = false;
 
-      // 🔍 PRINT EVERYTHING
-      print("-----------------------------------------------------------");
       print("📤 OTP VERIFY REQUEST BODY: $body");
       print("📩 RAW RESPONSE BODY: ${response.body}");
-      print("📩 STATUS CODE: ${response.statusCode}");
-      print("📩 HEADERS: ${response.headers}");
-      print("-----------------------------------------------------------");
+
 
       var message;
       try {
         message = jsonDecode(response.body);
-        print("📩 DECODED JSON: $message");
       } catch (e) {
-        print("❌ JSON PARSE ERROR: $e");
         message = {"error": {"message": "Invalid server response"}};
       }
 

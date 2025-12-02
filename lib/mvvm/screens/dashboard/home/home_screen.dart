@@ -370,7 +370,7 @@ class HomeScreen extends StatelessWidget {
                                     // User NOT logged in → go to Login
                                     Get.toNamed(RouteNameV1.login);
                                   } else {
-                                    // User IS logged in → go to Vender page
+
                                     Get.toNamed(RouteNameV1.meuPedido);
                                   }
                                 },
