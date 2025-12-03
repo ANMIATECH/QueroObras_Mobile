@@ -1,13 +1,11 @@
 import '../../const/export.dart';
 
-
 class RegistrationScreen extends StatelessWidget {
   const RegistrationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controllers = Get.put(LoginController());
-
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -20,109 +18,143 @@ class RegistrationScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Column(
               children: [
-
                 verticalSpace(48), // Adjust as needed
                 _buildLogo(),
                 verticalSpace(32),
                 _buildTitle(context),
                 verticalSpace(24),
 
-                Obx(() => CustomDropdownField(
-                  label:  CustomText.registrationType,
-                  selectedValue: controllers.selectedUserStatus.value,
-                  options: controllers.userStatusOptions,
-                  customIcon:                        const Icon(
-                  Icons.verified_user,
-                  color: CustomColor.hintText,
-                ),
+                Obx(
+                  () => CustomDropdownField(
+                    label: CustomText.registrationType,
+                    selectedValue: controllers.selectedUserStatus.value,
+                    options: controllers.userStatusOptions,
+                    customIcon: const Icon(
+                      Icons.verified_user,
+                      color: CustomColor.hintText,
+                    ),
 
-                  onChanged: (String newValue) {
-                    controllers.setUserStatus(newValue); // sync both selectedUserStatus & selectedDocumentType
-                  },
-                )),
+                    onChanged: (String newValue) {
+                      controllers.setUserStatus(
+                        newValue,
+                      ); // sync both selectedUserStatus & selectedDocumentType
+                    },
+                  ),
+                ),
                 const SizedBox(height: 14),
 
                 Obx(() {
                   final doc = controllers.selectedDocumentType.value;
 
                   if (doc == CustomText.cnpj) {
-
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(CustomText.name,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.name,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.fullNameController,
                           hintText: CustomText.fullName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.cooperateName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.cooperateName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.companyNameController,
                           hintText: CustomText.cooperateName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.legalRepName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.legalRepName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.legalRepNameController,
                           hintText: CustomText.hintLegalRep,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.tradeName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.tradeName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.tradeNameController,
                           hintText: CustomText.tradeName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.emailAddress,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-
-                            )),
+                        const Text(
+                          CustomText.emailAddress,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.emailController,
                           hintText: CustomText.hintEmail,
-                          icon:const Icon(
+                          prefixWidget: const Icon(
                             Icons.email_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -130,100 +162,129 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.motherName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.motherName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.motherNameController,
                           hintText: CustomText.motherName,
-                          icon:const Icon(
+                          prefixWidget: const Icon(
                             Icons.person_outline_outlined,
                             color: CustomColor.hintText,
                           ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.birthDate,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.birthDate,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.birthDateController,
                           hintText: CustomText.hintBirthDate,
-                          icon:const Icon(
+                          prefixWidget: const Icon(
                             Icons.calendar_today_outlined,
                             color: CustomColor.hintText,
                           ),
                           keyboardType: TextInputType.datetime,
-
                         ),
                         const SizedBox(height: 14),
 
-                        Obx(() => CustomDropdownField(
-                          label: CustomText.role,
-                          selectedValue: controllers.selectedRoleStatus.value == 0
-                              ? null
-                              : controllers.userRoleList
-                              .firstWhere(
-                                (e) => e.id == controllers.selectedRoleStatus.value,
-                            orElse: () => CategoryModel(id: 0, name: ""),
-                          )
-                              .name,
-                          options:
-                          controllers.userRoleList.map((item) => item.name).toList(),
-                          icon:
-                            Icons.verified_user,
+                        Obx(
+                          () => CustomDropdownField(
+                            label: CustomText.role,
+                            selectedValue:
+                                controllers.selectedRoleStatus.value == 0
+                                ? null
+                                : controllers.userRoleList
+                                      .firstWhere(
+                                        (e) =>
+                                            e.id ==
+                                            controllers
+                                                .selectedRoleStatus
+                                                .value,
+                                        orElse: () =>
+                                            CategoryModel(id: 0, name: ""),
+                                      )
+                                      .name,
+                            options: controllers.userRoleList
+                                .map((item) => item.name)
+                                .toList(),
+                            icon: Icons.verified_user,
 
-
-                          onChanged: (String selectedName) {
-                            final selected = controllers.userRoleList.firstWhere(
-                                  (item) => item.name == selectedName,
-                              orElse: () => CategoryModel(id: 0, name: ""),
-                            );
-                            controllers.selectedRoleStatus.value = selected.id;
-                          },
-                        )),
+                            onChanged: (String selectedName) {
+                              final selected = controllers.userRoleList
+                                  .firstWhere(
+                                    (item) => item.name == selectedName,
+                                    orElse: () =>
+                                        CategoryModel(id: 0, name: ""),
+                                  );
+                              controllers.selectedRoleStatus.value =
+                                  selected.id;
+                            },
+                          ),
+                        ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.cnpj,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.cnpj,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.cnpjController,
                           hintText: CustomText.cnpj,
-                          icon:const Icon(
+                          prefixWidget: const Icon(
                             Icons.person_outline_outlined,
                             color: CustomColor.hintText,
                           ),
                           keyboardType: TextInputType.text,
                         ),
                         const SizedBox(height: 14),
-                        const Text(CustomText.cep,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.cep,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.cepController,
                           hintText: CustomText.cep,
-                          icon:const Icon(
+                          prefixWidget: const Icon(
                             Icons.person_outline_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -231,75 +292,93 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.stateRegistration,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.stateRegistration,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.stateRegistrationController,
                           hintText: CustomText.stateRegistration,
-                          icon:const Icon(
-                          Icons.person_outline_outlined,
-                  color: CustomColor.hintText,
-                  ),
-
+                          prefixWidget: const Icon(
+                            Icons.person_outline_outlined,
+                            color: CustomColor.hintText,
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.address,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.address,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.addressController,
                           hintText: CustomText.address,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.location_on_outlined,
                             color: CustomColor.hintText,
                           ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.houseNumber,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.houseNumber,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.phoneNumberController,
                           hintText: CustomText.houseNumber,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.phone,
                             color: CustomColor.hintText,
                           ),
                           keyboardType: TextInputType.number,
-
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.password,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.password,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.passwordController,
                           hintText: CustomText.password,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.lock_outline,
                             color: CustomColor.hintText,
                           ),
@@ -307,18 +386,23 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.confirmPassword,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.confirmPassword,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.confirmPasswordController,
                           hintText: CustomText.confirmPassword,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.lock_outline,
                             color: CustomColor.hintText,
                           ),
@@ -333,63 +417,89 @@ class RegistrationScreen extends StatelessWidget {
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(CustomText.name,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.name,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.fullNameController,
                           hintText: CustomText.fullName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.companyName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.companyName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.companyNameController,
                           hintText: CustomText.companyName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.motherName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.motherName,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.motherNameController,
                           hintText: CustomText.motherName,
-                          icon: CustomImageView(imagePath: "assets/images/input_name.svg"),
+                          prefixWidget: CustomImageView(
+                            imagePath: "assets/images/input_name.svg",
+                          ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.businessEmail,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.businessEmail,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.emailController,
                           hintText: CustomText.hintEmail,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.email_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -397,81 +507,108 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.address,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.address,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.addressController,
                           hintText: CustomText.address,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.location_on_outlined,
                             color: CustomColor.hintText,
                           ),
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.birthDate,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.birthDate,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.birthDateController,
                           hintText: CustomText.hintBirthDate,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.calendar_today_outlined,
                             color: CustomColor.hintText,
                           ),
                         ),
                         const SizedBox(height: 14),
 
-                        Obx(() => CustomDropdownField(
-                          label: CustomText.role,
-                          selectedValue: controllers.selectedRoleStatus.value == 0
-                              ? null
-                              : controllers.userRoleList
-                              .firstWhere(
-                                (e) => e.id == controllers.selectedRoleStatus.value,
-                            orElse: () => CategoryModel(id: 0, name: ""),
-                          )
-                              .name,
-                          options:
-                          controllers.userRoleList.map((item) => item.name).toList(),
-                          customIcon:                           const Icon(
-                  Icons.verified_user,
-                  color: CustomColor.hintText,
-                  ),
+                        Obx(
+                          () => CustomDropdownField(
+                            label: CustomText.role,
+                            selectedValue:
+                                controllers.selectedRoleStatus.value == 0
+                                ? null
+                                : controllers.userRoleList
+                                      .firstWhere(
+                                        (e) =>
+                                            e.id ==
+                                            controllers
+                                                .selectedRoleStatus
+                                                .value,
+                                        orElse: () =>
+                                            CategoryModel(id: 0, name: ""),
+                                      )
+                                      .name,
+                            options: controllers.userRoleList
+                                .map((item) => item.name)
+                                .toList(),
+                            customIcon: const Icon(
+                              Icons.verified_user,
+                              color: CustomColor.hintText,
+                            ),
 
-                  onChanged: (String selectedName) {
-                            final selected = controllers.userRoleList.firstWhere(
-                                  (item) => item.name == selectedName,
-                              orElse: () => CategoryModel(id: 0, name: ""),
-                            );
-                            controllers.selectedRoleStatus.value = selected.id;
-                          },
-                        )),
+                            onChanged: (String selectedName) {
+                              final selected = controllers.userRoleList
+                                  .firstWhere(
+                                    (item) => item.name == selectedName,
+                                    orElse: () =>
+                                        CategoryModel(id: 0, name: ""),
+                                  );
+                              controllers.selectedRoleStatus.value =
+                                  selected.id;
+                            },
+                          ),
+                        ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.cpf,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.cpf,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.cpfController,
                           hintText: CustomText.cpf,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.person_outline_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -479,18 +616,23 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.cep,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.cep,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.cepController,
                           hintText: CustomText.cep,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.person_outline_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -498,38 +640,47 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.houseNumber,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.houseNumber,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.phoneNumberController,
                           hintText: CustomText.houseNumber,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.phone,
                             color: CustomColor.hintText,
                           ),
                           keyboardType: TextInputType.number,
-
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.password,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.password,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
+                          isPhoneNumber: false,
+                          obscureText: false,
+
                           controller: controllers.passwordController,
                           hintText: CustomText.password,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.lock_outline,
                             color: CustomColor.hintText,
                           ),
@@ -537,18 +688,22 @@ class RegistrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 14),
 
-                        const Text(CustomText.confirmPassword,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            )),
+                        const Text(
+                          CustomText.confirmPassword,
+                          style: TextStyle(
+                            color: CustomColor.sprimary,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
                           controller: controllers.confirmPasswordController,
+                          isPhoneNumber: false,
+                          obscureText: false,
                           hintText: CustomText.confirmPassword,
-                          icon: const Icon(
+                          prefixWidget: const Icon(
                             Icons.lock_outline,
                             color: CustomColor.hintText,
                           ),
@@ -561,7 +716,6 @@ class RegistrationScreen extends StatelessWidget {
                   return const SizedBox.shrink();
                 }),
 
-
                 const SizedBox(height: 34),
                 Obx(() {
                   return AgreeInputDesign(
@@ -571,10 +725,12 @@ class RegistrationScreen extends StatelessWidget {
                 }),
                 const SizedBox(height: 34),
                 Obx(
-                      () => CustomButton(
+                  () => CustomButton(
                     text: CustomText.entrar,
                     isLoading: controllers.isLoading.value,
-                    isActive: controllers.agree.value,  // 🔥 button only active when checked
+                    isActive: controllers
+                        .agree
+                        .value, // 🔥 button only active when checked
                     onPressed: controllers.agree.value
                         ? () async => await controllers.signUp()
                         : null, // 🔒 prevents click
@@ -584,7 +740,6 @@ class RegistrationScreen extends StatelessWidget {
                 const SizedBox(height: 20),
                 _buildSignUpLink(context),
                 const SizedBox(height: 40),
-
               ],
             ),
           ),
@@ -631,8 +786,6 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 
-
-
   Widget _buildSignUpLink(BuildContext context) {
     return RichText(
       textAlign: TextAlign.center,
@@ -658,7 +811,8 @@ class RegistrationScreen extends StatelessWidget {
             recognizer: TapGestureRecognizer()
               ..onTap = () {
                 Navigator.of(context).pushNamed(AppRoutes.login);
-              },          ),
+              },
+          ),
         ],
       ),
     );
@@ -688,18 +842,11 @@ class AgreeInputDesign extends StatelessWidget {
             height: 18,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(5),
-              border: Border.all(
-                color: const Color(0xFFB1B1B1),
-                width: 2,
-              ),
+              border: Border.all(color: const Color(0xFFB1B1B1), width: 2),
               color: value ? const Color(0xFFF9761E) : Colors.transparent,
             ),
             child: value
-                ? const Icon(
-              Icons.check,
-              size: 14,
-              color: Colors.white,
-            )
+                ? const Icon(Icons.check, size: 14, color: Colors.white)
                 : null,
           ),
           const SizedBox(width: 10),

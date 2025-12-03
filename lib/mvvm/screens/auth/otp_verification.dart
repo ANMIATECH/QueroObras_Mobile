@@ -1,27 +1,37 @@
 import '../../const/export.dart';
 
 class OtpVerificationScreen extends StatelessWidget {
-  final String email;
-
-  const OtpVerificationScreen({super.key, required this.email});
+  const OtpVerificationScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     final LoginController controller = Get.find<LoginController>();
+
+    // 1. Retrieve the arguments
+    final arguments = ModalRoute.of(context)?.settings.arguments;
+
+    // 2. Safely cast the arguments to the expected Map type.
+    // Use a null-aware operator (`??`) to provide an empty Map if arguments are null or the wrong type.
+    final Map<String, dynamic> data = arguments is Map<String, dynamic>
+        ? arguments
+        : {};
+
+    // 3. Access the values by key, providing a default value if the key is missing.
+    final String email = data["email"] as String? ?? "";
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final isLandscape = constraints.maxWidth > constraints.maxHeight;
+            // final isLandscape = constraints.maxWidth > constraints.maxHeight;
 
             return Column(
               children: [
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24,),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
@@ -58,7 +68,9 @@ class OtpVerificationScreen extends StatelessWidget {
                             return Flexible(
                               child: Container(
                                 height: 55,
-                                margin: const EdgeInsets.symmetric(horizontal: 3),
+                                margin: const EdgeInsets.symmetric(
+                                  horizontal: 3,
+                                ),
                                 decoration: BoxDecoration(
                                   color: const Color(0xFFF6F3F3),
                                   borderRadius: BorderRadius.circular(8),
@@ -69,7 +81,8 @@ class OtpVerificationScreen extends StatelessWidget {
                                 ),
                                 child: Center(
                                   child: TextField(
-                                    controller: controller.otpControllers[index],
+                                    controller:
+                                        controller.otpControllers[index],
                                     focusNode: controller.focusNodes[index],
                                     textAlign: TextAlign.center,
                                     style: const TextStyle(
@@ -99,13 +112,13 @@ class OtpVerificationScreen extends StatelessWidget {
                         // Resend Code
                         Obx(() {
                           final minutes =
-                          (controller.remainingSeconds.value ~/ 60)
-                              .toString()
-                              .padLeft(2, '0');
+                              (controller.remainingSeconds.value ~/ 60)
+                                  .toString()
+                                  .padLeft(2, '0');
                           final seconds =
-                          (controller.remainingSeconds.value % 60)
-                              .toString()
-                              .padLeft(2, '0');
+                              (controller.remainingSeconds.value % 60)
+                                  .toString()
+                                  .padLeft(2, '0');
 
                           return GestureDetector(
                             onTap: controller.canResend.value
@@ -120,8 +133,8 @@ class OtpVerificationScreen extends StatelessWidget {
                                       : 'Reenviar código $minutes:$seconds',
                                   style: TextStyle(
                                     color: controller.canResend.value
-                                        ? const Color(0xFF16577F)
-                                        : const Color(0xFFF9761E),
+                                        ? CustomColor.primaryBlue
+                                        : CustomColor.primary,
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Josefin Sans',
@@ -138,17 +151,29 @@ class OtpVerificationScreen extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
-                  child: Obx(() => CustomButton(
-                    text: CustomText.entrar,
-                    isLoading: controller.isButtonLoading.value,
-                    onPressed: () async {
-                      controller.isButtonLoading.value = true;
-                      final otp = controller.otpControllers.map((c) => c.text).join();
-                      await controller.verifyForgetPasswordOtp(otp, email: email);
-                      controller.isButtonLoading.value = false;
-                    },
-                  )),
+                  padding: const EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    bottom: 24,
+                  ),
+                  child: Obx(
+                    () => CustomButton(
+                      text: CustomText.entrar,
+                      isLoading: controller.isButtonLoading.value,
+                      onPressed: () async {
+                        controller.isButtonLoading.value = true;
+                        final otp = controller.otpControllers
+                            .map((c) => c.text)
+                            .join();
+                        await controller.verifyForgetPasswordOtp(
+                          otp,
+                          context,
+                          email: email,
+                        );
+                        controller.isButtonLoading.value = false;
+                      },
+                    ),
+                  ),
                 ),
               ],
             );
@@ -168,6 +193,7 @@ Widget _buildLogo() {
         _buildLogoPlaceholder(context), // Fallback
   );
 }
+
 Widget _buildLogoPlaceholder(BuildContext context) {
   // Fallback widget if logo asset fails to load
   return Container(

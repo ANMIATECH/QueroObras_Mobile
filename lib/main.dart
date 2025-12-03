@@ -1,10 +1,10 @@
 import '../mvvm/const/export.dart';
-import 'mvvm/controller/service_controller.dart';
+// import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(LoginController());
-  Get.put(ServiceController());
+  // Get.put(LoginController());
+  // Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
   runApp(ProviderScope(child: const MyApp()));
@@ -37,16 +37,18 @@ class MyApp extends StatelessWidget {
         //   }
         // }
 
-        return GetMaterialApp(
-          title: 'Quero Obra',
-          debugShowCheckedModeBanner: false,
-          theme: CAppTheme.lightMoodTheme,
-          darkTheme: CAppTheme.darkMoodTheme,
-          // 1. Define the initial route (the screen that loads first)
-          initialRoute: AppRoutes.onboarding,
-
-          // 2. Define the available routes using a Map<String, WidgetBuilder>
-          routes: AppRoutes.routes,
+        return OverlaySupport.global(
+          child: GetMaterialApp(
+            title: 'Quero Obra',
+            debugShowCheckedModeBanner: false,
+            theme: CAppTheme.lightMoodTheme,
+            darkTheme: CAppTheme.darkMoodTheme,
+            // 1. Define the initial route (the screen that loads first)
+            initialRoute: AppRoutes.onboarding,
+          
+            // 2. Define the available routes using a Map<String, WidgetBuilder>
+            routes: AppRoutes.routes,
+          ),
         );
       },
     );

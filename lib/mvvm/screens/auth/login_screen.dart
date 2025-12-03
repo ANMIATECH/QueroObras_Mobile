@@ -1,12 +1,11 @@
 import '../../const/export.dart';
 
 class LoginScreen extends StatelessWidget {
-   LoginScreen({super.key});
-  final lController = Get.put(LoginController());
+  const LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-
+    final lController = Get.put(LoginController());
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -25,22 +24,22 @@ class LoginScreen extends StatelessWidget {
                 verticalSpace(32),
                 _buildTitle(context),
                 verticalSpace(24),
-                _buildEmailInput(context),
+                _buildEmailInput(context, lController),
                 verticalSpace(16),
-                _buildPasswordInput(context),
+                _buildPasswordInput(context, lController),
                 verticalSpace(8),
                 _buildRememberAndForgot(context),
                 verticalSpace(32),
-                PrimaryButton(
-                  bgActive: CustomColor.primary,
-                  textColor: CustomColor.white,
-                  text: CustomText.enter,
-                  onPressed: () {
-
-                    FocusScope.of(context).unfocus();
-                    lController.login();
-                  },
+                Obx(
+                  () => CustomButton(
+                    text: CustomText.update,
+                    isLoading: lController.isLoading.value,
+                    onPressed: () async {
+                      lController.login();
+                    },
+                  ),
                 ),
+
                 verticalSpace(24),
 
                 _buildSignUpLink(context),
@@ -91,7 +90,7 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmailInput(BuildContext context) {
+  Widget _buildEmailInput(BuildContext context, LoginController lController) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -100,13 +99,14 @@ class LoginScreen extends StatelessWidget {
           style: CustomFontStyle.body(context).copyWith(
             fontWeight: FontWeight.w700,
             color: CustomColor.primaryBlue,
-
           ),
         ),
         verticalSpace(8),
         CustomInputFieldLive(
           hintText: 'exemplo@dominio.com',
           controller: lController.emailController,
+          isPassword: false,
+          obscureText: false,
 
           prefixWidget: const Icon(
             Icons.email_outlined,
@@ -118,7 +118,10 @@ class LoginScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPasswordInput(BuildContext context) {
+  Widget _buildPasswordInput(
+    BuildContext context,
+    LoginController lController,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

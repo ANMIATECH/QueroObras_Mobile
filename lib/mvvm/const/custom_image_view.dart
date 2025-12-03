@@ -451,7 +451,7 @@ class _CustomButtonState extends State<CustomButton>
       onTap: (disabled || widget.isLoading) ? null : widget.onPressed,
       child: Container(
         width: double.infinity,
-        height: 60,
+        height: 50,
         decoration: BoxDecoration(
           // 🔥 logic: keep primary while loading
           color: widget.isLoading

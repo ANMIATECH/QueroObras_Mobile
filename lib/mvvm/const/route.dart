@@ -1,6 +1,6 @@
-import '../const/export.dart';
-import '../controller/cpfbottomnav_controller.dart';
+import 'package:queroobras_mobile/mvvm/screens/auth/cnpjprofilepic_update.dart';
 
+import '../const/export.dart';
 
 /// A utility class to hold all static route names and the route map.
 class AppRoutes {
@@ -12,17 +12,25 @@ class AppRoutes {
   static const String cpfBottomNav = '/cpfBottomNav';
   static const String cpnjBottomNav = '/cpnjBottomNav';
   static const String forgetPassword = '/forgetPassword';
-
+  static const String cpfProfile = '/cpfProfile';
+  static const String bottomNavCpf = '/bottomNavCpf';
+  static const String cnpjProfile = '/cnpjProfile';
+  static const String otpPin = '/otpPin';
+  static const String changePasswordWord = '/changePasswordWord';
 
   /// A map defining all application routes.
   static Map<String, WidgetBuilder> get routes => {
-        onboarding: (context) => const OnboardingScreen(),
-        welcome: (context) => const WelcomeScreen(),
-        login: (context) =>  LoginScreen(),
-        registration: (context) => const RegistrationScreen(),
+    onboarding: (context) => const OnboardingScreen(),
+    welcome: (context) => const WelcomeScreen(),
+    login: (context) => LoginScreen(),
+    registration: (context) => const RegistrationScreen(),
     forgetPassword: (context) => const ResetPasswordScreen(),
-    cpfBottomNav: (context) =>  CpfBottomNavScreen(),
-    cpnjBottomNav: (context) =>  BottomNavScreen(),
-
+    cpfBottomNav: (context) => CpfBottomNavScreen(),
+    cpnjBottomNav: (context) => BottomNavScreen(),
+    cpfProfile: (context) => ProfileUploadScreen(),
+    cnpjProfile: (context) => CNPJProfileUploadScreen(),
+    bottomNavCpf: (context) => BottomNavScreen(),
+    otpPin: (context) => OtpVerificationScreen(),
+    changePasswordWord: (context) => ChangePasswordWord(),
   };
 }

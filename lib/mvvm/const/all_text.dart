@@ -9,6 +9,8 @@ class CustomText {
   static const String encontre4 = 'Resolva qualquer problema de forma rápida e simples.';
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
   static const String enter = 'Entrar';
+  static const String resetPassword = 'Reset Password';
+  static const String changeUrPassword = 'Change your password ';
   static const String emailAddress = 'Endereço de e-mail';
   static const String password = 'Senha';
   static const String rememberMe = 'Lembrar de mim';
@@ -23,7 +25,9 @@ class CustomText {
   static const String otpPinSub = 'SENHA OTP';
   static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
+  static const String update = 'Update';
   static const String cadastrar = 'Cadastrar-se';
+  static const String newPassword = 'New password';
   static const String desenvolvido = 'Desenvolvido por miatech.pro';
 
    static const String screenTitle =

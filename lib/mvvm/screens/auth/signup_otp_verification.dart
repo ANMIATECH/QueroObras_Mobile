@@ -14,7 +14,7 @@ class SignUpOtpVerification extends StatelessWidget {
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
-            final isLandscape = constraints.maxWidth > constraints.maxHeight;
+            // final isLandscape = constraints.maxWidth > constraints.maxHeight;
 
             return Column(
               children: [
@@ -67,7 +67,9 @@ class SignUpOtpVerification extends StatelessWidget {
                                     color: const Color(0xFFF6F3F3),
                                     borderRadius: BorderRadius.circular(8),
                                     border: Border.all(
-                                      color: Colors.black.withOpacity(0.05),
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
+                                      ),
                                       width: 1,
                                     ),
                                   ),
@@ -162,7 +164,11 @@ class SignUpOtpVerification extends StatelessWidget {
                             .join();
 
                         // Call verification method
-                        await controller.verifyPasswordOtp(otp, email: email);
+                        await controller.verifyPasswordOtp(
+                          otp,
+                          context,
+                          email: email,
+                        );
 
                         controller.isButtonLoading.value = false;
                       },

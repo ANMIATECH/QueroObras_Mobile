@@ -1,3 +1,5 @@
+export 'package:queroobras_mobile/mvvm/screens/auth/change_password_word.dart';
+
 export 'package:queroobras_mobile/mvvm/api_management/api_url.dart';
 export '../screens/dashboard/home/acabamento_services.dart';
 export '../screens/dashboard/home/ferramentas_services.dart';
@@ -13,7 +15,7 @@ export '../screens/dashboard/profile/availability.dart';
 export '../screens/dashboard/profile/profile_edit.dart';
 export 'dart:math';
 export '../screens/dashboard/profile/review.dart';
-
+export 'package:overlay_support/overlay_support.dart';
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
 export 'package:queroobras_mobile/mvvm/const/export.dart';
 export 'package:google_fonts/google_fonts.dart';
@@ -35,7 +37,9 @@ export '../screens/dashboard/service/service.dart';
 export '../screens/auth/otp_verification.dart';
 export '../screens/dashboard/home/serviceprovider_request.dart';
 export '../screens/dashboard/home/materiais_services.dart';
-
+export 'package:fluttertoast/fluttertoast.dart' show Fluttertoast, ToastGravity;
+export '../controller/cpfbottomnav_controller.dart';
+export '../screens/auth/profilepic_update.dart';
 export 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
 export 'package:queroobras_mobile/mvvm/const/route.dart';
 export 'package:cached_network_image/cached_network_image.dart';

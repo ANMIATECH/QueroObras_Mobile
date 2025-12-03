@@ -15,7 +15,7 @@ class ResetPasswordScreen extends StatelessWidget {
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, ),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -63,10 +63,11 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
                           controller: controller.resetEmailController,
                           hintText: CustomText.hintEmail,
-                          icon: const Icon(
+                          isPassword: false,
+                          prefixWidget: const Icon(
                             Icons.email_outlined,
                             color: CustomColor.hintText,
                           ),
@@ -88,18 +89,19 @@ class ResetPasswordScreen extends StatelessWidget {
                   isLoading: controller.isLoading.value,
                   onPressed: controller.isEmailFormValid.value
                       ? () {
-                    FocusScope.of(context).unfocus();
-                    final email = controller.resetEmailController.text.trim();
-                    if (email.isNotEmpty) {
-                      controller.forgetPassword();
-                    } else {
-                      SnackbarUtil.showSnackbar(
-                        title: "E-mail inválido",
-                        message: "Por favor, insira o seu e-mail.",
-                        type: SnackbarType.error,
-                      );
-                    }
-                  }
+                          FocusScope.of(context).unfocus();
+                          final email = controller.resetEmailController.text
+                              .trim();
+                          if (email.isNotEmpty) {
+                            controller.forgetPassword(context);
+                          } else {
+                            SnackbarUtil.showSnackbar(
+                              title: "E-mail inválido",
+                              message: "Por favor, insira o seu e-mail.",
+                              type: SnackbarType.error,
+                            );
+                          }
+                        }
                       : null,
                 );
               }),
@@ -120,6 +122,7 @@ Widget _buildLogo() {
         _buildLogoPlaceholder(context), // Fallback
   );
 }
+
 Widget _buildLogoPlaceholder(BuildContext context) {
   // Fallback widget if logo asset fails to load
   return Container(
