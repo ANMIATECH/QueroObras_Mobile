@@ -3,8 +3,9 @@ import '../controller/cpfbottomnav_controller.dart';
 import '../screens/auth/cnpjprofilepic_update.dart';
 import '../screens/auth/profilepic_update.dart';
 import '../screens/auth/signuoOtp_verification.dart';
-import '../screens/dashboard/home/meuPedido.dart';
+import '../screens/dashboard/home/trackorder.dart';
 import '../screens/dashboard/home/servicesproviders_bycategory.dart';
+import '../screens/dashboard/order/checkoutdetails.dart';
 
 class RouteNameV1 {
   static String getStarted = '/getStarted';
@@ -15,6 +16,7 @@ class RouteNameV1 {
   static String cnpjProfile = '/cnpjProfile';
   static String createVender = '/createVender';
   static String venderDetail = '/venderDetail';
+  static String checkOutDetail = '/checkOutDetail';
   static String home = '/home';
   static String profileEdit = '/profileEdit';
   static String bottomNav = '/bottomNav';
@@ -53,12 +55,13 @@ class RouteNameV1 {
       GetPage(name: serviceProviderAvailability, page: () => ServiceProviderAvailability()),
       GetPage(name: serviceProviderReview, page: () => ServiceProviderReview()),
       GetPage(name: productDetail, page: () => ProductDetailsScreen()),
+      GetPage(name: checkOutDetail, page: () => CheckoutNow()),
       GetPage(name: oneOnOneChat, page: () => OneOnOneChat()),
       GetPage(name: serviceScreen, page: () => ServicesScreen()),
       GetPage(name: login, page: () => LoginScreen()),
       GetPage(name: signOtpPin, page: () => SignUpOtpVerification(email:  Get.arguments as String,)),
       GetPage(name: vender, page: () => VenderScreen()),
-      GetPage(name: meuPedido, page: () => OrderTrackingScreen()),
+      GetPage(name: meuPedido, page: () => OrdersScreen()),
       GetPage(name: createVender, page: () => VendorFormScreen()),
       GetPage(name: venderDetail, page: () => VenderItemDetails()),
       GetPage(

@@ -11,6 +11,7 @@ class CustomText {
 
   static const String continuar = 'Continuar';
   static const String entrar = 'Entrar';
+  static final String checkOut = 'Check out all item : R \$239';
   static const String cadastrar = 'Cadastrar-se';
   static const String desenvolvido = 'Desenvolvido por miatech.pro';
 

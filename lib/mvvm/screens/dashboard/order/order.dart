@@ -54,6 +54,19 @@ class OrdersScreen extends StatelessWidget {
                   ),
                 ),
               ),
+
+              SizedBox(height: 16,),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: CustomButton(
+                    text: CustomText.checkOut,
+
+                    onPressed:
+                        () {
+                    }
+
+                ),
+              )
             ],
           ),
         ),
