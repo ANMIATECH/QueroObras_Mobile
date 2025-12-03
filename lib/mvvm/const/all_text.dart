@@ -13,10 +13,14 @@ class CustomText {
   static const String password = 'Senha';
   static const String rememberMe = 'Lembrar de mim';
   static const String forgotPassword = 'Esqueceu a senha?';
+  static const String forgotPasswordSub = 'Escreva seu endereço de e-mail\nabaixo.';
   static const String orContinueWith = 'Ou continue com';
   static const String dontHaveAccount = 'Não tem uma conta?';
+  static const String doHaveAccount = 'Já tem uma conta?';
   static const String signUp = 'Cadastrar-se';
   static const String continuar = 'Continuar';
+  static const String otpPin = 'SENHA OTP';
+  static const String otpPinSub = 'SENHA OTP';
   static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
   static const String cadastrar = 'Cadastrar-se';
@@ -29,6 +33,40 @@ class CustomText {
   static const String developedBy = "Desenvolvido por miatech.pro";
   static const String bemVindo = "Bem-vindo ao Quero Obras, sua melhor ferramenta para todas as necessidades do seu ciclo de vida.";
 
+  static const registrationType = "Tipo de cadastro";
+  static const fullName = "Nome completo";
+  static const name = "Nome";
+  static const cooperateName = "Razão Social";
+  static const companyName = "Nome da Empresa";
+  static const businessEmail = "E-mail Comercial";
+  static const legalRepName = "Nome do Representante Legal";
+  static const tradeName = "Nome Fantasia";
+  static const motherName = "Nome da Mãe";
+  static const birthDate = "Data de nascimento";
+  static const role = "Função";
+  static const cnpj = "CNPJ";
+  static const cpf = "CPF";
+  static const cep = "CEP";
+  static const stateRegistration = "Inscrição Estadual";
+  static const address = "Endereço";
+  static const houseNumber = "Número";
+  static const commercialEmail = "E-mail Comercial";
+  static const confirmPassword = "Confirmar senha";
+
+  // --- Hint Text ---
+  static const hintFullName = "Digite seu nome completo";
+  static const hintCompanyName = "Digite o nome da empresa";
+  static const hintTradeName = "Digite o nome fantasia";
+  static const hintLegalRep = "Representante legal";
+  static const hintEmail = "exemplo@dominio.com";
+  static const hintBirthDate = "dd/mm/aaaa";
+  static const hintPassword = "Digite sua senha";
+  static const hintConfirmPassword = "Confirme sua senha";
+  static const hintAddress = "Digite seu endereço";
+  static const hintCEP = "Digite o CEP";
+  static const hintCNPJ = "Digite o CNPJ";
+  static const hintCPF = "Digite o CPF";
+  static const hintPhone = "Digite o número";
 
 
 }

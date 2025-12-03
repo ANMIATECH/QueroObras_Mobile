@@ -1,12 +1,12 @@
 import '../../const/export.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+   LoginScreen({super.key});
+  final lController = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
-    // Note: Removed all references to 'ref', 'controller', and 'state'
-    // as per the requirement to omit the controller pattern.
+
 
     return Scaffold(
       resizeToAvoidBottomInset: true,
@@ -36,7 +36,9 @@ class LoginScreen extends StatelessWidget {
                   textColor: CustomColor.white,
                   text: CustomText.enter,
                   onPressed: () {
-                    // Navigator.of(context).pushNamed(AppRoutes.welcome);
+
+                    FocusScope.of(context).unfocus();
+                    lController.login();
                   },
                 ),
                 verticalSpace(24),
@@ -98,11 +100,13 @@ class LoginScreen extends StatelessWidget {
           style: CustomFontStyle.body(context).copyWith(
             fontWeight: FontWeight.w700,
             color: CustomColor.primaryBlue,
+
           ),
         ),
         verticalSpace(8),
         CustomInputFieldLive(
           hintText: 'exemplo@dominio.com',
+          controller: lController.emailController,
 
           prefixWidget: const Icon(
             Icons.email_outlined,
@@ -128,6 +132,8 @@ class LoginScreen extends StatelessWidget {
         verticalSpace(8),
         CustomInputFieldLive(
           hintText: '*********',
+          controller: lController.passwordController,
+
           prefixWidget: const Icon(
             Icons.lock_outline,
             color: CustomColor.hintText,
@@ -166,7 +172,7 @@ class LoginScreen extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () {
-            // Handle forgot password tap
+            Get.toNamed(AppRoutes.forgetPassword);
           },
           child: Text(
             CustomText.forgotPassword,

@@ -454,113 +454,212 @@ class _CustomInputFieldLiveState extends State<CustomInputFieldLive> {
   }
 }
 
-class CustomDropdownField extends StatefulWidget {
+// class CustomDropdownField extends StatefulWidget {
+//   const CustomDropdownField({
+//     super.key,
+//     required this.hintText,
+//     this.prefixIcon,
+//     this.initialValue,
+//     required this.options, // 🚨 NEW: List of selectable options
+//     required this.onOptionSelected, // 🚨 NEW: Callback to notify parent of selection
+//   });
+//
+//   final String hintText;
+//   final Widget? prefixIcon;
+//   final String? initialValue;
+//   final List<String> options;
+//   final ValueChanged<String> onOptionSelected;
+//
+//   @override
+//   State<CustomDropdownField> createState() => _CustomDropdownFieldState();
+// }
+//
+// class _CustomDropdownFieldState extends State<CustomDropdownField> {
+//   String? _selectedValue;
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//     _selectedValue = widget.initialValue;
+//   }
+//
+//   /// Handles the tap event and displays the list of options.
+//   void _handleTap() {
+//     showModalBottomSheet(
+//       context: context,
+//       isScrollControlled: true,
+//       backgroundColor: Colors.transparent, // Important for rounded corners
+//       builder: (context) => _OptionsListSheet(
+//         options: widget.options,
+//         onSelect: _updateSelection,
+//       ),
+//     );
+//   }
+//
+//   /// Updates the internal state and notifies the parent widget.
+//   void _updateSelection(String selectedOption) {
+//     setState(() {
+//       _selectedValue = selectedOption;
+//     });
+//     widget.onOptionSelected(selectedOption); // Notify the parent
+//   }
+//
+//   /// -----------------------------------------------------------
+//   /// 1. REUSABLE BOX DECORATION
+//   /// -----------------------------------------------------------
+//   BoxDecoration getDropdownDecoration() {
+//     return BoxDecoration(
+//       color: CustomColor.primaryBlue,
+//       borderRadius: BorderRadius.circular(25),
+//       border: Border.all(color: CustomColor.primaryBlue, width: 1.5),
+//     );
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     final String displayText = _selectedValue ?? widget.hintText;
+//     const Color textColor = CustomColor.white;
+//     const Color iconColor = CustomColor.white;
+//
+//     return GestureDetector(
+//       onTap: _handleTap, // 🚨 Call the new handler
+//       child: Container(
+//         height: 50,
+//         padding: const EdgeInsets.symmetric(horizontal: 16.0),
+//         decoration: getDropdownDecoration(),
+//         child: Row(
+//           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//           children: [
+//             // 1. Prefix Icon
+//             if (widget.prefixIcon != null) ...[
+//               IconTheme(
+//                 data: const IconThemeData(color: iconColor, size: 20),
+//                 child: widget.prefixIcon!,
+//               ),
+//               horizontalSpace(8),
+//             ],
+//
+//             // 2. Displayed Text
+//             Expanded(
+//               child: Text(
+//                 displayText,
+//                 style: CustomFontStyle.body(context).copyWith(
+//                   color: textColor,
+//                   fontSize: 15,
+//                   fontWeight: FontWeight.w600,
+//                 ),
+//                 overflow: TextOverflow.ellipsis,
+//               ),
+//             ),
+//
+//             // 3. Suffix Icon (Dropdown Arrow)
+//             horizontalSpace(8),
+//             const Icon(Icons.keyboard_arrow_down, color: iconColor, size: 20),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
+// }
+
+class CustomDropdownField extends StatelessWidget {
+  final String label;
+  final String? selectedValue;
+  final List<String> options;
+  final Function(String) onChanged;
+  final IconData? icon;
+  final Widget? customIcon;
+
   const CustomDropdownField({
     super.key,
-    required this.hintText,
-    this.prefixIcon,
-    this.initialValue,
-    required this.options, // 🚨 NEW: List of selectable options
-    required this.onOptionSelected, // 🚨 NEW: Callback to notify parent of selection
+    required this.label,
+    required this.selectedValue,
+    required this.options,
+    required this.onChanged,
+    this.icon,
+    this.customIcon,
   });
-
-  final String hintText;
-  final Widget? prefixIcon;
-  final String? initialValue;
-  final List<String> options;
-  final ValueChanged<String> onOptionSelected;
-
-  @override
-  State<CustomDropdownField> createState() => _CustomDropdownFieldState();
-}
-
-class _CustomDropdownFieldState extends State<CustomDropdownField> {
-  String? _selectedValue;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedValue = widget.initialValue;
-  }
-
-  /// Handles the tap event and displays the list of options.
-  void _handleTap() {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: Colors.transparent, // Important for rounded corners
-      builder: (context) => _OptionsListSheet(
-        options: widget.options,
-        onSelect: _updateSelection,
-      ),
-    );
-  }
-
-  /// Updates the internal state and notifies the parent widget.
-  void _updateSelection(String selectedOption) {
-    setState(() {
-      _selectedValue = selectedOption;
-    });
-    widget.onOptionSelected(selectedOption); // Notify the parent
-  }
-
-  /// -----------------------------------------------------------
-  /// 1. REUSABLE BOX DECORATION
-  /// -----------------------------------------------------------
-  BoxDecoration getDropdownDecoration() {
-    return BoxDecoration(
-      color: CustomColor.primaryBlue,
-      borderRadius: BorderRadius.circular(25),
-      border: Border.all(color: CustomColor.primaryBlue, width: 1.5),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
-    final String displayText = _selectedValue ?? widget.hintText;
-    const Color textColor = CustomColor.white;
-    const Color iconColor = CustomColor.white;
-
-    return GestureDetector(
-      onTap: _handleTap, // 🚨 Call the new handler
-      child: Container(
-        height: 50,
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        decoration: getDropdownDecoration(),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            // 1. Prefix Icon
-            if (widget.prefixIcon != null) ...[
-              IconTheme(
-                data: const IconThemeData(color: iconColor, size: 20),
-                child: widget.prefixIcon!,
-              ),
-              horizontalSpace(8),
-            ],
-
-            // 2. Displayed Text
-            Expanded(
-              child: Text(
-                displayText,
-                style: CustomFontStyle.body(context).copyWith(
-                  color: textColor,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-
-            // 3. Suffix Icon (Dropdown Arrow)
-            horizontalSpace(8),
-            const Icon(Icons.keyboard_arrow_down, color: iconColor, size: 20),
-          ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontFamily: 'Josefin Sans',
+            fontSize: 15,
+            fontWeight: FontWeight.w700,
+            color: Color(0xFF16577F),
+          ),
         ),
-      ),
+        const SizedBox(height: 14),
+        Container(
+          decoration: BoxDecoration(
+            color: const Color(0xFF16577F),
+            borderRadius: BorderRadius.circular(217.391),
+          ),
+          child: DropdownButtonFormField<String>(
+            value: selectedValue,
+            onChanged: (String? newValue) {
+              if (newValue != null) {
+                onChanged(newValue);
+              }
+            },
+            style: const TextStyle(
+              fontFamily: 'Josefin Sans',
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              color: Colors.white,
+            ),
+            dropdownColor: const Color(0xFF16577F),
+            decoration: InputDecoration(
+              prefixIcon: customIcon != null
+                  ? Padding(
+                padding: const EdgeInsets.all(12.0),
+                child: customIcon,
+              )
+                  : icon != null
+                  ? Icon(icon, color: Colors.white, size: 24)
+                  : null,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(217.391),
+                borderSide: BorderSide.none,
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 18,
+                vertical: 18,
+              ),
+              filled: true,
+              fillColor: const Color(0xFF16577F),
+            ),
+            icon: const Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+              size: 24,
+            ),
+            items: options.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  style: const TextStyle(
+                    fontFamily: 'Josefin Sans',
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ],
     );
   }
 }
+
 
 // ----------------------------------------------------------------------
 // 🚨 New Widget: The Modal Bottom Sheet that shows the list of options

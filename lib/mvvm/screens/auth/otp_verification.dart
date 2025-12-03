@@ -21,18 +21,15 @@ class OtpVerificationScreen extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 24,),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: isLandscape ? 100 : 128,
-                          height: isLandscape ? 65 : 83.9,
-                          child: CustomImageView(imagePath: "assets/images/logo.png"),
-                        ),
+                        verticalSpace(48), // Adjust as needed
+                        _buildLogo(),
                         const SizedBox(height: 40),
                         const Text(
-                          'SENHA OTP',
+                          CustomText.otpPin,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -66,7 +63,7 @@ class OtpVerificationScreen extends StatelessWidget {
                                   color: const Color(0xFFF6F3F3),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
-                                    color: Colors.black.withOpacity(0.05),
+                                    color: Colors.black.withValues(alpha: 0.05),
                                     width: 1,
                                   ),
                                 ),
@@ -160,4 +157,34 @@ class OtpVerificationScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildLogo() {
+  // Assuming the logo is a local asset
+  return Image.asset(
+    CustomImage.welcomeLogo,
+    height: 60, // Adjust size based on image
+    errorBuilder: (context, error, stackTrace) =>
+        _buildLogoPlaceholder(context), // Fallback
+  );
+}
+Widget _buildLogoPlaceholder(BuildContext context) {
+  // Fallback widget if logo asset fails to load
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: CustomColor.primary.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Center(
+      child: Text(
+        'QO',
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: CustomColor.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
 }

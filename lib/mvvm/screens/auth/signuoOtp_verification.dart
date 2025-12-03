@@ -21,18 +21,15 @@ class SignUpOtpVerification extends StatelessWidget {
                 Expanded(
                   child: SingleChildScrollView(
                     physics: const BouncingScrollPhysics(),
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: isLandscape ? 100 : 128,
-                          height: isLandscape ? 65 : 83.9,
-                          child: CustomImageView(imagePath: "assets/images/logo.png"),
-                        ),
+                        verticalSpace(48), // Adjust as needed
+                        _buildLogo(),
                         const SizedBox(height: 40),
                         const Text(
-                          'SENHA OTP',
+                          CustomText.otpPin,
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 24,
@@ -57,56 +54,64 @@ class SignUpOtpVerification extends StatelessWidget {
                         // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(controller.otpControllers.length, (index) {
-                            return Flexible(
-                              child: Container(
-                                height: 55,
-                                margin: const EdgeInsets.symmetric(horizontal: 3),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF6F3F3),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.black.withOpacity(0.05),
-                                    width: 1,
+                          children: List.generate(
+                            controller.otpControllers.length,
+                            (index) {
+                              return Flexible(
+                                child: Container(
+                                  height: 55,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF6F3F3),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.black.withOpacity(0.05),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: TextField(
+                                      controller:
+                                          controller.otpControllers[index],
+                                      focusNode: controller.focusNodes[index],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(1),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        counterText: '',
+                                      ),
+                                      onChanged: (value) =>
+                                          controller.onOtpChanged(value, index),
+                                    ),
                                   ),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller: controller.otpControllers[index],
-                                    focusNode: controller.focusNodes[index],
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(1),
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      counterText: '',
-                                    ),
-                                    onChanged: (value) =>
-                                        controller.onOtpChanged(value, index),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
+                              );
+                            },
+                          ),
                         ),
                         const SizedBox(height: 30),
 
                         // Resend Code
                         Obx(() {
-                          final minutes = (controller.remainingSeconds.value ~/ 60)
-                              .toString()
-                              .padLeft(2, '0');
-                          final seconds = (controller.remainingSeconds.value % 60)
-                              .toString()
-                              .padLeft(2, '0');
+                          final minutes =
+                              (controller.remainingSeconds.value ~/ 60)
+                                  .toString()
+                                  .padLeft(2, '0');
+                          final seconds =
+                              (controller.remainingSeconds.value % 60)
+                                  .toString()
+                                  .padLeft(2, '0');
 
                           return GestureDetector(
                             onTap: controller.canResend.value
@@ -139,26 +144,30 @@ class SignUpOtpVerification extends StatelessWidget {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.only(left: 24, right: 24, bottom: 24),
-                  child: Obx(() => CustomButton(
-                    text: CustomText.entrar,
-                    isLoading: controller.isButtonLoading.value,
-                    onPressed: () async {
-                      controller.isButtonLoading.value = true;
+                  padding: const EdgeInsets.only(
+                    left: 24,
+                    right: 24,
+                    bottom: 24,
+                  ),
+                  child: Obx(
+                    () => CustomButton(
+                      text: CustomText.entrar,
+                      isLoading: controller.isButtonLoading.value,
+                      onPressed: () async {
+                        controller.isButtonLoading.value = true;
 
-                      // Combine OTP digits
-                      final otp =
-                      controller.otpControllers.map((c) => c.text).join();
+                        // Combine OTP digits
+                        final otp = controller.otpControllers
+                            .map((c) => c.text)
+                            .join();
 
-                      // Call verification method
-                      await controller.verifyPasswordOtp(
-                        otp,
-                        email: email,
-                      );
+                        // Call verification method
+                        await controller.verifyPasswordOtp(otp, email: email);
 
-                      controller.isButtonLoading.value = false;
-                    },
-                  )),
+                        controller.isButtonLoading.value = false;
+                      },
+                    ),
+                  ),
                 ),
               ],
             );
@@ -167,4 +176,35 @@ class SignUpOtpVerification extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildLogo() {
+  // Assuming the logo is a local asset
+  return Image.asset(
+    CustomImage.welcomeLogo,
+    height: 60, // Adjust size based on image
+    errorBuilder: (context, error, stackTrace) =>
+        _buildLogoPlaceholder(context), // Fallback
+  );
+}
+
+Widget _buildLogoPlaceholder(BuildContext context) {
+  // Fallback widget if logo asset fails to load
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: CustomColor.primary.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Center(
+      child: Text(
+        'QO',
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: CustomColor.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
 }
