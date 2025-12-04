@@ -14,8 +14,8 @@ class CNPJProfileUploadScreen extends StatelessWidget {
       ),
     );
 
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth <= 640;
+    // final screenWidth = MediaQuery.of(context).size.width;
+    // final isSmallScreen = screenWidth <= 640;
 
     return Scaffold(
       backgroundColor: Colors.white,

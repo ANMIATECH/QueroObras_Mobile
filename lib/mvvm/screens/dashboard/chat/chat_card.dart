@@ -18,7 +18,7 @@ class ChatMessageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: (){
-        Get.toNamed(RouteNameV1.oneOnOneChat);
+        // Get.toNamed(RouteNameV1.oneOnOneChat);
 
       },
       child: Container(

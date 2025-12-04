@@ -1,14 +1,15 @@
 class CustomImage {
   CustomImage._();
-  static String baseImage = "assets/images";
+  static const String baseImage = "assets/images";
 
-  static String onboarding1 = "$baseImage/worker.svg";
-  static String onboarding2 = "$baseImage/camera.svg";
-  static String onboarding3 = "$baseImage/handshake.svg";
-  static String onboarding4 = "$baseImage/service.svg";
+  static const String onboarding1 = "$baseImage/worker.svg";
+  static const String onboarding2 = "$baseImage/camera.svg";
+  static const String onboarding3 = "$baseImage/handshake.svg";
+  static const String onboarding4 = "$baseImage/service.svg";
   static String clapping = "$baseImage/clapping1.svg";
   static String welcomeLogo = "$baseImage/logo.png";
   static String logo = "$baseImage/img_5.png";
+  static String nigeriaFlag = "$baseImage/img_5.png";
   static String emoji = "$baseImage/emoji.svg";
   static String inputCamera = "$baseImage/input_camera.svg";
   static String recording = "$baseImage/recording.svg";

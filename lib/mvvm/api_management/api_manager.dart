@@ -1,16 +1,8 @@
-
-
-
-
 import 'package:http/http.dart' as http;
 
 import '../const/export.dart';
 
-
-
-
 class ApiManager implements ApiReuse {
-
   @override
   Future<http.StreamedResponse> uploadFileWithData({
     required String endpoint,
@@ -20,11 +12,11 @@ class ApiManager implements ApiReuse {
     bool bearerToken = true,
   }) async {
     try {
-      String token =
-          bearerToken ? StorageDesign.readItem(StorageDesign.token) : "";
+      String token = bearerToken
+          ? StorageDesign.readItem(StorageDesign.token)
+          : "";
 
-      final url =
-          Uri.parse('${ApiReuse.baseUrl}$endpoint');
+      final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
 
       final request = http.MultipartRequest('POST', url);
 
@@ -54,26 +46,22 @@ class ApiManager implements ApiReuse {
         return response;
       }
     } on SocketException {
-
-
       throw Exception("No Internet connection. Please check your network.");
     } on TimeoutException {
-
-
       throw Exception("Request timed out. Try again later.");
     } on HttpException catch (e) {
-
-
       throw Exception("HTTP Error: ${e.message}");
     } catch (e) {
-
       throw Exception("Unexpected error occurred: $e");
     }
   }
 
   @override
   Future<http.Response> post(
-      String endpoint, Map<String, dynamic> body, bool bearerToken) async {
+    String endpoint,
+    Map<String, dynamic> body,
+    bool bearerToken,
+  ) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
     try {
@@ -81,8 +69,7 @@ class ApiManager implements ApiReuse {
           ? ""
           : StorageDesign.readItem(StorageDesign.token);
 
-      final url =
-          Uri.parse('${ApiReuse.baseUrl}$endpoint');
+      final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -91,11 +78,7 @@ class ApiManager implements ApiReuse {
       };
 
       final response = await http
-          .post(
-            url,
-            headers: headers,
-            body: jsonEncode(body),
-          )
+          .post(url, headers: headers, body: jsonEncode(body))
           .timeout(const Duration(seconds: 15)); // Set a timeout
 
       if (response.statusCode >= 200 && response.statusCode < 300) {
@@ -104,27 +87,32 @@ class ApiManager implements ApiReuse {
         return response;
       }
     } on SocketException {
-
       throw Exception("No Internet connection. Please check your network.");
     } on TimeoutException {
       throw Exception("Request timed out. Try again later.");
     } on HttpException catch (e) {
-
       throw Exception("HTTP Error: ${e.message}");
     } catch (e) {
-
       throw Exception("Unexpected error occurred: $e");
     }
   }
 
   @override
-  Future<http.Response> read(String endpoint, bool bearerToken) async {
-    String token =
-        bearerToken == false ? "" : StorageDesign.readItem(StorageDesign.token);
+  Future<http.Response> read(
+    String endpoint,
+    bool bearerToken, [
+    Map<String, String>?
+    queryParameters, // Made optional with []// Parameters like page and per_page
+  ]) async {
+    String token = bearerToken == false
+        ? ""
+        : StorageDesign.readItem(StorageDesign.token);
 
-    final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
+    final url = Uri.parse(
+      '${ApiReuse.baseUrl}$endpoint',
+    ).replace(queryParameters: queryParameters);
 
-    // log(token);
+    // print(url);
 
     final headers = {
       'Content-Type': 'application/json',
@@ -140,8 +128,9 @@ class ApiManager implements ApiReuse {
 
   @override
   Future<http.Response> readOnce(String endpoint, bool bearerToken) async {
-    String token =
-        bearerToken == false ? "" : StorageDesign.readItem(StorageDesign.token);
+    String token = bearerToken == false
+        ? ""
+        : StorageDesign.readItem(StorageDesign.token);
 
     final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
 
@@ -156,8 +145,9 @@ class ApiManager implements ApiReuse {
 
       // If token is invalid or expired, logout
       if (response.statusCode == 401 || response.statusCode == 400) {
-        StorageDesign.deleteItem(StorageDesign
-            .token); // or specifically StorageManager.deleteItem(StorageManager.token);
+        StorageDesign.deleteItem(
+          StorageDesign.token,
+        ); // or specifically StorageManager.deleteItem(StorageManager.token);
 
         // Navigate to login screen
         // Get.offAllNamed(RouteNameV1.login); // Change route to your login route
@@ -179,11 +169,15 @@ class ApiManager implements ApiReuse {
 
   @override
   Future<http.Response> updateApi(
-      String endpoint, Map<String, dynamic> body, bool bearerToken) async {
+    String endpoint,
+    Map<String, dynamic> body,
+    bool bearerToken,
+  ) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    String token =
-        bearerToken == false ? "" : StorageDesign.readItem(StorageDesign.token);
+    String token = bearerToken == false
+        ? ""
+        : StorageDesign.readItem(StorageDesign.token);
 
     final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
     final headers = {
@@ -192,11 +186,7 @@ class ApiManager implements ApiReuse {
       if (bearerToken == true) 'Authorization': 'Bearer $token',
     };
     try {
-      return await http.put(
-        url,
-        headers: headers,
-        body: jsonEncode(body),
-      );
+      return await http.put(url, headers: headers, body: jsonEncode(body));
     } catch (e) {
       rethrow;
     }
@@ -204,11 +194,15 @@ class ApiManager implements ApiReuse {
 
   @override
   Future<http.Response> updatePatch(
-      String endpoint, Map<String, dynamic> body, bool bearerToken) async {
+    String endpoint,
+    Map<String, dynamic> body,
+    bool bearerToken,
+  ) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    String token =
-        bearerToken == false ? "" : StorageDesign.readItem(StorageDesign.token);
+    String token = bearerToken == false
+        ? ""
+        : StorageDesign.readItem(StorageDesign.token);
 
     final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
     final headers = {
@@ -217,11 +211,7 @@ class ApiManager implements ApiReuse {
       if (bearerToken == true) 'Authorization': 'Bearer $token',
     };
     try {
-      return await http.patch(
-        url,
-        headers: headers,
-        body: jsonEncode(body),
-      );
+      return await http.patch(url, headers: headers, body: jsonEncode(body));
     } catch (e) {
       rethrow;
     }
@@ -229,8 +219,9 @@ class ApiManager implements ApiReuse {
 
   @override
   Future<http.Response> delete(String endpoint, bool bearerToken) async {
-    String token =
-        bearerToken == false ? "" : StorageDesign.readItem(StorageDesign.token);
+    String token = bearerToken == false
+        ? ""
+        : StorageDesign.readItem(StorageDesign.token);
     final headers = {
       'Content-Type': 'application/json',
       // 'User-Agent': d,
@@ -241,6 +232,56 @@ class ApiManager implements ApiReuse {
       return await http.delete(url, headers: headers);
     } catch (e) {
       rethrow;
+    }
+  }
+
+  // 👈 New: Function for uploading multiple files
+  Future<http.StreamedResponse> uploadMultipleFilesWithData({
+    required String endpoint,
+    required List<File> files, // List of files
+    required Map<String, String> data,
+    required String fileField, // Should be 'images[]'
+    bool bearerToken = true,
+  }) async {
+    try {
+      String token = bearerToken
+          ? StorageDesign.readItem(StorageDesign.token)
+          : "";
+
+      final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
+
+      final request = http.MultipartRequest('POST', url);
+
+      // Add bearer token if needed
+      if (bearerToken) {
+        request.headers['Authorization'] = 'Bearer $token';
+      }
+
+      // Attach multiple files
+      for (var file in files) {
+        request.files.add(
+          await http.MultipartFile.fromPath(
+            fileField, // 'images[]'
+            file.path,
+          ),
+        );
+      }
+
+      // Attach additional fields
+      request.fields.addAll(data);
+
+      // Send the request
+      final response = await request.send();
+
+      return response;
+    } on SocketException {
+      throw Exception("No Internet connection. Please check your network.");
+    } on TimeoutException {
+      throw Exception("Request timed out. Try again later.");
+    } on HttpException catch (e) {
+      throw Exception("HTTP Error: ${e.message}");
+    } catch (e) {
+      throw Exception("Unexpected error occurred: $e");
     }
   }
 }

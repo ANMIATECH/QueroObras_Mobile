@@ -5,6 +5,8 @@ class OrderItem extends StatelessWidget {
   final String title;
   final String subtitle;
   final String price;
+  final Item dd;
+  final void Function()? onTap;
 
   const OrderItem({
     super.key,
@@ -12,6 +14,8 @@ class OrderItem extends StatelessWidget {
     required this.title,
     required this.subtitle,
     required this.price,
+    required this.dd,
+    required this.onTap,
   });
 
   @override
@@ -74,11 +78,22 @@ class OrderItem extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisSize: MainAxisSize.min,
             children: [
-              CustomImageView(imagePath: CustomImage.cancel),
+              CustomImageView(
+                onTap:onTap,
+                imagePath: CustomImage.cancel,
+              ),
               const SizedBox(height: 9),
               GestureDetector(
-                onTap: (){
-                  Get.toNamed(RouteNameV1.checkOutDetail);
+                onTap: () {
+                  String? token = StorageDesign.readItem(StorageDesign.token);
+
+                  if (token == null || token.isEmpty) {
+                    // User NOT logged in → go to Login
+                    Get.toNamed(AppRoutes.login);
+                  } else {
+                    // User IS logged in → go to Vender page
+                    Get.to(() => ProductDetailsScreen(dd: dd));
+                  }
                 },
                 child: Container(
                   width: 89,
@@ -108,4 +123,3 @@ class OrderItem extends StatelessWidget {
     );
   }
 }
-

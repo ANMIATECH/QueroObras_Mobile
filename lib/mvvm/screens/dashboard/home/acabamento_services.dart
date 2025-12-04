@@ -74,7 +74,6 @@ class ServiceProvidersScreen extends StatelessWidget {
                                   fontFamily: 'Josefin Sans',
                                 ),
                                 onChanged: (value) {
-                                  // TODO: implement search filter logic here
                                 },
                               ),
                             ),
@@ -111,7 +110,7 @@ class ServiceProvidersScreen extends StatelessWidget {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: (){
-                                Get.toNamed(RouteNameV1.serviceRequestScreen);
+                                // Get.toNamed(RouteNameV1.serviceRequestScreen);
 
                               },
                               child: ProviderCardA(

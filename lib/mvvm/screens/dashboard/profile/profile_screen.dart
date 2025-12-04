@@ -181,7 +181,7 @@ class ProfileMenuSection extends StatelessWidget {
                   title: 'Editar Perfil',
                   hasArrow: true,
                   onTap: (){
-                    Get.toNamed(RouteNameV1.serviceProviderAvailability, );
+                    // Get.toNamed(RouteNameV1.serviceProviderAvailability, );
 
                   },
 
@@ -194,7 +194,7 @@ class ProfileMenuSection extends StatelessWidget {
                   hasArrow: true,
                   isExpanded: true,
                   onTap: (){
-                    Get.toNamed(RouteNameV1.profileEdit, );
+                    // Get.toNamed(RouteNameV1.profileEdit, );
 
                   },
 
@@ -205,7 +205,7 @@ class ProfileMenuSection extends StatelessWidget {
                   title: 'Avaliações',
                   hasArrow: true,
                   onTap: (){
-                    Get.toNamed(RouteNameV1.serviceProviderReview, );
+                    // Get.toNamed(RouteNameV1.serviceProviderReview, );
 
                   },
 

@@ -97,7 +97,7 @@ class ServiceRequestScreen extends StatelessWidget {
                             backgroundColor: const Color(0xFFF9761E),
                             textColor: Colors.white,
                             onPressed: () {
-                              Get.toNamed(RouteNameV1.oneOnOneChat);
+                              // Get.toNamed(RouteNameV1.oneOnOneChat);
                             },
                           ),
                           const SizedBox(height: 10),

@@ -1,23 +1,13 @@
 import '../../const/export.dart';
 
-class OtpVerificationScreen extends StatelessWidget {
-  const OtpVerificationScreen({super.key});
+class SignUpOtpVerification extends StatelessWidget {
+  final String email;
+
+  const SignUpOtpVerification({super.key, required this.email});
 
   @override
   Widget build(BuildContext context) {
     final LoginController controller = Get.find<LoginController>();
-
-    // 1. Retrieve the arguments
-    final arguments = ModalRoute.of(context)?.settings.arguments;
-
-    // 2. Safely cast the arguments to the expected Map type.
-    // Use a null-aware operator (`??`) to provide an empty Map if arguments are null or the wrong type.
-    final Map<String, dynamic> data = arguments is Map<String, dynamic>
-        ? arguments
-        : {};
-
-    // 3. Access the values by key, providing a default value if the key is missing.
-    final String email = data["email"] as String? ?? "";
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -64,48 +54,53 @@ class OtpVerificationScreen extends StatelessWidget {
                         // OTP Inputs
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: List.generate(6, (index) {
-                            return Flexible(
-                              child: Container(
-                                height: 55,
-                                margin: const EdgeInsets.symmetric(
-                                  horizontal: 3,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFFF6F3F3),
-                                  borderRadius: BorderRadius.circular(8),
-                                  border: Border.all(
-                                    color: Colors.black.withValues(alpha: 0.05),
-                                    width: 1,
+                          children: List.generate(
+                            controller.otpControllers.length,
+                            (index) {
+                              return Flexible(
+                                child: Container(
+                                  height: 55,
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 3,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFF6F3F3),
+                                    borderRadius: BorderRadius.circular(8),
+                                    border: Border.all(
+                                      color: Colors.black.withValues(
+                                        alpha: 0.05,
+                                      ),
+                                      width: 1,
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: TextField(
+                                      controller:
+                                          controller.otpControllers[index],
+                                      focusNode: controller.focusNodes[index],
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.w400,
+                                        color: Colors.black,
+                                      ),
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        LengthLimitingTextInputFormatter(1),
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      decoration: const InputDecoration(
+                                        border: InputBorder.none,
+                                        counterText: '',
+                                      ),
+                                      onChanged: (value) =>
+                                          controller.onOtpChanged(value, index),
+                                    ),
                                   ),
                                 ),
-                                child: Center(
-                                  child: TextField(
-                                    controller:
-                                        controller.otpControllers[index],
-                                    focusNode: controller.focusNodes[index],
-                                    textAlign: TextAlign.center,
-                                    style: const TextStyle(
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.w400,
-                                      color: Colors.black,
-                                    ),
-                                    keyboardType: TextInputType.number,
-                                    inputFormatters: [
-                                      LengthLimitingTextInputFormatter(1),
-                                      FilteringTextInputFormatter.digitsOnly,
-                                    ],
-                                    decoration: const InputDecoration(
-                                      border: InputBorder.none,
-                                      counterText: '',
-                                    ),
-                                    onChanged: (value) =>
-                                        controller.onOtpChanged(value, index),
-                                  ),
-                                ),
-                              ),
-                            );
-                          }),
+                              );
+                            },
+                          ),
                         ),
                         const SizedBox(height: 30),
 
@@ -133,8 +128,8 @@ class OtpVerificationScreen extends StatelessWidget {
                                       : 'Reenviar código $minutes:$seconds',
                                   style: TextStyle(
                                     color: controller.canResend.value
-                                        ? CustomColor.primaryBlue
-                                        : CustomColor.primary,
+                                        ? const Color(0xFF16577F)
+                                        : const Color(0xFFF9761E),
                                     fontSize: 16,
                                     fontWeight: FontWeight.w400,
                                     fontFamily: 'Josefin Sans',
@@ -162,14 +157,19 @@ class OtpVerificationScreen extends StatelessWidget {
                       isLoading: controller.isButtonLoading.value,
                       onPressed: () async {
                         controller.isButtonLoading.value = true;
+
+                        // Combine OTP digits
                         final otp = controller.otpControllers
                             .map((c) => c.text)
                             .join();
-                        await controller.verifyForgetPasswordOtp(
+
+                        // Call verification method
+                        await controller.verifyPasswordOtp(
                           otp,
                           context,
                           email: email,
                         );
+
                         controller.isButtonLoading.value = false;
                       },
                     ),

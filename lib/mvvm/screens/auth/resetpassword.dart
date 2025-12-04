@@ -15,23 +15,17 @@ class ResetPasswordScreen extends StatelessWidget {
             // Scrollable content
             Expanded(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    // Logo
-                    Center(
-                      child: SizedBox(
-                        width: 128,
-                        height: 83.9,
-                        child: CustomImageView(imagePath: "assets/images/logo.png"),
-                      ),
-                    ),
+                    verticalSpace(48), // Adjust as needed
+                    _buildLogo(),
                     const SizedBox(height: 60),
 
                     // Title
                     const Text(
-                      'Redefinir Senha',
+                      CustomText.forgotPassword,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -44,7 +38,7 @@ class ResetPasswordScreen extends StatelessWidget {
 
                     // Subtitle
                     const Text(
-                      'Escreva seu endereço de e-mail\nabaixo.',
+                      CustomText.forgotPasswordSub,
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         color: Colors.black,
@@ -60,7 +54,7 @@ class ResetPasswordScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          'Endereço de e-mail',
+                          CustomText.emailAddress,
                           style: TextStyle(
                             color: Color(0xFF16577F),
                             fontSize: 15,
@@ -69,11 +63,13 @@ class ResetPasswordScreen extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 14),
-                        CustomInputField(
+                        CustomInputFieldLive(
                           controller: controller.resetEmailController,
-                          hintText: 'exemplo@dominio.com',
-                          icon: CustomImageView(
-                            imagePath: "assets/images/input_email.svg",
+                          hintText: CustomText.hintEmail,
+                          isPassword: false,
+                          prefixWidget: const Icon(
+                            Icons.email_outlined,
+                            color: CustomColor.hintText,
                           ),
                           keyboardType: TextInputType.emailAddress,
                         ),
@@ -93,19 +89,19 @@ class ResetPasswordScreen extends StatelessWidget {
                   isLoading: controller.isLoading.value,
                   onPressed: controller.isEmailFormValid.value
                       ? () {
-                    FocusScope.of(context).unfocus();
-                    final email = controller.resetEmailController.text.trim();
-                    if (email.isNotEmpty) {
-                      controller.forgetPassword(); // triggers OTP
-                      // Navigate to OTP screen with email
-                    } else {
-                      SnackbarUtil.showSnackbar(
-                        title: "Invalid Email",
-                        message: "Please enter your email.",
-                        type: SnackbarType.error,
-                      );
-                    }
-                  }
+                          FocusScope.of(context).unfocus();
+                          final email = controller.resetEmailController.text
+                              .trim();
+                          if (email.isNotEmpty) {
+                            controller.forgetPassword(context);
+                          } else {
+                            SnackbarUtil.showSnackbar(
+                              title: "E-mail inválido",
+                              message: "Por favor, insira o seu e-mail.",
+                              type: SnackbarType.error,
+                            );
+                          }
+                        }
                       : null,
                 );
               }),
@@ -115,4 +111,35 @@ class ResetPasswordScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Widget _buildLogo() {
+  // Assuming the logo is a local asset
+  return Image.asset(
+    CustomImage.welcomeLogo,
+    height: 60, // Adjust size based on image
+    errorBuilder: (context, error, stackTrace) =>
+        _buildLogoPlaceholder(context), // Fallback
+  );
+}
+
+Widget _buildLogoPlaceholder(BuildContext context) {
+  // Fallback widget if logo asset fails to load
+  return Container(
+    width: 60,
+    height: 60,
+    decoration: BoxDecoration(
+      color: CustomColor.primary.withValues(alpha: 0.1),
+      borderRadius: BorderRadius.circular(8),
+    ),
+    child: Center(
+      child: Text(
+        'QO',
+        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+          color: CustomColor.primary,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    ),
+  );
 }

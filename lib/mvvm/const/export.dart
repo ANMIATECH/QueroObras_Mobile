@@ -1,3 +1,14 @@
+export 'package:queroobras_mobile/mvvm/model/cart_model.dart';
+
+export 'package:queroobras_mobile/mvvm/screens/dashboard/order/checkoutdetails.dart';
+
+export 'package:queroobras_mobile/mvvm/screens/dashboard/home/vendor_edit_screen.dart';
+
+export 'package:queroobras_mobile/mvvm/screens/auth/change_password_word.dart';
+export 'package:image_picker/image_picker.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/home/upload_successful.dart';
+export 'package:queroobras_mobile/mvvm/model/item_by_current_user_data.dart';
+
 export 'package:queroobras_mobile/mvvm/api_management/api_url.dart';
 export '../screens/dashboard/home/acabamento_services.dart';
 export '../screens/dashboard/home/ferramentas_services.dart';
@@ -11,9 +22,9 @@ export '../screens/dashboard/profile/profile_screen.dart';
 export '../controller/login_controller.dart';
 export '../screens/dashboard/profile/availability.dart';
 export '../screens/dashboard/profile/profile_edit.dart';
-
+export 'dart:math';
 export '../screens/dashboard/profile/review.dart';
-
+export 'package:overlay_support/overlay_support.dart';
 export 'package:queroobras_mobile/mvvm/api_management/api_manager.dart';
 export 'package:queroobras_mobile/mvvm/const/export.dart';
 export 'package:google_fonts/google_fonts.dart';
@@ -35,7 +46,9 @@ export '../screens/dashboard/service/service.dart';
 export '../screens/auth/otp_verification.dart';
 export '../screens/dashboard/home/serviceprovider_request.dart';
 export '../screens/dashboard/home/materiais_services.dart';
-
+export 'package:fluttertoast/fluttertoast.dart' show Fluttertoast, ToastGravity;
+export '../controller/cpfbottomnav_controller.dart';
+export '../screens/auth/profilepic_update.dart';
 export 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
 export 'package:queroobras_mobile/mvvm/const/route.dart';
 export 'package:cached_network_image/cached_network_image.dart';
@@ -45,7 +58,7 @@ export '../controller/auth_controller.dart';
 export '../screens/auth/login_screen.dart';
 export '../screens/auth/registration.dart';
 export '../screens/auth/resetpassword.dart';
-export '../screens/onboarding/welcome_screen.dart' hide DashedBorderPainter;
+export '../screens/onboarding/welcome_screen.dart' ;
 export 'package:queroobras_mobile/mvvm/const/storage.dart';
 export 'package:queroobras_mobile/mvvm/responsive/responsive.dart';
 export 'package:queroobras_mobile/mvvm/const/images.dart';
@@ -63,3 +76,4 @@ export 'package:flutter/gestures.dart';
 export 'dart:io'; // Keep dart:io for HeaderValue
 export 'dart:async';
 export 'dart:convert';
+export 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;

@@ -1,8 +1,6 @@
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import '../const/export.dart';
 import 'package:file_picker/file_picker.dart';
-
 
 class AuthController extends GetxController {
   final ApiManager _apiManager = ApiManager();
@@ -28,7 +26,6 @@ class AuthController extends GetxController {
     }
   }
 
-
   Future<void> pickCnpjDocumentImage() async {
     try {
       FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -39,10 +36,8 @@ class AuthController extends GetxController {
       if (result != null && result.files.single.path != null) {
         cnpjDocumentImage.value = File(result.files.single.path!); // 👈 FIXED
       } else {
-        print("No file selected");
       }
     } catch (e) {
-      print("File picking error: $e");
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: "Failed to pick file: $e",
@@ -61,10 +56,8 @@ class AuthController extends GetxController {
       if (result != null && result.files.single.path != null) {
         documentImage.value = File(result.files.single.path!); // 👈 FIXED
       } else {
-        print("No file selected");
       }
     } catch (e) {
-      print("File picking error: $e");
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: "Failed to pick file: $e",
@@ -72,7 +65,6 @@ class AuthController extends GetxController {
       );
     }
   }
-
 
   final otpControllers = List.generate(5, (_) => TextEditingController());
   final focusNodes = List.generate(5, (_) => FocusNode());
@@ -95,7 +87,6 @@ class AuthController extends GetxController {
     super.onInit();
     startCountdown();
     getServiceCategory(); // fetch categories when controller is initialized
-
   }
 
   void startCountdown() {
@@ -113,7 +104,6 @@ class AuthController extends GetxController {
     });
   }
 
-
   Future<void> getServiceCategory() async {
     try {
       var response = await _apiManager.read(ApiUrl.serviceCategory, false);
@@ -124,14 +114,14 @@ class AuthController extends GetxController {
         var categories = data['categories'] as List<dynamic>? ?? [];
 
         // Safely map names and ignore nulls
-        userRoleOptions.value =
-            categories.map((cat) => (cat['name'] ?? '').toString())
-                .where((name) => name.isNotEmpty)
-                .toList();
-
+        userRoleOptions.value = categories
+            .map((cat) => (cat['name'] ?? '').toString())
+            .where((name) => name.isNotEmpty)
+            .toList();
       } else {
         var message = jsonDecode(response.body);
-        var error = message["error"]?["message"] ?? "Failed to fetch categories";
+        var error =
+            message["error"]?["message"] ?? "Failed to fetch categories";
 
         SnackbarUtil.showSnackbar(
           title: "Fetch Failed",
@@ -139,7 +129,7 @@ class AuthController extends GetxController {
           type: SnackbarType.error,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: e.toString(),
@@ -158,14 +148,14 @@ class AuthController extends GetxController {
         var categories = data['categories'] as List<dynamic>? ?? [];
 
         // Safely map names and ignore nulls
-        userRoleOptions.value =
-            categories.map((cat) => (cat['name'] ?? '').toString())
-                .where((name) => name.isNotEmpty)
-                .toList();
-
+        userRoleOptions.value = categories
+            .map((cat) => (cat['name'] ?? '').toString())
+            .where((name) => name.isNotEmpty)
+            .toList();
       } else {
         var message = jsonDecode(response.body);
-        var error = message["error"]?["message"] ?? "Failed to fetch categories";
+        var error =
+            message["error"]?["message"] ?? "Failed to fetch categories";
 
         SnackbarUtil.showSnackbar(
           title: "Fetch Failed",
@@ -173,7 +163,7 @@ class AuthController extends GetxController {
           type: SnackbarType.error,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: e.toString(),
@@ -182,13 +172,12 @@ class AuthController extends GetxController {
     }
   }
 
-  Future uploadProfilePicNDoc() async {
+  Future uploadProfilePicNDoc(dynamic context) async {
     try {
       if (profileImage.value == null || documentImage.value == null) {
-        SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
+        CustomLoading.showNotification(
           message: "Both profile picture and document are required",
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
         return;
       }
@@ -223,28 +212,25 @@ class AuthController extends GetxController {
 
       isLoading.value = false;
 
-      print("UPLOAD STATUS: ${response.statusCode}");
-      print("UPLOAD BODY: ${response.body}");
-
       dynamic message;
       try {
         message = jsonDecode(response.body);
       } catch (e) {
-        SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
+        CustomLoading.showNotification(
           message: "Invalid JSON returned by server",
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
         return;
       }
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-        SnackbarUtil.showSnackbar(
-          title: "Success",
+        CustomLoading.showNotification(
           message: "Documents uploaded successfully",
-          type: SnackbarType.success,
+          messageType: MessageType.success,
         );
-        Get.offAllNamed(RouteNameV1.bottomNavCpf);
+        Navigator.of(context).pushNamed(AppRoutes.bottomNavCpf);
+
+        // Get.offAllNamed(RouteNameV1.bottomNavCpf);
       } else {
         String errorMsg = "Upload failed";
 
@@ -254,20 +240,17 @@ class AuthController extends GetxController {
           errorMsg = message["error"]["message"];
         }
 
-        SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
+        CustomLoading.showNotification(
           message: errorMsg,
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
       }
     } catch (e) {
       isLoading.value = false;
 
-      print("UPLOAD EXCEPTION: $e");
-      SnackbarUtil.showSnackbar(
-        title: "Upload Failed",
+      CustomLoading.showNotification(
         message: "$e",
-        type: SnackbarType.error,
+        messageType: MessageType.error,
       );
     }
   }
@@ -313,9 +296,6 @@ class AuthController extends GetxController {
 
       isLoading.value = false;
 
-      print("UPLOAD STATUS: ${response.statusCode}");
-      print("UPLOAD BODY: ${response.body}");
-
       dynamic message;
       try {
         message = jsonDecode(response.body);
@@ -335,7 +315,7 @@ class AuthController extends GetxController {
           message: "Documents uploaded successfully",
           type: SnackbarType.success,
         );
-        Get.offAllNamed(RouteNameV1.bottomNav);
+        // Get.offAllNamed(RouteNameV1.bottomNav);
       } else {
         String errorMsg = "Upload failed";
 
@@ -354,7 +334,6 @@ class AuthController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
-      print("UPLOAD EXCEPTION: $e");
       SnackbarUtil.showSnackbar(
         title: "Upload Failed",
         message: "$e",
@@ -362,7 +341,6 @@ class AuthController extends GetxController {
       );
     }
   }
-
 
   @override
   void onClose() {
@@ -377,23 +355,18 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-
   String getOtp() {
     return otpControllers.map((e) => e.text).join();
   }
-
 
   RxBool isButtonLoading = false.obs;
   RxString selectedUserStatus = ''.obs;
   RxString selectedRoleStatus = ''.obs;
   RxString selectedDocumentType = ''.obs; // 'CPF' or 'CNPJ'
 
-  final List<String> userStatusOptions = [
-    'Prestador de serviço',
-  ];
+  final List<String> userStatusOptions = ['Prestador de serviço'];
 
   var userRoleOptions = <String>[].obs; // store category names
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
 }

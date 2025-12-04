@@ -1,13 +1,13 @@
 import '../mvvm/const/export.dart';
-import 'mvvm/controller/service_controller.dart';
+// import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(LoginController());
-  Get.put(ServiceController());
+  // Get.put(LoginController());
+  // Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
-  runApp(const MyApp());
+  runApp(ProviderScope(child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -27,24 +27,28 @@ class MyApp extends StatelessWidget {
         final String? userStatus = StorageService.has("user_status")
             ? StorageService.read("user_status")
             : null;
-        String initialRoute = RouteNameV1.getStarted;
+        String initialRoute = AppRoutes.onboarding;
 
         if (token != null && token.isNotEmpty) {
           if (userStatus == "cpf") {
-            initialRoute = RouteNameV1.bottomNavCpf;
+            initialRoute = AppRoutes.bottomNav;
           } else if (userStatus == "cnpj") {
-            initialRoute = RouteNameV1.bottomNav;
+            initialRoute = AppRoutes.bottomNav;
           }
         }
 
-        return GetMaterialApp(
-          title: 'Quero Obra',
-          debugShowCheckedModeBanner: false,
-          theme: CAppTheme.lightMoodTheme,
-          darkTheme: CAppTheme.darkMoodTheme,
-          getPages: RouteNameV1.getPages(),
-
-          initialRoute: initialRoute,
+        return OverlaySupport.global(
+          child: GetMaterialApp(
+            title: 'Quero Obra',
+            debugShowCheckedModeBanner: false,
+            theme: CAppTheme.lightMoodTheme,
+            darkTheme: CAppTheme.darkMoodTheme,
+            // 1. Define the initial route (the screen that loads first)
+            initialRoute: initialRoute,
+          
+            // 2. Define the available routes using a Map<String, WidgetBuilder>
+            routes: AppRoutes.routes,
+          ),
         );
       },
     );

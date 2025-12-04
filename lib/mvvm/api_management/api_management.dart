@@ -5,7 +5,7 @@ abstract class ApiReuse {
   static String baseUrl = "https://queroobras.popopipo.com/api/";
   Future<http.Response> post(
       String endpoint, Map<String, dynamic> body, bool bearerToken);
-  Future<http.Response> read(String endpoint, bool bearerToken);
+  Future<http.Response> read(String endpoint, bool bearerToken,[Map<String, String>? queryParameters]);
   Future<http.Response> readOnce(String endpoint, bool bearerToken);
   Future<http.Response> updateApi(
       String endpoint, Map<String, dynamic> body, bool bearerToken);
