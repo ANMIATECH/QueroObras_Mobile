@@ -20,22 +20,22 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (_, child) {
-        // final String? token = StorageService.has(StorageDesign.token)
-        //     ? StorageService.read(StorageDesign.token)
-        //     : null;
+        final String? token = StorageService.has(StorageDesign.token)
+            ? StorageService.read(StorageDesign.token)
+            : null;
 
-        // final String? userStatus = StorageService.has("user_status")
-        //     ? StorageService.read("user_status")
-        //     : null;
-        // String initialRoute = RouteNameV1.getStarted;
+        final String? userStatus = StorageService.has("user_status")
+            ? StorageService.read("user_status")
+            : null;
+        String initialRoute = AppRoutes.onboarding;
 
-        // if (token != null && token.isNotEmpty) {
-        //   if (userStatus == "cpf") {
-        //     initialRoute = RouteNameV1.bottomNavCpf;
-        //   } else if (userStatus == "cnpj") {
-        //     initialRoute = RouteNameV1.bottomNav;
-        //   }
-        // }
+        if (token != null && token.isNotEmpty) {
+          if (userStatus == "cpf") {
+            initialRoute = AppRoutes.bottomNav;
+          } else if (userStatus == "cnpj") {
+            initialRoute = AppRoutes.bottomNav;
+          }
+        }
 
         return OverlaySupport.global(
           child: GetMaterialApp(
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
             theme: CAppTheme.lightMoodTheme,
             darkTheme: CAppTheme.darkMoodTheme,
             // 1. Define the initial route (the screen that loads first)
-            initialRoute: AppRoutes.onboarding,
+            initialRoute: initialRoute,
           
             // 2. Define the available routes using a Map<String, WidgetBuilder>
             routes: AppRoutes.routes,

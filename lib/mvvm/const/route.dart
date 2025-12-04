@@ -17,6 +17,7 @@ class AppRoutes {
   static const String cnpjProfile = '/cnpjProfile';
   static const String otpPin = '/otpPin';
   static const String changePasswordWord = '/changePasswordWord';
+  static const String bottomNav = '/bottomNav';
 
   /// A map defining all application routes.
   static Map<String, WidgetBuilder> get routes => {
@@ -32,5 +33,6 @@ class AppRoutes {
     bottomNavCpf: (context) => BottomNavScreen(),
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),
+    bottomNav: (context) => CpfBottomNavScreen(),
   };
 }

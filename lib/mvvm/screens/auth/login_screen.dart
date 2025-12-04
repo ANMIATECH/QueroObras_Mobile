@@ -32,7 +32,7 @@ class LoginScreen extends StatelessWidget {
                 verticalSpace(32),
                 Obx(
                   () => CustomButton(
-                    text: CustomText.update,
+                    text: CustomText.enter,
                     isLoading: lController.isLoading.value,
                     onPressed: () async {
                       lController.login();

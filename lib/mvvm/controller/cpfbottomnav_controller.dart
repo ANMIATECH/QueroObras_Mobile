@@ -1,5 +1,4 @@
 import '../const/export.dart';
-import '../screens/dashboard/cnpj/cnpj_home.dart';
 
 class CPfBottomNavController extends GetxController {
   var selectedIndex = 0.obs;
@@ -79,11 +78,12 @@ class CpfBottomNavScreen extends StatelessWidget {
                 if (index == 2) {
                   return GestureDetector(
                     onTap: () async {
-                      String? token =
-                      StorageDesign.readItem(StorageDesign.token);
+                      String? token = StorageDesign.readItem(
+                        StorageDesign.token,
+                      );
 
                       if (token == null || token.isEmpty) {
-                        // Get.toNamed(RouteNameV1.login);
+                        Get.toNamed(AppRoutes.login);
                       } else {
                         controller.changeIndex(2);
                       }
@@ -104,8 +104,7 @@ class CpfBottomNavScreen extends StatelessWidget {
                 // -----------------------------------------------------
                 return GestureDetector(
                   onTap: () async {
-                    String? token =
-                    StorageDesign.readItem(StorageDesign.token);
+                    String? token = StorageDesign.readItem(StorageDesign.token);
 
                     if (index == 0) {
                       // Home

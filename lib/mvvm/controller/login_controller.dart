@@ -271,7 +271,7 @@ class LoginController extends GetxController {
       isLoading.value = false;
 
       dynamic message = jsonDecode(response.body);
-      print(message);
+      // print(message);
 
       if (response.statusCode == 200) {
         // Login successful
