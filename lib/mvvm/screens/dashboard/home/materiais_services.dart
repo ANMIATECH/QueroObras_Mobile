@@ -39,7 +39,7 @@ class MaterialShopScreen extends StatelessWidget {
               const Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Available Product',
+                  'Produto Disponível',
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 14,

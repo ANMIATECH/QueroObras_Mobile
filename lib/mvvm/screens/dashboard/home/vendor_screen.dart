@@ -88,7 +88,7 @@ class VenderScreen extends StatelessWidget {
                           const Expanded(
                             child: Center(
                               child: Text(
-                                'Add New item',
+                                'Adicionar novo item',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 15,
@@ -116,7 +116,7 @@ class VenderScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Previous article',
+                            'Artigos anteriores',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 16,

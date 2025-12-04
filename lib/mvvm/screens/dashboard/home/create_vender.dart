@@ -42,7 +42,7 @@ class VendorFormScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 24),
                         const Text(
-                          'Upload the picture of the article.',
+                          'Faça upload da foto do artigo.',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -127,7 +127,7 @@ class VendorFormScreen extends StatelessWidget {
                         // 👈 END: DYNAMIC IMAGE ROW
                         const SizedBox(height: 20),
                         const Text(
-                          'Name of the article',
+                          'Nome do artigo',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -144,7 +144,7 @@ class VendorFormScreen extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         const Text(
-                          'Choose the article either a tools or material',
+                          'Escolha o tipo do artigo: ferramenta ou material',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -170,7 +170,7 @@ class VendorFormScreen extends StatelessWidget {
                         const SizedBox(height: 20),
 
                         const Text(
-                          'Quantity',
+                          'Quantidade',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -181,14 +181,14 @@ class VendorFormScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         FormInputField(
                           controller: controller.quantityController,
-                          hintText: 'How many items you have',
+                          hintText: 'Quantos itens você possui',
                           iconUrl: "assets/images/price.svg",
                           iconWidth: 14,
                         ),
                         const SizedBox(height: 20),
 
                         const Text(
-                          'Price',
+                          'Preço',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -199,14 +199,14 @@ class VendorFormScreen extends StatelessWidget {
                         const SizedBox(height: 20),
                         FormInputField(
                           controller: controller.priceController,
-                          hintText: 'Enter price',
+                          hintText: 'Digite o preço',
                           iconUrl: "assets/images/price.svg",
                           iconWidth: 14,
                         ),
                         const SizedBox(height: 20),
 
                         const Text(
-                          'Description',
+                          'Descrição',
                           style: TextStyle(
                             fontFamily: 'Josefin Sans',
                             fontSize: 16,
@@ -237,7 +237,7 @@ class VendorFormScreen extends StatelessWidget {
                               color: Colors.black,
                             ),
                             decoration: const InputDecoration(
-                              hintText: 'Enter description',
+                              hintText: 'Digite a descrição',
                               hintStyle: TextStyle(
                                 fontFamily: 'Josefin Sans',
                                 fontSize: 15,

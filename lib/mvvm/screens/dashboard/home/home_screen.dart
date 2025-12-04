@@ -80,8 +80,7 @@ class HomeScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Josefin Sans',
                                         ),
-                                        onChanged: (value) {
-                                        },
+                                        onChanged: (value) {},
                                       ),
                                     ),
                                   ],
@@ -163,7 +162,18 @@ class HomeScreen extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Get.toNamed(AppRoutes.materiaisServiceProvider);
+                                String? token = StorageDesign.readItem(
+                                  StorageDesign.token,
+                                );
+
+                                if (token == null || token.isEmpty) {
+                                  // User NOT logged in → go to Login
+                                  Get.toNamed(AppRoutes.login);
+                                } else {
+                                  Get.toNamed(
+                                    AppRoutes.materiaisServiceProvider,
+                                  );
+                                }
                               },
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
@@ -207,6 +217,9 @@ class HomeScreen extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 // Get.toNamed(RouteNameV1.serviceScreen);
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.serviceScreen);
                               },
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
@@ -438,8 +451,7 @@ class SearchBarWidget extends StatelessWidget {
                       fontWeight: FontWeight.w400,
                       fontFamily: 'Josefin Sans',
                     ),
-                    onChanged: (value) {
-                    },
+                    onChanged: (value) {},
                   ),
                 ),
               ],

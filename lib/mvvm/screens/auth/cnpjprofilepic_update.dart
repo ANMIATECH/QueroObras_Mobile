@@ -147,7 +147,7 @@ class CNPJProfileUploadScreen extends StatelessWidget {
                         return;
                       }
 
-                      await controller.uploadProfilePicNDocCnpj();
+                      await controller.uploadProfilePicNDocCnpj(context);
                     },
                   ),
                 ),

@@ -228,7 +228,9 @@ class AuthController extends GetxController {
           message: "Documents uploaded successfully",
           messageType: MessageType.success,
         );
-        Navigator.of(context).pushNamed(AppRoutes.bottomNavCpf);
+        // Navigator.of(context).pushNamed(AppRoutes.cpfBottomNav);
+        Get.offAllNamed(AppRoutes.cpfBottomNav);
+
 
         // Get.offAllNamed(RouteNameV1.bottomNavCpf);
       } else {
@@ -255,7 +257,7 @@ class AuthController extends GetxController {
     }
   }
 
-  Future uploadProfilePicNDocCnpj() async {
+  Future uploadProfilePicNDocCnpj(dynamic context) async {
     try {
       if (profileImage.value == null || cnpjDocumentImage.value == null) {
         SnackbarUtil.showSnackbar(
@@ -315,7 +317,8 @@ class AuthController extends GetxController {
           message: "Documents uploaded successfully",
           type: SnackbarType.success,
         );
-        // Get.offAllNamed(RouteNameV1.bottomNav);
+
+        Get.offAllNamed(AppRoutes.cpnjBottomNav);
       } else {
         String errorMsg = "Upload failed";
 

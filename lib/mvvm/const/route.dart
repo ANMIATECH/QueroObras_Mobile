@@ -13,8 +13,9 @@ class AppRoutes {
   static const String cpnjBottomNav = '/cpnjBottomNav';
   static const String forgetPassword = '/forgetPassword';
   static const String cpfProfile = '/cpfProfile';
-  static const String bottomNavCpf = '/bottomNavCpf';
+  // static const String bottomNavCpf = '/bottomNavCpf';
   static const String cnpjProfile = '/cnpjProfile';
+  static const String serviceScreen = '/serviceScreen';
   static const String otpPin = '/otpPin';
   static const String changePasswordWord = '/changePasswordWord';
   static const String bottomNav = '/bottomNav';
@@ -35,7 +36,8 @@ class AppRoutes {
     cpnjBottomNav: (context) => BottomNavScreen(),
     cpfProfile: (context) => ProfileUploadScreen(),
     cnpjProfile: (context) => CNPJProfileUploadScreen(),
-    bottomNavCpf: (context) => BottomNavScreen(),
+    serviceScreen: (context) => ServicesScreen(),
+    // bottomNavCpf: (context) => BottomNavScreen(),
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),

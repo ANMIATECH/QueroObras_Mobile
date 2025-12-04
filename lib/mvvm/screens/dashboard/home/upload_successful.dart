@@ -44,7 +44,7 @@ class UploadSuccessScreen extends StatelessWidget {
                         width: 291,
                         margin: const EdgeInsets.only(top: 74),
                         child: const Text(
-                          'Your items has been upload with success',
+                          'Seus itens foram carregados com sucesso',
                           style: TextStyle(
                             fontSize: 20,
                             fontWeight: FontWeight.w500,
@@ -63,8 +63,9 @@ class UploadSuccessScreen extends StatelessWidget {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 40),
                         child: CustomButton(
-                          text: 'Go to home',
+                          text: 'Ir para a página inicial',
                           onPressed: () {
+                            Navigator.pop(context);
                             Navigator.pop(context);
                           },
                         ),

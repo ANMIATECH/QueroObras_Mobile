@@ -83,7 +83,7 @@ class CpfBottomNavScreen extends StatelessWidget {
                       );
 
                       if (token == null || token.isEmpty) {
-                        Get.toNamed(AppRoutes.login);
+                        Navigator.of(context).pushNamed(AppRoutes.login);
                       } else {
                         controller.changeIndex(2);
                       }
@@ -108,13 +108,13 @@ class CpfBottomNavScreen extends StatelessWidget {
 
                     if (index == 0) {
                       // Home
-                      controller.changeIndex(4);
+                      controller.changeIndex(0);
                       return;
                     }
 
                     // Other tabs require login
                     if (token == null || token.isEmpty) {
-                      // Get.toNamed(RouteNameV1.login);
+                      Navigator.of(context).pushNamed(AppRoutes.login);
                       return;
                     }
 

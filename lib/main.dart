@@ -1,10 +1,10 @@
 import '../mvvm/const/export.dart';
-// import 'mvvm/controller/service_controller.dart';
+import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Get.put(LoginController());
-  // Get.put(ServiceController());
+  Get.put(LoginController());
+  Get.put(ServiceController());
 
   await StorageService.init(); // Initialize GetStorage
   runApp(ProviderScope(child: const MyApp()));
@@ -31,9 +31,9 @@ class MyApp extends StatelessWidget {
 
         if (token != null && token.isNotEmpty) {
           if (userStatus == "cpf") {
-            initialRoute = AppRoutes.bottomNav;
+            initialRoute = AppRoutes.cpfBottomNav;
           } else if (userStatus == "cnpj") {
-            initialRoute = AppRoutes.bottomNav;
+            initialRoute = AppRoutes.cpnjBottomNav;
           }
         }
 

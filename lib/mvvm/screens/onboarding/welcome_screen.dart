@@ -133,7 +133,7 @@ class TextSeperatedTwo extends StatelessWidget {
                 height: 60,
 
                 onConfirmation: () {
-                                    Navigator.of(context).pushNamed(AppRoutes.login);
+                                    Navigator.of(context).pushNamed(AppRoutes.cpfBottomNav);
 
                 },
               ),
