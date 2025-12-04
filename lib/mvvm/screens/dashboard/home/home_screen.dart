@@ -63,7 +63,8 @@ class HomeScreen extends StatelessWidget {
                                     Expanded(
                                       child: TextField(
                                         decoration: const InputDecoration(
-                                          hintText: 'O que você está procurando?',
+                                          hintText:
+                                              'O que você está procurando?',
                                           hintStyle: TextStyle(
                                             color: Color(0xFF7F7F7F),
                                             fontSize: 16,
@@ -80,7 +81,6 @@ class HomeScreen extends StatelessWidget {
                                           fontFamily: 'Josefin Sans',
                                         ),
                                         onChanged: (value) {
-                                          // TODO: implement search filter logic here
                                         },
                                       ),
                                     ),
@@ -96,9 +96,7 @@ class HomeScreen extends StatelessWidget {
                                 color: const Color(
                                   0xFFEEEEEE,
                                 ), // background color
-                                borderRadius: BorderRadius.circular(
-                                  999,
-                                ),
+                                borderRadius: BorderRadius.circular(999),
                               ),
                               child: Center(
                                 child: CustomImageView(
@@ -164,9 +162,8 @@ class HomeScreen extends StatelessWidget {
                         Column(
                           children: [
                             GestureDetector(
-                              onTap: (){
-                                // Get.toNamed(RouteNameV1.materiaisServiceProvider);
-
+                              onTap: () {
+                                Get.toNamed(AppRoutes.materiaisServiceProvider);
                               },
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
@@ -183,7 +180,8 @@ class HomeScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomImageView(
                                         imagePath: "assets/images/s_home.svg",
@@ -199,7 +197,7 @@ class HomeScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                           height: 1.7,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -207,9 +205,8 @@ class HomeScreen extends StatelessWidget {
                             ),
                             const SizedBox(height: 10),
                             GestureDetector(
-                              onTap: (){
+                              onTap: () {
                                 // Get.toNamed(RouteNameV1.serviceScreen);
-
                               },
                               child: AnimatedContainer(
                                 duration: const Duration(milliseconds: 300),
@@ -226,10 +223,12 @@ class HomeScreen extends StatelessWidget {
                                   padding: const EdgeInsets.all(8.0),
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       CustomImageView(
-                                        imagePath: "assets/images/s_service.svg",
+                                        imagePath:
+                                            "assets/images/s_service.svg",
                                       ),
                                       const SizedBox(width: 10),
 
@@ -242,7 +241,7 @@ class HomeScreen extends StatelessWidget {
                                           fontWeight: FontWeight.bold,
                                           height: 1.7,
                                         ),
-                                      )
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -314,7 +313,8 @@ class HomeScreen extends StatelessWidget {
                               Expanded(
                                 flex: 38,
                                 child: CustomImageView(
-                                  imagePath: "assets/images/service_provider.png",
+                                  imagePath:
+                                      "assets/images/service_provider.png",
                                   width: 137,
                                   fit: BoxFit.contain,
                                 ),
@@ -346,14 +346,16 @@ class HomeScreen extends StatelessWidget {
                                 imageUrl: "assets/images/Vender.svg",
                                 title: 'Vender',
                                 onTap: () async {
-                                  String? token = StorageDesign.readItem(StorageDesign.token);
+                                  String? token = StorageDesign.readItem(
+                                    StorageDesign.token,
+                                  );
 
                                   if (token == null || token.isEmpty) {
                                     // User NOT logged in → go to Login
-                                    // Get.toNamed(RouteNameV1.login);
+                                    Get.toNamed(AppRoutes.login);
                                   } else {
                                     // User IS logged in → go to Vender page
-                                    // Get.toNamed(RouteNameV1.vender);
+                                    Get.toNamed(AppRoutes.vender);
                                   }
                                 },
                               ),
@@ -364,17 +366,13 @@ class HomeScreen extends StatelessWidget {
                                 imageUrl: "assets/images/Meu_pedido.svg",
                                 title: 'Meu pedido',
                                 onTap: () async {
-                                  String? token = StorageDesign.readItem(StorageDesign.token);
-
-                                  if (token == null || token.isEmpty) {
-                                    // User NOT logged in → go to Login
-                                    // Get.toNamed(RouteNameV1.login);
-                                  } else {
-
-                                    // Get.toNamed(RouteNameV1.meuPedido);
-                                  }
+                                  // if (token == null || token.isEmpty) {
+                                  //   // User NOT logged in → go to Login
+                                  //   // Get.toNamed(RouteNameV1.login);
+                                  // } else {
+                                  //   // Get.toNamed(RouteNameV1.meuPedido);
+                                  // }
                                 },
-
                               ),
                             ),
                             const SizedBox(width: 20),
@@ -416,10 +414,7 @@ class SearchBarWidget extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
             child: Row(
               children: [
-                const Icon(
-                  Icons.search_outlined,
-                  color: Color(0xFF7F7F7F),
-                ),
+                const Icon(Icons.search_outlined, color: Color(0xFF7F7F7F)),
                 const SizedBox(width: 10),
                 Expanded(
                   child: TextField(
@@ -441,14 +436,12 @@ class SearchBarWidget extends StatelessWidget {
                       fontFamily: 'Josefin Sans',
                     ),
                     onChanged: (value) {
-                      // TODO: implement search filter logic here
                     },
                   ),
                 ),
               ],
             ),
           ),
-
         ),
         const SizedBox(width: 3),
         Container(
@@ -460,8 +453,8 @@ class SearchBarWidget extends StatelessWidget {
               999,
             ), // optional, if you want rounded corners
           ),
-          child:  Center(
-            child:  CustomImageView(imagePath: CustomImage.notification,),
+          child: Center(
+            child: CustomImageView(imagePath: CustomImage.notification),
           ),
         ),
       ],
@@ -490,10 +483,7 @@ class SearchBarWidgetMain extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
       child: Row(
         children: [
-          const Icon(
-            Icons.search_outlined,
-            color: Color(0xFF7F7F7F),
-          ),
+          const Icon(Icons.search_outlined, color: Color(0xFF7F7F7F)),
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
@@ -522,8 +512,6 @@ class SearchBarWidgetMain extends StatelessWidget {
     );
   }
 }
-
-
 
 class RecentSearchChip extends StatelessWidget {
   final String text;
@@ -563,7 +551,7 @@ class RecentSearchChip extends StatelessWidget {
             const SizedBox(width: 4),
             GestureDetector(
               onTap: onRemove,
-              child: CustomImageView(imagePath: CustomImage.cancel,),
+              child: CustomImageView(imagePath: CustomImage.cancel),
             ),
           ],
         ],
@@ -712,7 +700,8 @@ class QuickAccessCard extends StatelessWidget {
   const QuickAccessCard({
     super.key,
     required this.imageUrl,
-    required this.title,  this.onTap,
+    required this.title,
+    this.onTap,
   });
 
   @override

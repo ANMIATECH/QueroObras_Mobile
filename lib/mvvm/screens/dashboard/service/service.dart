@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../../const/custom_image_view.dart';
-import '../../../const/route.dart';
 import '../../../controller/service_controller.dart';
 import '../home/home_screen.dart';
 import '../home/servicesproviders_bycategory.dart';
 import 'service_card.dart';
 
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class ServicesScreen extends StatelessWidget {
@@ -94,7 +92,6 @@ class ServicesScreen extends StatelessWidget {
 
                     return InkWell(
                       onTap: () {
-                        print("Tapped: ${category['name']}");
                         final slug = category['slug'];
 
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
@@ -139,7 +136,6 @@ class ServicesScreen extends StatelessWidget {
 
                     return InkWell(
                       onTap: () {
-                        print("Tapped: ${category['name']}");
                         final slug = category['slug'];
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
                       },

@@ -5,10 +5,10 @@ class AuthPromptBottomSheet extends StatelessWidget {
   final VoidCallback? onRegisterPressed;
 
   const AuthPromptBottomSheet({
-    Key? key,
+    super.key,
     this.onLoginPressed,
     this.onRegisterPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

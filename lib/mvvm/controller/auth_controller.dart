@@ -1,4 +1,3 @@
-import 'package:image_picker/image_picker.dart';
 import 'package:http/http.dart' as http;
 import '../const/export.dart';
 import 'package:file_picker/file_picker.dart';
@@ -37,10 +36,8 @@ class AuthController extends GetxController {
       if (result != null && result.files.single.path != null) {
         cnpjDocumentImage.value = File(result.files.single.path!); // 👈 FIXED
       } else {
-        print("No file selected");
       }
     } catch (e) {
-      print("File picking error: $e");
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: "Failed to pick file: $e",
@@ -59,10 +56,8 @@ class AuthController extends GetxController {
       if (result != null && result.files.single.path != null) {
         documentImage.value = File(result.files.single.path!); // 👈 FIXED
       } else {
-        print("No file selected");
       }
     } catch (e) {
-      print("File picking error: $e");
       SnackbarUtil.showSnackbar(
         title: "Error",
         message: "Failed to pick file: $e",
@@ -301,9 +296,6 @@ class AuthController extends GetxController {
 
       isLoading.value = false;
 
-      print("UPLOAD STATUS: ${response.statusCode}");
-      print("UPLOAD BODY: ${response.body}");
-
       dynamic message;
       try {
         message = jsonDecode(response.body);
@@ -342,7 +334,6 @@ class AuthController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
-      print("UPLOAD EXCEPTION: $e");
       SnackbarUtil.showSnackbar(
         title: "Upload Failed",
         message: "$e",

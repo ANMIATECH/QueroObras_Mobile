@@ -74,7 +74,6 @@ class ServiceProvidersScreen extends StatelessWidget {
                                   fontFamily: 'Josefin Sans',
                                 ),
                                 onChanged: (value) {
-                                  // TODO: implement search filter logic here
                                 },
                               ),
                             ),

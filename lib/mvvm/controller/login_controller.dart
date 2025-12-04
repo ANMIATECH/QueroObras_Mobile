@@ -1,5 +1,4 @@
 import 'package:http/http.dart' as http;
-import 'package:image_picker/image_picker.dart';
 
 import '../const/export.dart';
 import '../screens/auth/signup_otp_verification.dart';

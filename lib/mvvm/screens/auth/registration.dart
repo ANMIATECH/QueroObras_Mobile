@@ -872,8 +872,6 @@ class AgreeInputDesign extends StatelessWidget {
                     style: const TextStyle(color: Color(0xFFF9761E)),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        print("Terms tapped");
-                        // TODO: Navigate to Terms screen
                       },
                   ),
 
@@ -885,8 +883,6 @@ class AgreeInputDesign extends StatelessWidget {
                     style: const TextStyle(color: Color(0xFFF9761E)),
                     recognizer: TapGestureRecognizer()
                       ..onTap = () {
-                        print("Condition tapped");
-                        // TODO: Navigate to Condition screen
                       },
                   ),
                 ],

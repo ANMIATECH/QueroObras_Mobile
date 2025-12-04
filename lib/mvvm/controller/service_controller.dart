@@ -46,7 +46,6 @@ class ServiceController extends GetxController {
 
   Future<void> getPopularServiceProvider() async {
     try {
-      print("📡 Fetching service categories...");
       var response = await _apiManager.read(ApiUrl.popularCategory, false);
 
       if (response.statusCode == 200) {
@@ -74,7 +73,6 @@ class ServiceController extends GetxController {
 
   Future<void> getConstructionServiceProvider() async {
     try {
-      print("📡 Fetching service categories...");
       var response = await _apiManager.read(ApiUrl.constructionCategory, false);
 
       if (response.statusCode == 200) {
@@ -102,20 +100,16 @@ class ServiceController extends GetxController {
 
   Future<void> getAcabamentoServiceProvider() async {
     try {
-      print("📡 Fetching service categories...");
 
       var response = await _apiManager.read(ApiUrl.acabamentoCategory, false);
 
-      // 🔥 PRINT FULL RAW RESPONSE HERE
-      print("🔍 Acabamento Response: ${response.body}");
-      print("🔗 Requesting: ${ApiUrl.acabamentoCategory}");
+
 
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         aCategories.value = data["categories"] ?? [];
 
-        print("✅ Parsed Acabamento Categories: $aCategories");
       } else {
         var message = jsonDecode(response.body);
         var error =
@@ -138,7 +132,6 @@ class ServiceController extends GetxController {
 
   Future<void> getPopularServiceProviderBySlug(String slug) async {
     try {
-      print("📡 Fetching providers for slug: $slug");
 
       final url = "v1/category/$slug/users";
 
@@ -151,7 +144,6 @@ class ServiceController extends GetxController {
         filteredProviders.value = List.from(providers);
 
         categoryName.value = data["category"]?["name"] ?? "";
-        print("📌 Category name set to: ${categoryName.value}");
       } else {
         var message = jsonDecode(response.body);
         var error =

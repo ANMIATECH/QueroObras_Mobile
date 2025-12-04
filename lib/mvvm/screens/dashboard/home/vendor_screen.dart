@@ -5,10 +5,13 @@ class VenderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final vController = Get.put(VendorFormController());
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
+            // Use const for Text style
             'Vender',
             style: TextStyle(
               color: Colors.black,
@@ -21,7 +24,7 @@ class VenderScreen extends StatelessWidget {
           actions: [
             GestureDetector(
               onTap: () {
-                // Get.toNamed(RouteNameV1.createVender);
+                Get.toNamed(AppRoutes.venderCreate);
               },
               child: Padding(
                 padding: const EdgeInsets.only(right: 15.0),
@@ -39,106 +42,166 @@ class VenderScreen extends StatelessWidget {
           ],
         ),
         backgroundColor: Colors.white,
-        body: SingleChildScrollView(
-          // ✅ Wrap in scroll view
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
+        body: FutureBuilder(
+          future: vController.fetchItems(),
+          builder: (context, asyncSnapshot) {
+            // The main structure for a flexible layout is a Column
+            // where one child (the list) is Expanded.
+            return Column(
+              children: [
+                const SizedBox(height: 40),
 
-              // Add new item button
-              GestureDetector(
-                onTap: (){
-                  // Get.toNamed(RouteNameV1.createVender);
-
-                },
-                child: Container(
-                  width: MediaQuery.of(context).size.width > 991
-                      ? 399
-                      : MediaQuery.of(context).size.width - 42,
-                  height: 60,
-                  margin: const EdgeInsets.symmetric(horizontal: 21),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF16577F),
-                    borderRadius: BorderRadius.circular(217.391),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 21,
-                      vertical: 18,
+                // Add new item button
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.venderCreate);
+                  },
+                  child: Container(
+                    // Simplified width logic for better responsiveness/consistency
+                    width: MediaQuery.of(context).size.width * 0.9,
+                    height: 60,
+                    margin: const EdgeInsets.symmetric(horizontal: 21),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF16577F),
+                      borderRadius: BorderRadius.circular(217.391),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          width: 24,
-                          height: 24,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 21,
+                        vertical: 18,
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 24,
+                            height: 24,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              color: Color(0xFF16577F),
+                              size: 16,
+                            ),
                           ),
-                          child: const Icon(
-                            Icons.add,
-                            color: Color(0xFF16577F),
-                            size: 16,
-                          ),
-                        ),
-                        const Expanded(
-                          child: Center(
-                            child: Text(
-                              'Add New item',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'Josefin Sans',
+                          const Expanded(
+                            child: Center(
+                              child: Text(
+                                'Add New item',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'Josefin Sans',
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 26),
+                const SizedBox(height: 26),
 
-              // Previous article section
-              Container(
-                width: MediaQuery.of(context).size.width > 991
-                    ? 400
-                    : MediaQuery.of(context).size.width - 40,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text(
-                      'Previous article',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Josefin Sans',
-                        height: 1.5,
+                // Previous article section (Expanded to use remaining space)
+                // Expanded is the key to making the list scrollable and responsive.
+                Obx(() {
+                  return Expanded(
+                    child: Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Previous article',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Josefin Sans',
+                              height: 1.5,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+
+                    
+                          Expanded(
+                            child: RefreshIndicator(
+                              onRefresh: () =>
+                                  vController.fetchItems(isInitial: true),
+                              child: NotificationListener<ScrollNotification>(
+                                onNotification: (ScrollNotification scrollInfo) {
+                                  // Check if the user is scrolling near the bottom
+                                  if (scrollInfo.metrics.pixels >=
+                                          scrollInfo.metrics.maxScrollExtent *
+                                              0.9 && // 90% scrolled
+                                      !vController.isPaginating.value &&
+                                      vController.hasMoreData.value) {
+                                    vController.loadNextPage();
+                                  }
+                                  return true; // Return true to stop the notification from bubbling up
+                                },
+                                child: ListView.builder(
+                                  itemCount:
+                                      vController.itemList.length +
+                                      1, // +1 for the loading indicator
+                                  // Added padding for the list content
+                                  padding: const EdgeInsets.only(bottom: 20),
+                                  itemBuilder: (context, index) {
+                                    if (index < vController.itemList.length) {
+                                      var dd = vController.itemList[index];
+                                      return ItemCard(
+                                        title: dd.name ?? "",
+                                        subtitle: dd.description ?? "",
+                                        price: '\$${dd.price ?? ""}',
+                                        quantity: dd.quantity ?? "",
+                                        imageUrl: 'assets/images/cement.png',
+                                        onTap: () {
+                                          Get.to(
+                                            () => VendorEditScreen(itemId: dd),
+                                          );
+                                        },
+                                      );
+                                    } else {
+                                      // This is the last item: show the pagination loader or an empty space
+                                      return Obx(
+                                        () => vController.isPaginating.value
+                                            ? const Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(12.0),
+                                                  child:
+                                                      CircularProgressIndicator(),
+                                                ),
+                                              )
+                                            : vController.itemList.isNotEmpty &&
+                                                  !vController.hasMoreData.value
+                                            ? const Center(
+                                                child: Padding(
+                                                  padding: EdgeInsets.all(12.0),
+                                                  child: Text(
+                                                    "You've reached the end of the list.",
+                                                  ),
+                                                ),
+                                              )
+                                            : const SizedBox.shrink(),
+                                      );
+                                    }
+                                  },
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(height: 20),
-                    ItemCard(
-                      title: 'Título',
-                      subtitle: 'Legenda',
-                      price: '\$20',
-                      quantity: '5\nitems',
-                      imageUrl:
-                          'assets/images/cement.png',
-                      onTap: (){
-                        // Get.toNamed(RouteNameV1.venderDetail);
-
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+                  );
+                }),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -153,14 +216,14 @@ class ItemCard extends StatelessWidget {
   final String imageUrl;
   final VoidCallback? onTap;
 
-
   const ItemCard({
     super.key,
     required this.title,
     required this.subtitle,
     required this.price,
     required this.quantity,
-    required this.imageUrl, this.onTap,
+    required this.imageUrl,
+    this.onTap,
   });
 
   @override
@@ -260,4 +323,3 @@ class ItemCard extends StatelessWidget {
     );
   }
 }
-

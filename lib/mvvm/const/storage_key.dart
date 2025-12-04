@@ -31,7 +31,7 @@ class StorageDesign {
   static String userType = "userType";
   static String firstTimerUser = "firstTimerUser";
 
-  static String? validation(value, String object) {
+  static String? validation(dynamic value, String object) {
     if (value == null || value.isEmpty) {
       return 'Please enter $object';
     }

@@ -14,6 +14,8 @@ class ApiUrl {
   static String identity = "onboard/identity";
   static String changePassword = "auth/verify/otp";
   static String forgetPassword = "auth/signup";
+  static String getProduct = "v1/item/list?per_page=1";
   static String resetPasswordEmail = "v1/password/otp/request";
-
+  static String createItem = "v1/vendor/item/create";
+  static String updateItem = "v1/vendor/item/";
 }

@@ -79,7 +79,6 @@ class CnpjHomeScreen extends StatelessWidget {
                                         fontFamily: 'Josefin Sans',
                                       ),
                                       onChanged: (value) {
-                                        // TODO: implement search filter logic here
                                       },
                                     ),
                                   ),
@@ -175,7 +174,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                     topLeft: Radius.circular(11),
                                   ),
                                     onTap: (){
-                                      // Get.toNamed(RouteNameV1.materiaisServiceProvider);
+                                Get.toNamed(AppRoutes.materiaisServiceProvider);
 
                                     }
 

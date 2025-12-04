@@ -1,4 +1,9 @@
+export 'package:queroobras_mobile/mvvm/screens/dashboard/home/vendor_edit_screen.dart';
+
 export 'package:queroobras_mobile/mvvm/screens/auth/change_password_word.dart';
+export 'package:image_picker/image_picker.dart';
+export 'package:queroobras_mobile/mvvm/screens/dashboard/home/upload_successful.dart';
+export 'package:queroobras_mobile/mvvm/model/item_by_current_user_data.dart';
 
 export 'package:queroobras_mobile/mvvm/api_management/api_url.dart';
 export '../screens/dashboard/home/acabamento_services.dart';
