@@ -139,7 +139,7 @@ class VendorFormController extends GetxController {
         'page': currentPage.value.toString(),
         'per_page': itemsPerPage.value.toString(),
       };
-      var response = await _apiManager.read(ApiUrl.getProduct, true, params);
+      var response = await _apiManager.read(ApiUrl.itemByOwner, true, params);
 
       jsonDecode(response.body);
 

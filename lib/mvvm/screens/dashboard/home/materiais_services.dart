@@ -3,28 +3,6 @@ import '../../../const/export.dart';
 class MaterialShopScreen extends StatelessWidget {
   const MaterialShopScreen({super.key});
 
-  // Mock data for the first section to maintain consistency with GridView.builder
-  final List<Map<String, String>> recentProducts = const [
-    {
-      'imageUrl': "assets/images/cement.png",
-      'title': 'Título 1',
-      'subtitle': 'Legenda 1',
-      'price': '\$20',
-    },
-    {
-      'imageUrl': "assets/images/cement.png",
-      'title': 'Título 2',
-      'subtitle': 'Legenda 2',
-      'price': '\$35',
-    },
-    {
-      'imageUrl': "assets/images/cement.png",
-      'title': 'Título 3',
-      'subtitle': 'Legenda 3',
-      'price': '\$15',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     final pController = Get.find<ProductDetailsController>();
@@ -51,8 +29,9 @@ class MaterialShopScreen extends StatelessWidget {
             // The main column holds the fixed header elements and the expanded, scrollable grid.
             children: [
               // 🔍 Search Bar (Fixed at the top)
-              const SearchBarWidgetMain(
+              SearchBarWidgetMain(
                 hintText: "O que você está procurando?",
+                onChanged: pController.updateSearchTerm,
               ),
               const SizedBox(height: 20),
 
@@ -76,36 +55,123 @@ class MaterialShopScreen extends StatelessWidget {
               // and since it is a scrollable widget itself, it will handle the scrolling.
               // We remove SingleChildScrollView and shrinkWrap: true.
               FutureBuilder(
-                future: Future.wait([
-                  pController.getAllProduct()
-                ]),
+                future: Future.wait([pController.getAllProduct()]),
                 builder: (context, asyncSnapshot) {
+                  if (asyncSnapshot.connectionState ==
+                          ConnectionState.waiting &&
+                      pController.product.value.items == null) {
+                    return Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(12.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    );
+                  }
                   return Expanded(
-                    child: GridView.builder(
-                      // We use a large number (e.g., 50) to ensure the grid overflows
-                      // and scrolling can be tested.
-                      itemCount: 50,
-                      // shrinkWrap: true is removed.
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 8, // Added small spacing for better look
-                        mainAxisSpacing: 8, // Added small spacing for better look
-                        childAspectRatio:
-                            0.7, // Adjusted aspect ratio to fit the card content better
-                      ),
-                      itemBuilder: (context, index) => ProductCardM(
-                        onTap: () {
-                          // Navigate to product detail
-                          Get.toNamed(AppRoutes.productDetail);
-                        },
-                        imageUrl: "assets/images/lawn_mower.png",
-                        title: 'Product $index',
-                        subtitle: 'Category',
-                        price: '\$${20 + index}',
-                      ),
-                    ),
+                    child: Obx(() {
+                      // Use the filtered list count for checks and building.
+
+                      // Show initial loading screen (based on master list status)
+                      if (pController.isLoading.value &&
+                          pController.masterItemList.isEmpty) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      final displayList = pController
+                          .filteredItemList; // Correct list to display
+                      // Show "No results" if the filtered list is empty after initial load
+                      if (!pController.isLoading.value && displayList.isEmpty) {
+                        return Center(
+                          child: Text(
+                            pController.searchTerm.isEmpty
+                                ? 'No products available.'
+                                : 'No products found matching "${pController.searchTerm.value}".',
+                          ),
+                        );
+                      }
+                      // Use the filtered list count for checks and building.
+
+                      // ... (Loading and No Results checks are correct)
+
+                      return RefreshIndicator(
+                        onRefresh: () =>
+                            pController.getAllProduct(isInitial: true),
+                        child: NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            // Check if the user is scrolling near the bottom
+                            if (scrollInfo.metrics.pixels >=
+                                    scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                                !pController.isPaginating.value &&
+                                pController.hasMoreData.value &&
+                                pController.searchTerm.isEmpty) {
+                              // 👈 IMPORTANT: Only load more pages if NOT searching
+                              pController.loadNextPage();
+                            }
+                            return true;
+                          },
+                          child: GridView.builder(
+                            // 1. FIX: Use displayList.length for the item count
+                            itemCount:
+                                displayList
+                                    .length + // <-- CHANGED from pController.itemList.length
+                                (pController.hasMoreData.value &&
+                                        pController.searchTerm.isEmpty
+                                    ? 1
+                                    : 0),
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 3,
+                                  crossAxisSpacing: 8,
+                                  mainAxisSpacing: 8,
+                                  childAspectRatio: 0.7,
+                                ),
+                            itemBuilder: (context, index) {
+                              // 2. FIX: Check index against displayList.length
+                              if (index < displayList.length) {
+                                // <-- CHANGED from pController.itemList.length
+                                var dd = displayList[index];
+                                return ProductCardM(
+                                  // ... (ProductCardM content)
+                                  title: '${dd.name}',
+                                  subtitle: '${dd.type}',
+                                  price: '\$ ${dd.price}',
+                                  imageUrl: "assets/images/lawn_mower.png",
+                                  onTap: () {
+                                    // Navigate to product detail
+                                    Get.to(() => ProductDetailsScreen(dd: dd));
+                                  },
+                                );
+                              } else {
+                                // This is the last item: show the pagination loader or an empty space
+                                // The Obx logic here is mostly fine, but let's clean up the unused itemList references.
+                                return Obx(
+                                  () => pController.isPaginating.value
+                                      ? const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(12.0),
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        )
+                                      : displayList
+                                                .isNotEmpty && // <-- Use displayList
+                                            !pController.hasMoreData.value
+                                      ? const Center(
+                                          child: Padding(
+                                            padding: EdgeInsets.all(12.0),
+                                            child: Text(
+                                              "You've reached the end of the list.",
+                                            ),
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
+                                );
+                              }
+                            },
+                          ),
+                        ),
+                      );
+                    }),
                   );
-                }
+                },
               ),
             ],
           ),
@@ -212,15 +278,15 @@ class ProductCardM extends StatelessWidget {
                             fontFamily: 'Josefin Sans',
                           ),
                         ),
-                        const Text(
-                          'Carrinho',
-                          style: TextStyle(
-                            color: Color(0xFFF9761E),
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Josefin Sans',
-                          ),
-                        ),
+                        // const Text(
+                        //   'Carrinho',
+                        //   style: TextStyle(
+                        //     color: Color(0xFFF9761E),
+                        //     fontSize: 11,
+                        //     fontWeight: FontWeight.w700,
+                        //     fontFamily: 'Josefin Sans',
+                        //   ),
+                        // ),
                       ],
                     ),
                   ],

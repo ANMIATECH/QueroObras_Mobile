@@ -1,3 +1,7 @@
+export 'package:queroobras_mobile/mvvm/model/cart_model.dart';
+
+export 'package:queroobras_mobile/mvvm/screens/dashboard/order/checkoutdetails.dart';
+
 export 'package:queroobras_mobile/mvvm/screens/dashboard/home/vendor_edit_screen.dart';
 
 export 'package:queroobras_mobile/mvvm/screens/auth/change_password_word.dart';

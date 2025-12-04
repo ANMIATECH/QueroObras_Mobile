@@ -26,7 +26,7 @@ class CustomText {
   static const String otpPinSub = 'SENHA OTP';
   static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
-  static final String checkOut = 'Check out all item : R \$239';
+  static final String checkOut = 'Check out all item : R ';
   static const String update = 'Update';
   static const String cadastrar = 'Cadastrar-se';
   static const String newPassword = 'New password';

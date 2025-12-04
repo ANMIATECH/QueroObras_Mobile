@@ -14,8 +14,11 @@ class ApiUrl {
   static String identity = "onboard/identity";
   static String changePassword = "auth/verify/otp";
   static String forgetPassword = "auth/signup";
-  static String getProduct = "v1/item/list?per_page=1";
+  static String getProduct = "v1/item/list";
+  static String addToCart= "v1/cart/sync";
+  static String cart= "v1/cart";
   static String resetPasswordEmail = "v1/password/otp/request";
   static String createItem = "v1/vendor/item/create";
+  static String itemByOwner = "v1/vendor/item/list";
   static String updateItem = "v1/vendor/item/";
 }

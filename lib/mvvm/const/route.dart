@@ -19,10 +19,10 @@ class AppRoutes {
   static const String changePasswordWord = '/changePasswordWord';
   static const String bottomNav = '/bottomNav';
   static const String materiaisServiceProvider = '/materiaisServiceProvider';
-  static const String productDetail = '/productDetail';
   static const String vender = '/vender';
   static const String venderCreate = '/venderCreate';
   static const String uploadSuccessScreen = '/uploadSuccessScreen';
+  static const String checkout = '/checkout';
 
   /// A map defining all application routes.
   static Map<String, WidgetBuilder> get routes => {
@@ -40,9 +40,9 @@ class AppRoutes {
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),
     materiaisServiceProvider: (context) => MaterialShopScreen(),
-    productDetail: (context) => ProductDetailsScreen(),
     vender: (context) => VenderScreen(),
     venderCreate: (context) => VendorFormScreen(),
     uploadSuccessScreen: (context) => UploadSuccessScreen(),
+    checkout: (context) => OrdersScreen(),
   };
 }
