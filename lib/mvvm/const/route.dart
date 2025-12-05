@@ -1,6 +1,7 @@
 import 'package:queroobras_mobile/mvvm/screens/auth/cnpjprofilepic_update.dart';
 
 import '../const/export.dart';
+import '../screens/dashboard/notification/notification.dart';
 
 /// A utility class to hold all static route names and the route map.
 class AppRoutes {
@@ -8,6 +9,9 @@ class AppRoutes {
   static const String onboarding = '/';
   static const String welcome = '/welcome';
   static const String login = '/login';
+  static const String notification = '/notification';
+  static const String oneOnOneChat = '/oneOnOneChat';
+  // static const String serviceRequestScreen = '/serviceRequestScreen';
   static const String registration = '/registration';
   static const String cpfBottomNav = '/cpfBottomNav';
   static const String cpnjBottomNav = '/cpnjBottomNav';
@@ -30,6 +34,8 @@ class AppRoutes {
     onboarding: (context) => const OnboardingScreen(),
     welcome: (context) => const WelcomeScreen(),
     login: (context) => LoginScreen(),
+    oneOnOneChat: (context) => OneOnOneChat(),
+    // serviceRequestScreen: (context) => ServiceRequestScreen(),
     registration: (context) => const RegistrationScreen(),
     forgetPassword: (context) => const ResetPasswordScreen(),
     cpfBottomNav: (context) => CpfBottomNavScreen(),
@@ -37,6 +43,7 @@ class AppRoutes {
     cpfProfile: (context) => ProfileUploadScreen(),
     cnpjProfile: (context) => CNPJProfileUploadScreen(),
     serviceScreen: (context) => ServicesScreen(),
+    notification: (context) => NotificationScreen(),
     // bottomNavCpf: (context) => BottomNavScreen(),
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),

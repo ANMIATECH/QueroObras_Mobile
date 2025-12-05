@@ -72,6 +72,10 @@ class LoginController extends GetxController {
     }
   }
 
+  void toggleRememberMe() {
+    rememberMeNotifier.value = !rememberMeNotifier.value;
+  }
+
   final RxInt remainingSeconds = 82.obs; // 1 minute 22 seconds
   final RxBool canResend = false.obs;
   Timer? _timer;
@@ -270,33 +274,47 @@ class LoginController extends GetxController {
       isLoading.value = false;
 
       dynamic message = jsonDecode(response.body);
-      // print(message);
 
       if (response.statusCode == 200) {
-        // Login successful
-        passwordController.clear();
-        emailController.clear();
 
-        CustomLoading.showNotification(
-          message: "User logged in successfully",
-          messageType: MessageType.success,
-        );
+        // Extract login info
+        var token = message["token"];
+        var userStatus = message["user"]["user_status"];
 
-        // Get.offAllNamed(RouteNameV1.bottomNav);
+        print("TOKEN FROM API: $token");
+        print("USER STATUS FROM API: $userStatus");
 
-        var token = message["data"]["token"];
-        var userType = message["data"]["user"]["onboard_type"].toString();
-
+        // REMEMBER ME LOGIC
         if (rememberMeNotifier.value) {
+          // 🔥 Save permanently
           StorageDesign.createItem(StorageDesign.token, token);
-          StorageDesign.createItem(StorageDesign.userType, userType);
+          StorageDesign.createItem(StorageDesign.userType, userStatus);
+          StorageDesign.deleteItem(StorageDesign.tokenExpiry);
         } else {
-          StorageDesign.deleteItem(StorageDesign.token);
-          StorageDesign.deleteItem(StorageDesign.userType);
+          // 🔥 Save token but WITH 24-hour expiry
+          StorageDesign.createItem(StorageDesign.token, token);
+          StorageDesign.createItem(StorageDesign.userType, userStatus);
+
+          // Save expiry timestamp (24 hours from now)
+          DateTime expiry = DateTime.now().add(Duration(hours: 24));
+          StorageDesign.createItem(StorageDesign.tokenExpiry, expiry.toIso8601String());
         }
+
+        print("READ TOKEN AFTER SAVE: ${StorageDesign.readItem(StorageDesign.token)}");
+        print("READ USER TYPE AFTER SAVE: ${StorageDesign.readItem(StorageDesign.userType)}");
+
+        // Navigation
+        if (token != null && token.toString().isNotEmpty) {
+          if (userStatus == "cpf") {
+            Get.offAllNamed(AppRoutes.cpfBottomNav);
+          } else if (userStatus == "cnpj") {
+            Get.offAllNamed(AppRoutes.cpnjBottomNav);
+          }
+        }
+
       } else {
-        // Extract the error message from JSON
-        String errorMsg = "Login failed"; // default
+        String errorMsg = "Login failed";
+
         if (message.containsKey("error") &&
             message["error"].containsKey("message")) {
           errorMsg = message["error"]["message"];
@@ -306,12 +324,6 @@ class LoginController extends GetxController {
           message: errorMsg,
           messageType: MessageType.error,
         );
-
-        // Optional: handle next_step or action if provided (e.g., email verification)
-        if (message.containsKey("action") &&
-            message["action"] == "verify_email") {
-          // You can navigate to OTP screen here if needed
-        }
       }
     } catch (e) {
       isLoading.value = false;

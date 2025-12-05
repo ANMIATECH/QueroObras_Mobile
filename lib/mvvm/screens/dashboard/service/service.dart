@@ -99,7 +99,7 @@ class ServicesScreen extends StatelessWidget {
                       borderRadius: BorderRadius.circular(6),
                       child: ServiceCard(
                         imageUrl: category['avatar'],
-                        // title:  category["name"] ?? "Serviço",
+                        title:  category["name"] ?? "Serviço",
                       ),
                     );
                   }, childCount: controller.categories.length),
@@ -144,7 +144,7 @@ class ServicesScreen extends StatelessWidget {
                         children: [
                           ServiceCard(
                             imageUrl: category['avatar'],
-                            // title: category["name"] ?? "Serviço",
+                            title: category["name"] ?? "Serviço",
                           ),
                         ],
                       ),
@@ -180,6 +180,9 @@ class ServicesScreen extends StatelessWidget {
 
                       if (list.length < 2) return const SizedBox();
 
+                      final firstCategory = list[0];
+                      final secondCategory = list[1];
+
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -187,12 +190,13 @@ class ServicesScreen extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               Get.to(
-                                () => ServicesProvidersByCategory(
-                                  slug: list[0]['slug'],
-                                ),
+                                    () => ServicesProvidersByCategory(slug: firstCategory['slug']),
                               );
                             },
-                            child: ServiceCard(imageUrl: list[0]['avatar']),
+                            child: ServiceCard(
+                              imageUrl: firstCategory['avatar'],
+                              title: firstCategory['name'] ?? "Serviço",
+                            ),
                           ),
 
                           const SizedBox(width: 12),
@@ -201,12 +205,13 @@ class ServicesScreen extends StatelessWidget {
                           InkWell(
                             onTap: () {
                               Get.to(
-                                    () => ServicesProvidersByCategory(
-                                  slug: list[1]['slug'],
-                                ),
+                                    () => ServicesProvidersByCategory(slug: secondCategory['slug']),
                               );
                             },
-                            child: ServiceCard(imageUrl: list[1]['avatar']),
+                            child: ServiceCard(
+                              imageUrl: secondCategory['avatar'],
+                              title: secondCategory['name'] ?? "Serviço",
+                            ),
                           ),
 
                           const SizedBox(width: 12),
@@ -215,7 +220,6 @@ class ServicesScreen extends StatelessWidget {
                           Expanded(
                             child: Container(
                               height: 78.5,
-                              width:191,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(6),
                                 color: const Color(0xFFF9761E),
@@ -252,7 +256,7 @@ class ServicesScreen extends StatelessWidget {
 
 class ServiceCard extends StatelessWidget {
   final String imageUrl;
-  // final String title;
+  final String title;
   final double? width;
   final double? height;
   final EdgeInsets? padding;
@@ -262,7 +266,7 @@ class ServiceCard extends StatelessWidget {
   const ServiceCard({
     super.key,
     required this.imageUrl,
-    // this.title,
+    required this.title,
     this.width = 89,
     this.height,
     this.padding,
@@ -291,26 +295,26 @@ class ServiceCard extends StatelessWidget {
                   ),
                 ),
               ),
-              // Positioned.fill(
-              //   child: Container(
-              //     padding: padding ?? const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
-              //     child: Column(
-              //       mainAxisAlignment: MainAxisAlignment.end,
-              //       children: [
-              //         Text(
-              //           title,
-              //           textAlign: textAlign,
-              //           style: const TextStyle(
-              //             fontSize: 12,
-              //             color: Colors.white,
-              //             fontWeight: FontWeight.w500,
-              //             fontFamily: 'Josefin Sans',
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
+              Positioned.fill(
+                child: Container(
+                  padding: padding ?? const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text(
+                        title,
+                        textAlign: textAlign,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Josefin Sans',
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

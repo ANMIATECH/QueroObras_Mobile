@@ -4,6 +4,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
 
@@ -38,7 +40,11 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
-<!--        <meta-data android:name="com.google.android.geo.API_KEY"-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyDQb-o-DDR_zWS-358zA5mYhRp0-0-MZBg"/>
+
+        <!--        <meta-data android:name="com.google.android.geo.API_KEY"-->
 <!--            android:value="${MAPS_API_KEY}" />-->
     </application>
     <!-- Required to query activities that can process text, see:

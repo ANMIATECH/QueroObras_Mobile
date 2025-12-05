@@ -5,8 +5,9 @@ class OrdersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final controller = Get.put(ProductDetailsController());
+    Get.lazyPut(() => ProductDetailsController());
 
+    final controller = Get.find<ProductDetailsController>();
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.white,

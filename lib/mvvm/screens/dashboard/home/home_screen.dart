@@ -88,18 +88,25 @@ class HomeScreen extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(width: 3),
-                            Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFEEEEEE,
-                                ), // background color
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Center(
-                                child: CustomImageView(
-                                  imagePath: CustomImage.notification,
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.notification);
+                              },
+                              child: Container(
+                                width: 50,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: const Color(
+                                    0xFFEEEEEE,
+                                  ), // background color
+                                  borderRadius: BorderRadius.circular(999),
+                                ),
+                                child: Center(
+                                  child: CustomImageView(
+                                    imagePath: CustomImage.notification,
+                                  ),
                                 ),
                               ),
                             ),
@@ -379,14 +386,12 @@ class HomeScreen extends StatelessWidget {
                                 imageUrl: "assets/images/Meu_pedido.svg",
                                 title: 'Meu pedido',
                                 onTap: () async {
-                                  String? token = StorageDesign.readItem(
-                                    StorageDesign.token,
-                                  );
+                                  String? token = StorageDesign.readItem(StorageDesign.token);
                                   if (token == null || token.isEmpty) {
-                                    // User NOT logged in → go to Login
                                     Get.toNamed(AppRoutes.login);
                                   } else {
                                     Get.toNamed(AppRoutes.checkout);
+
                                   }
                                 },
                               ),

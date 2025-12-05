@@ -5,7 +5,9 @@ class VenderScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final vController = Get.put(VendorFormController());
+    Get.lazyPut(() => VendorFormController());
+
+    final vController = Get.find<VendorFormController>();
 
     return SafeArea(
       child: Scaffold(

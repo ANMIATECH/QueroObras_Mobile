@@ -13,10 +13,27 @@ class ServiceController extends GetxController {
   RxDouble myLng = 0.0.obs;
 
   Future<void> getCurrentLocation() async {
+    LocationPermission permission;
+
+    // Check permission
+    permission = await Geolocator.checkPermission();
+
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      throw Exception("Location permissions are permanently denied.");
+    }
+
+    if (permission == LocationPermission.denied) {
+      throw Exception("User denied location permission.");
+    }
+
+    // Now get location safely
     Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    myLat.value = position.latitude;
-    myLng.value = position.longitude;
+      desiredAccuracy: LocationAccuracy.high,
+    );
   }
 
 
@@ -139,6 +156,7 @@ class ServiceController extends GetxController {
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
+        print(response.body);
 
         providers.value = data["users"] ?? [];
         filteredProviders.value = List.from(providers);

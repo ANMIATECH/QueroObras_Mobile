@@ -96,7 +96,7 @@ class ServicesProvidersByCategory extends StatelessWidget {
                       Row(
                         children: const [
                           FilterButtonA(
-                            text: 'ocalização',
+                            text: 'localização',
                             iconUrl: 'assets/images/location.svg',
                             width: 110,
                           ),
@@ -135,10 +135,18 @@ class ServicesProvidersByCategory extends StatelessWidget {
                                   String? token = StorageDesign.readItem(StorageDesign.token);
 
                                   if (token == null || token.isEmpty) {
-                                    // User NOT logged in → go to Login
-                                    // Get.toNamed(RouteNameV1.login);
+                                    Get.toNamed(AppRoutes.login);
                                   } else {
-                                    // Get.toNamed(RouteNameV1.serviceRequestScreen);
+                                    Get.to(() => ServiceRequestScreen(
+                                      providerName: firstName,
+                                      serviceName: role,
+                                      amount: provider['profile']?['hourly_rate']?.toString() ?? 'N/A',
+                                      imageUrl: provider['profile']?['avatar'] == null
+                                          ? 'assets/images/profile_dummy.png'
+                                          : "${provider['profile']['avatar']}",
+                                      providerLat: double.tryParse(provider['profile']?['latitude'] ?? '0') ?? 0,
+                                      providerLng: double.tryParse(provider['profile']?['longitude'] ?? '0') ?? 0,
+                                    ));
                                   }
                                 },
                                 child: ProviderCardA(
@@ -146,10 +154,10 @@ class ServicesProvidersByCategory extends StatelessWidget {
                                     name: firstName,
                                     role: role,
                                     distance: "${distanceKm.toStringAsFixed(1)} km de você",
-                                    hourlyRate: '',
+                                    hourlyRate: provider['profile']?['hourly_rate']?.toString() ?? '',
                                     imageUrl: provider['profile']?['avatar'] == null
                                         ? 'assets/images/profile_dummy.png'
-                                        : "https://yourdomain.com/${provider['profile']['avatar']}",
+                                        : "${provider['profile']['avatar']}",
                                   ),
                                 ),
                               );

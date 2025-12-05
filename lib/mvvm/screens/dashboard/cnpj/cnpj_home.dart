@@ -78,8 +78,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                         fontWeight: FontWeight.w400,
                                         fontFamily: 'Josefin Sans',
                                       ),
-                                      onChanged: (value) {
-                                      },
+                                      onChanged: (value) {},
                                     ),
                                   ),
                                 ],
@@ -87,20 +86,27 @@ class CnpjHomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 3),
-                          Container(
-                            width: 50,
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: const Color(
-                                0xFFEEEEEE,
-                              ), // background color
-                              borderRadius: BorderRadius.circular(
-                                999,
-                              ), // optional, if you want rounded corners
-                            ),
-                            child: Center(
-                              child: CustomImageView(
-                                imagePath: CustomImage.notification,
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.notification);
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFEEEEEE,
+                                ), // background color
+                                borderRadius: BorderRadius.circular(
+                                  999,
+                                ), // optional, if you want rounded corners
+                              ),
+                              child: Center(
+                                child: CustomImageView(
+                                  imagePath: CustomImage.notification,
+                                ),
                               ),
                             ),
                           ),
@@ -173,11 +179,11 @@ class CnpjHomeScreen extends StatelessWidget {
                                   BorderRadius.only(
                                     topLeft: Radius.circular(11),
                                   ),
-                                    onTap: (){
-                                Get.toNamed(AppRoutes.materiaisServiceProvider);
-
-                                    }
-
+                                  onTap: () {
+                                    Get.toNamed(
+                                      AppRoutes.materiaisServiceProvider,
+                                    );
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -188,10 +194,9 @@ class CnpjHomeScreen extends StatelessWidget {
                                   BorderRadius.only(
                                     topRight: Radius.circular(11),
                                   ),
-                                  onTap: (){
+                                  onTap: () {
                                     // Get.toNamed(RouteNameV1.ferramentasServiceProvider);
-
-                                  }
+                                  },
                                 ),
                               ),
                             ],
@@ -206,10 +211,9 @@ class CnpjHomeScreen extends StatelessWidget {
                                   BorderRadius.only(
                                     bottomLeft: Radius.circular(11),
                                   ),
-                                  onTap: (){
+                                  onTap: () {
                                     // Get.toNamed(RouteNameV1.acabamentoServiceProvider);
-
-                                  }
+                                  },
                                 ),
                               ),
                               const SizedBox(width: 10),
@@ -317,7 +321,9 @@ class CnpjHomeScreen extends StatelessWidget {
                             imageUrl: "assets/images/Vender.svg",
                             title: 'Vender',
                             onTap: () async {
-                              String? token = StorageDesign.readItem(StorageDesign.token);
+                              String? token = StorageDesign.readItem(
+                                StorageDesign.token,
+                              );
 
                               if (token == null || token.isEmpty) {
                                 // Get.toNamed(RouteNameV1.login);
@@ -344,15 +350,14 @@ class CnpjHomeScreen extends StatelessWidget {
       floatingActionButton: CustomImageView(imagePath: CustomImage.chat),
     );
   }
-
-
 }
+
 Widget buildCategoryCard(
-    String iconUrl,
-    String title,
-    BorderRadius borderRadius, {
-      VoidCallback? onTap,
-    }) {
+  String iconUrl,
+  String title,
+  BorderRadius borderRadius, {
+  VoidCallback? onTap,
+}) {
   return GestureDetector(
     onTap: onTap,
     child: Container(

@@ -16,9 +16,9 @@ class CpfBottomNavScreen extends StatelessWidget {
   // Screens for navigation
   final List<Widget> screens = [
     const HomeScreen(),
-    OrdersScreen(),
+   StorageDesign.validKey(StorageDesign.token)? OrdersScreen() : Container(),
     ChatScreen(),
-    SearchScreen(),
+    StorageDesign.validKey(StorageDesign.token)? SearchScreen() : Container(),
     ProfileScreen(),
   ];
 

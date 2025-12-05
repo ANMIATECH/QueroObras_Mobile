@@ -149,22 +149,30 @@ class LoginScreen extends StatelessWidget {
   }
 
   Widget _buildRememberAndForgot(BuildContext context) {
-    // Using a simple Row for layout as Checkbox/State is removed
+    final lController = Get.put(LoginController());
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Row(
           children: [
             // Placeholder for Checkbox
-            Checkbox(
-              value: true, // Mock checked state
-              onChanged: (bool? newValue) {}, // Empty function
-              activeColor: CustomColor.primary,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(4),
+        ValueListenableBuilder<bool>(
+          valueListenable: lController.rememberMeNotifier,
+          builder: (context, value, child) {
+            return InkWell(
+              onTap: () => lController.toggleRememberMe(),
+              child: Row(
+                children: [
+                  Checkbox(
+                    value: value,
+                    onChanged: (val) => lController.toggleRememberMe(),
+                  ),
+
+                ],
               ),
-              visualDensity: VisualDensity.compact,
-            ),
+            );
+          },
+        ),
             Text(
               CustomText.rememberMe,
               style: CustomFontStyle.body(
