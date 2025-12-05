@@ -89,6 +89,9 @@ class NotificationScreen extends StatelessWidget {
                         ),
 
                         const SizedBox(height: 15),
+                        CustomerRequestCard(),
+                        const SizedBox(height: 15),
+
 
                         // System Update Notification
                         const NotificationCard(
@@ -208,6 +211,238 @@ class NotificationButton extends StatelessWidget {
             color: Colors.white,
             fontFamily: 'Josefin Sans',
             height: 1.7,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomerRequestCard extends StatelessWidget {
+  final String title;
+  final String imageUrl;
+  final String location;
+  final String description;
+  final VoidCallback? onCancel;
+  final VoidCallback? onApprove;
+
+  const CustomerRequestCard({
+    super.key,
+    this.title = 'New customer',
+    this.imageUrl = 'https://api.builder.io/api/v1/image/assets/TEMP/57d5fd924518d37875d103d9da2aa409350dfd72?width=692',
+    this.location = 'Nigeria - turkey',
+    this.description = 'i want you to repair my bathroom and to make it more beautiful.',
+    this.onCancel,
+    this.onApprove,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isTablet = screenWidth > 640 && screenWidth <= 991;
+    final isMobile = screenWidth <= 640;
+
+    double containerMaxWidth = 400;
+    double containerPadding = 27;
+    double contentWidth = 346;
+    double imageHeight = 240;
+    double borderRadius = 20;
+    double contentGap = 19;
+    double titleFontSize = 20;
+    double descriptionFontSize = 16;
+    double locationFontSize = 14;
+
+    if (isTablet) {
+      containerMaxWidth = 350;
+      containerPadding = 20;
+      contentWidth = 310;
+    } else if (isMobile) {
+      containerMaxWidth = 320;
+      containerPadding = 16;
+      contentWidth = 288;
+      imageHeight = 200;
+      borderRadius = 16;
+      contentGap = 16;
+      titleFontSize = 18;
+      descriptionFontSize = 14;
+      locationFontSize = 13;
+    }
+
+    return Center(
+      child: Container(
+        constraints: BoxConstraints(maxWidth: containerMaxWidth),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(borderRadius),
+          border: Border.all(color: const Color(0xFFFFE0C9)),
+          color: const Color(0xFFFFF5F0),
+        ),
+        padding: EdgeInsets.all(containerPadding),
+        child: SizedBox(
+          width: contentWidth,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Title
+              Text(
+                title,
+                style: TextStyle(
+                  fontFamily: 'Josefin Sans',
+                  fontSize: titleFontSize,
+                  fontWeight: FontWeight.w700,
+                  height: 24 / titleFontSize,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: contentGap),
+
+              // Image with pagination dots
+              SizedBox(
+                height: 235,
+                child: Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: CustomImageView(imagePath:
+                        imageUrl,
+                        width: contentWidth,
+                        height: imageHeight,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+
+                    // Pagination dots
+                    Positioned(
+                      left: isMobile ? 104 : (isTablet ? 115 : 126),
+                      top: isMobile ? 176 : 216,
+                      child: Row(
+                        children: List.generate(4, (index) {
+                          return Container(
+                            margin: const EdgeInsets.only(right: 5),
+                            width: 20,
+                            height: 4,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: const Color(0xFFCCCCCC),
+                            ),
+                          );
+                        }),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: contentGap),
+
+              // Location
+              Text(
+                location,
+                style: TextStyle(
+                  fontFamily: 'Josefin Sans',
+                  fontSize: locationFontSize,
+                  fontWeight: FontWeight.w700,
+                  height: 24 / locationFontSize,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: contentGap),
+
+              // Description with "More" link
+              SizedBox(
+                height: isMobile ? null : 48,
+                child: RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      fontFamily: 'Josefin Sans',
+                      fontSize: descriptionFontSize,
+                      fontWeight: FontWeight.w400,
+                      height: 24 / descriptionFontSize,
+                      color: Colors.black,
+                    ),
+                    children: [
+                      TextSpan(text: description),
+                      const TextSpan(text: ' '),
+                      const TextSpan(
+                        text: 'More',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF16577F),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(height: contentGap),
+
+              // Action buttons
+              isMobile
+                  ? Column(
+                children: [
+                  _buildButton(
+                    text: 'Cancel',
+                    backgroundColor: const Color(0xFFDC2626),
+                    onPressed: onCancel,
+                    width: double.infinity,
+                  ),
+                  const SizedBox(height: 8),
+                  _buildButton(
+                    text: 'Approve',
+                    backgroundColor: const Color(0xFF1E40AF),
+                    onPressed: onApprove,
+                    width: double.infinity,
+                  ),
+                ],
+              )
+                  : Row(
+                children: [
+                  _buildButton(
+                    text: 'Cancel',
+                    backgroundColor: const Color(0xFFDC2626),
+                    onPressed: onCancel,
+                    width: 145,
+                  ),
+                  const SizedBox(width: 10),
+                  _buildButton(
+                    text: 'Approve',
+                    backgroundColor: const Color(0xFF1E40AF),
+                    onPressed: onApprove,
+                    width: 145,
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildButton({
+    required String text,
+    required Color backgroundColor,
+    required VoidCallback? onPressed,
+    required double width,
+  }) {
+    return SizedBox(
+      width: width,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: backgroundColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.symmetric(vertical: 13),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(
+            fontFamily: 'Josefin Sans',
+            fontSize: 14,
+            fontWeight: FontWeight.w700,
+            height: 24 / 14,
           ),
         ),
       ),
