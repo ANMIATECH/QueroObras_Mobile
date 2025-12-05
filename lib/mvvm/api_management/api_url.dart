@@ -19,6 +19,7 @@ class ApiUrl {
   static String cart= "v1/cart";
   static String resetPasswordEmail = "v1/password/otp/request";
   static String createItem = "v1/vendor/item/create";
+  static String serviceRequests = "v1/service-requests";
   static String itemByOwner = "v1/vendor/item/list";
   static String updateItem = "v1/vendor/item/";
 }

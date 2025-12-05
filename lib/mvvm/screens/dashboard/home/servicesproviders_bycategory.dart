@@ -1,5 +1,4 @@
 import '../../../const/export.dart';
-import '../../../controller/service_controller.dart';
 
 class ServicesProvidersByCategory extends StatelessWidget {
   final String slug;
@@ -146,6 +145,7 @@ class ServicesProvidersByCategory extends StatelessWidget {
                                           : "${provider['profile']['avatar']}",
                                       providerLat: double.tryParse(provider['profile']?['latitude'] ?? '0') ?? 0,
                                       providerLng: double.tryParse(provider['profile']?['longitude'] ?? '0') ?? 0,
+                                      serviceProviderId:provider['profile']?['id']?.toString() ?? 'N/A'
                                     ));
                                   }
                                 },

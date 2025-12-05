@@ -1,6 +1,5 @@
 import '/mvvm/const/export.dart';
 
-
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
 
@@ -180,11 +179,9 @@ class ProfileMenuSection extends StatelessWidget {
                   icon: Icons.edit,
                   title: 'Editar Perfil',
                   hasArrow: true,
-                  onTap: (){
+                  onTap: () {
                     // Get.toNamed(RouteNameV1.serviceProviderAvailability, );
-
                   },
-
                 ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
@@ -193,22 +190,18 @@ class ProfileMenuSection extends StatelessWidget {
                   subtitle: 'Hoje das 09h às 18h',
                   hasArrow: true,
                   isExpanded: true,
-                  onTap: (){
+                  onTap: () {
                     // Get.toNamed(RouteNameV1.profileEdit, );
-
                   },
-
                 ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.star_border,
                   title: 'Avaliações',
                   hasArrow: true,
-                  onTap: (){
+                  onTap: () {
                     // Get.toNamed(RouteNameV1.serviceProviderReview, );
-
                   },
-
                 ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
@@ -243,6 +236,10 @@ class ProfileMenuSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
+                  onTap: () {
+                    StorageDesign.deleteItem(StorageDesign.token);
+                    Get.offAllNamed(AppRoutes.login);
+                  },
                   icon: Icons.logout,
                   title: 'Sair',
                   hasArrow: false,
@@ -256,8 +253,6 @@ class ProfileMenuSection extends StatelessWidget {
     );
   }
 }
-
-
 
 class ProfileMenuItemWidget extends StatelessWidget {
   final IconData icon;
@@ -293,85 +288,84 @@ class ProfileMenuItemWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 10),
         child: isExpanded && subtitle != null
             ? Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    Icon(icon, size: 24, color: Colors.black),
-                    const SizedBox(width: 10),
-                    Text(
-                      title,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: titleFontSize,
-                        fontWeight: FontWeight.w700,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          Icon(icon, size: 24, color: Colors.black),
+                          const SizedBox(width: 10),
+                          Text(
+                            title,
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: titleFontSize,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Josefin Sans',
+                              height: 24 / titleFontSize,
+                            ),
+                          ),
+                        ],
+                      ),
+                      if (hasArrow)
+                        Transform.rotate(
+                          angle: 1.5708,
+                          child: Icon(
+                            Icons.arrow_forward_ios,
+                            size: 18,
+                            color: Colors.black,
+                          ),
+                        ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 34, top: 5),
+                    child: Text(
+                      subtitle!,
+                      style: const TextStyle(
+                        color: Color(0xFF8C8C8C),
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
                         fontFamily: 'Josefin Sans',
-                        height: 24 / titleFontSize,
+                        height: 24 / 14,
                       ),
                     ),
-                  ],
-                ),
-                if (hasArrow)
-                  Transform.rotate(
-                    angle: 1.5708,
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 18,
-                      color: Colors.black,
-                    ),
                   ),
-              ],
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 34, top: 5),
-              child: Text(
-                subtitle!,
-                style: const TextStyle(
-                  color: Color(0xFF8C8C8C),
-                  fontSize: 14,
-                  fontWeight: FontWeight.w400,
-                  fontFamily: 'Josefin Sans',
-                  height: 24 / 14,
-                ),
-              ),
-            ),
-          ],
-        )
+                ],
+              )
             : Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Icon(icon, size: 24, color: Colors.black),
-                const SizedBox(width: 10),
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: titleFontSize,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Josefin Sans',
-                    height: 24 / titleFontSize,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Icon(icon, size: 24, color: Colors.black),
+                      const SizedBox(width: 10),
+                      Text(
+                        title,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: titleFontSize,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Josefin Sans',
+                          height: 24 / titleFontSize,
+                        ),
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            if (hasArrow)
-              Transform.rotate(
-                angle: 1.5708,
-                child: Icon(
-                  Icons.arrow_forward_ios,
-                  size: 18,
-                  color: Colors.black,
-                ),
+                  if (hasArrow)
+                    Transform.rotate(
+                      angle: 1.5708,
+                      child: Icon(
+                        Icons.arrow_forward_ios,
+                        size: 18,
+                        color: Colors.black,
+                      ),
+                    ),
+                ],
               ),
-          ],
-        ),
       ),
     );
   }
 }
-

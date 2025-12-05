@@ -1,3 +1,7 @@
+export 'package:queroobras_mobile/mvvm/controller/service_controller.dart';
+
+export 'package:queroobras_mobile/mvvm/screens/service_provider/request_service.dart';
+
 export 'package:queroobras_mobile/mvvm/model/cart_model.dart';
 
 export 'package:queroobras_mobile/mvvm/screens/dashboard/order/checkoutdetails.dart';

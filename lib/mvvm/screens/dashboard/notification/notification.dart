@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
+import '../../../const/export.dart';
 
 class NotificationScreen extends StatelessWidget {
   const NotificationScreen({super.key});
