@@ -1,10 +1,12 @@
 import '../../../const/export.dart';
 
-class NotificationScreen extends StatelessWidget {
-  const NotificationScreen({super.key});
+class NotificationCpnScreen extends StatelessWidget {
+  const NotificationCpnScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ServiceController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -14,99 +16,145 @@ class NotificationScreen extends StatelessWidget {
             color: Colors.white,
           ),
           child: SingleChildScrollView(
-            child: Container(
-              constraints: const BoxConstraints(maxWidth: 480),
-              width: double.infinity,
-              child: Column(
-                children: [
-                  // Header Section
-                  Container(
-                    width: double.infinity,
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    margin: const EdgeInsets.only(top: 5),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Row(
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                          icon: Icon(Icons.arrow_back_outlined),
-                        ),
-                        const SizedBox(width: 33),
-                        Expanded(
-                          child: Container(
-                            height: 34,
-                            alignment: Alignment.centerLeft,
-                            child: const Text(
-                              'Notification',
-                              style: TextStyle(
-                                fontSize: 32,
-                                fontWeight: FontWeight.w700,
-                                color: Colors.black,
-                                fontFamily: 'Josefin Sans',
-                                height: 1.0,
+            child: FutureBuilder(
+              future: controller.loadNoficationCpn(),
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
+                    controller.notificaitoncpnfCpn.value.data == null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return Container(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  width: double.infinity,
+                  child: Column(
+                    children: [
+                      // Header Section
+                      Container(
+                        width: double.infinity,
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        margin: const EdgeInsets.only(top: 5),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Row(
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.pop(context);
+                              },
+                              icon: Icon(Icons.arrow_back_outlined),
+                            ),
+                            const SizedBox(width: 33),
+                            Expanded(
+                              child: Container(
+                                height: 34,
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Notification',
+                                  style: TextStyle(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.w700,
+                                    color: Colors.black,
+                                    fontFamily: 'Josefin Sans',
+                                    height: 1.0,
+                                  ),
+                                ),
                               ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      // Notifications Section
+                      NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          // Check if the user is scrolling near the bottom
+                          if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                              !controller.isPaginatingCpn.value &&
+                              controller.hasMoreDataCpn.value) {
+                            // 👈 IMPORTANT: Only load more pages if NOT searching
+                            controller.loadNextPageCpn();
+                          }
+                          return true;
+                        },
+                        child: Container(
+                          width: double.infinity,
+                          constraints: const BoxConstraints(maxWidth: 400),
+                          margin: const EdgeInsets.only(top: 44),
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Column(
+                            children: List.generate(
+                              controller
+                                      .notificaitoncpn
+                                      .value
+                                      .data
+                                      ?.data
+                                      ?.length ??
+                                  0,
+                              (index) {
+                                var dd = controller
+                                    .notificaitoncpn
+                                    .value
+                                    .data
+                                    ?.data?[index];
+                                return Column(
+                                  children: [
+                                    // Service Provider Notification
+                                    NotificationCard(
+                                      title: 'Service Provider',
+                                      description:
+                                          'The service provider ${dd?.provider?.name} [specialisation] accept your request and the price is \$${dd?.replies?.first.amount}.',
+                                      actions: [
+                                        Row(
+                                          children: [
+                                            NotificationButton(
+                                              text: 'Cancel',
+                                              backgroundColor: const Color(
+                                                0xFFD10000,
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                            const SizedBox(width: 10),
+
+                                            NotificationButton(
+                                              text: 'Pay',
+                                              backgroundColor: const Color(
+                                                0xFF16577F,
+                                              ),
+                                              onPressed: () {},
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+
+                                    const SizedBox(height: 15),
+
+                                    // // System Update Notification
+                                    // if (userStatus != "cnpj")
+                                    //   const NotificationCard(
+                                    //     title: '[!] New Update',
+                                    //     description:
+                                    //         'Check the new update that we share in your system.',
+                                    //   ),
+                                  ],
+                                );
+                              },
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+
+                      // Bottom padding
+                      const SizedBox(height: 472),
+                    ],
                   ),
-
-                  // Notifications Section
-                  Container(
-                    width: double.infinity,
-                    constraints: const BoxConstraints(maxWidth: 400),
-                    margin: const EdgeInsets.only(top: 44),
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      children: [
-                        // Service Provider Notification
-                        NotificationCard(
-                          title: 'Service Provider',
-                          description:
-                              'The service provider [username] [specialisation] accept your request and the price is [price].',
-                          actions: [
-                            Row(
-                              children: [
-                                NotificationButton(
-                                  text: 'Cancel',
-                                  backgroundColor: const Color(0xFFD10000),
-                                  onPressed: () {},
-                                ),
-                                const SizedBox(width: 10),
-
-                                NotificationButton(
-                                  text: 'Pay',
-                                  backgroundColor: const Color(0xFF16577F),
-                                  onPressed: () {},
-                                ),
-                              ],
-                            ),
-
-                          ],
-                        ),
-
-                        const SizedBox(height: 15),
-                        CustomerRequestCard(),
-                        const SizedBox(height: 15),
-
-
-                        // System Update Notification
-                        const NotificationCard(
-                          title: '[!] New Update',
-                          description:
-                              'Check the new update that we share in your system.',
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // Bottom padding
-                  const SizedBox(height: 472),
-                ],
-              ),
+                );
+              },
             ),
           ),
         ),
@@ -229,9 +277,11 @@ class CustomerRequestCard extends StatelessWidget {
   const CustomerRequestCard({
     super.key,
     this.title = 'New customer',
-    this.imageUrl = 'https://api.builder.io/api/v1/image/assets/TEMP/57d5fd924518d37875d103d9da2aa409350dfd72?width=692',
+    this.imageUrl =
+        'https://api.builder.io/api/v1/image/assets/TEMP/57d5fd924518d37875d103d9da2aa409350dfd72?width=692',
     this.location = 'Nigeria - turkey',
-    this.description = 'i want you to repair my bathroom and to make it more beautiful.',
+    this.description =
+        'i want you to repair my bathroom and to make it more beautiful.',
     this.onCancel,
     this.onApprove,
   });
@@ -302,8 +352,8 @@ class CustomerRequestCard extends StatelessWidget {
                   children: [
                     ClipRRect(
                       borderRadius: BorderRadius.circular(20),
-                      child: CustomImageView(imagePath:
-                        imageUrl,
+                      child: CustomImageView(
+                        imagePath: imageUrl,
                         width: contentWidth,
                         height: imageHeight,
                         fit: BoxFit.cover,
@@ -377,39 +427,39 @@ class CustomerRequestCard extends StatelessWidget {
               // Action buttons
               isMobile
                   ? Column(
-                children: [
-                  _buildButton(
-                    text: 'Cancel',
-                    backgroundColor: const Color(0xFFDC2626),
-                    onPressed: onCancel,
-                    width: double.infinity,
-                  ),
-                  const SizedBox(height: 8),
-                  _buildButton(
-                    text: 'Approve',
-                    backgroundColor: const Color(0xFF1E40AF),
-                    onPressed: onApprove,
-                    width: double.infinity,
-                  ),
-                ],
-              )
+                      children: [
+                        _buildButton(
+                          text: 'Cancel',
+                          backgroundColor: const Color(0xFFDC2626),
+                          onPressed: onCancel,
+                          width: double.infinity,
+                        ),
+                        const SizedBox(height: 8),
+                        _buildButton(
+                          text: 'Approve',
+                          backgroundColor: const Color(0xFF1E40AF),
+                          onPressed: onApprove,
+                          width: double.infinity,
+                        ),
+                      ],
+                    )
                   : Row(
-                children: [
-                  _buildButton(
-                    text: 'Cancel',
-                    backgroundColor: const Color(0xFFDC2626),
-                    onPressed: onCancel,
-                    width: 145,
-                  ),
-                  const SizedBox(width: 10),
-                  _buildButton(
-                    text: 'Approve',
-                    backgroundColor: const Color(0xFF1E40AF),
-                    onPressed: onApprove,
-                    width: 145,
-                  ),
-                ],
-              ),
+                      children: [
+                        _buildButton(
+                          text: 'Cancel',
+                          backgroundColor: const Color(0xFFDC2626),
+                          onPressed: onCancel,
+                          width: 145,
+                        ),
+                        const SizedBox(width: 10),
+                        _buildButton(
+                          text: 'Approve',
+                          backgroundColor: const Color(0xFF1E40AF),
+                          onPressed: onApprove,
+                          width: 145,
+                        ),
+                      ],
+                    ),
             ],
           ),
         ),

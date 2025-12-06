@@ -56,10 +56,248 @@ class ServiceController extends GetxController {
     getCurrentLocation();
     getConstructionServiceProvider();
     getAcabamentoServiceProvider();
+    loadNofication(isInitial: true);
+    loadNoficationCpn(isInitial: true);
   }
 
   @override
   void onClose() {}
+
+  final RxList<Item> itemList =
+      <Item>[].obs; // To store the list of fetched items
+  final RxInt currentPage = 1.obs; // Tracks the current page number
+  final RxInt itemsPerPage =
+      10.obs; // Sets the limit (e.g., 10 items per request)
+  final RxBool isLoadingNotification =
+      false.obs; // Tracks initial loading state
+  final RxBool isPaginating =
+      false.obs; // Tracks loading state for subsequent pages (load more)
+  final RxBool hasMoreData =
+      true.obs; // Indicates if there are more pages to load
+  final notificaitoncpnf = NotificationCpnf().obs;
+  final RxList<dynamic> masterItemList = <dynamic>[].obs;
+
+  void loadNextPage() {
+    if (!isLoadingNotification.value &&
+        !isPaginating.value &&
+        hasMoreData.value) {
+      loadNofication();
+    }
+  }
+
+  void loadNextPageCpn() {
+    if (!isLoadingNotification.value &&
+        !isPaginating.value &&
+        hasMoreData.value) {
+      loadNoficationCpn();
+    }
+  }
+
+  final requestPricing = TextEditingController();
+  final notePricing = TextEditingController();
+  var approveRequestIsLoading = false.obs;
+
+  Future<void> approveRequest({required String id}) async {
+    if (requestPricing.text.isEmpty) {
+      CustomLoading.showNotification(
+        message: 'Kindly enter a price',
+        messageType: MessageType.error,
+      );
+      return;
+    }
+    try {
+      final Map<String, dynamic> body = {
+        'amount': num.parse(requestPricing.text.trim()),
+        'note': notePricing.text.trim(),
+      };
+      approveRequestIsLoading.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/reply",
+        body,
+        true,
+      );
+      approveRequestIsLoading.value = false;
+
+      if (response.statusCode == 201) {
+        requestPricing.clear();
+        notePricing.clear();
+        CustomLoading.showNotification(
+          message: 'Request price sent successful.',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to Approve.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      approveRequestIsLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      approveRequestIsLoading.value = false;
+    }
+  }
+
+  Future loadNofication({bool isInitial = false}) async {
+    if (!hasMoreData.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingNotification.value = true;
+      currentPage.value = 1; // Reset to page 1 for initial load/refresh
+      itemList.clear(); // Clear list for initial load/refresh
+      hasMoreData.value = true;
+    } else {
+      isPaginating.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPage.value.toString(),
+        'per_page': itemsPerPage.value.toString(),
+      };
+
+      var response = await _apiManager.read(
+        ApiUrl.serviceRequestAssigned,
+        true,
+        params,
+      );
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        notificaitoncpnf.value = NotificationCpnf.fromJson(data);
+
+        final List<DatumCpnf> fetchedItems =
+            notificaitoncpnf.value.data?.datacpnf ?? [];
+        final int totalPages =
+            notificaitoncpnf.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemList.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPage.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPage.value > totalPages) {
+          hasMoreData.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Failed to load items.',
+          messageType: MessageType.error,
+        );
+        hasMoreData.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingNotification.value = false;
+      isPaginating.value = false;
+    }
+  }
+
+  final RxList<Item> itemListCpn =
+      <Item>[].obs; // To store the list of fetched items
+  final RxInt currentPageCpn = 1.obs; // Tracks the current page number
+  final RxInt itemsPerPageCpn =
+      10.obs; // Sets the limit (e.g., 10 items per request)
+  final RxBool isLoadingNotificationCpn =
+      false.obs; // Tracks initial loading state
+  final RxBool isPaginatingCpn =
+      false.obs; // Tracks loading state for subsequent pages (load more)
+  final RxBool hasMoreDataCpn =
+      true.obs; // Indicates if there are more pages to load
+  final notificaitoncpnfCpn = NotificationCpnf().obs;
+  final notificaitoncpn = NotificationCpn().obs;
+  final RxList<dynamic> masterItemListCpn = <dynamic>[].obs;
+
+  Future loadNoficationCpn({bool isInitial = false}) async {
+    if (!hasMoreDataCpn.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingNotificationCpn.value = true;
+      currentPageCpn.value = 1; // Reset to page 1 for initial load/refresh
+      itemListCpn.clear(); // Clear list for initial load/refresh
+      hasMoreDataCpn.value = true;
+    } else {
+      isPaginatingCpn.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPage.value.toString(),
+        'per_page': itemsPerPage.value.toString(),
+      };
+
+      var response = await _apiManager.read(
+        ApiUrl.myServiceRequest,
+        true,
+        params,
+      );
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        notificaitoncpn.value = NotificationCpn.fromJson(data);
+
+        final List<DatumCpn> fetchedItems =
+            notificaitoncpn.value.data?.data ?? [];
+        final int totalPages =
+            notificaitoncpn.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemListCpn.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPageCpn.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPageCpn.value > totalPages) {
+          hasMoreDataCpn.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Failed to load items.',
+          messageType: MessageType.error,
+        );
+        hasMoreDataCpn.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingNotificationCpn.value = false;
+      isPaginatingCpn.value = false;
+    }
+  }
 
   Future<void> getPopularServiceProvider() async {
     try {

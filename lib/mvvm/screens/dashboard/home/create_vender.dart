@@ -279,6 +279,7 @@ class FormInputField extends StatelessWidget {
   final String hintText;
   final String iconUrl;
   final double iconWidth;
+  final TextInputType? keyboardType;
 
   const FormInputField({
     super.key,
@@ -286,6 +287,7 @@ class FormInputField extends StatelessWidget {
     required this.hintText,
     required this.iconUrl,
     this.iconWidth = 24,
+    this.keyboardType,
   });
 
   @override
@@ -298,6 +300,7 @@ class FormInputField extends StatelessWidget {
       ),
       child: TextFormField(
         controller: controller,
+        keyboardType: keyboardType,
         style: const TextStyle(
           fontFamily: 'Josefin Sans',
           fontSize: 15,

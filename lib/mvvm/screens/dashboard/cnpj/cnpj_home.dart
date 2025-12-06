@@ -88,9 +88,29 @@ class CnpjHomeScreen extends StatelessWidget {
                           const SizedBox(width: 3),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(AppRoutes.notification);
+                              final String? token =
+                                  StorageService.has(StorageDesign.token)
+                                  ? StorageService.read(StorageDesign.token)
+                                  : null;
+
+                              final String? userStatus =
+                                  StorageService.has("user_status")
+                                  ? StorageService.read("user_status")
+                                  : null;
+                              // ignore: unused_local_variable
+                              String initialRoute = AppRoutes.onboarding;
+
+                              if (token != null && token.isNotEmpty) {
+                                if (userStatus == "cpf") {
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(AppRoutes.notificationcpnf);
+                                } else if (userStatus == "cnpj") {
+                                  Navigator.of(
+                                    context,
+                                  ).pushNamed(AppRoutes.notificationcpnf);
+                                }
+                              }
                             },
                             child: Container(
                               width: 50,
