@@ -9,15 +9,15 @@ class AppRoutes {
   static const String onboarding = '/';
   static const String welcome = '/welcome';
   static const String login = '/login';
-  static const String notificationcpnf = '/notification';
+  static const String notificationcpnf = '/notificationcpnf';
   static const String oneOnOneChat = '/oneOnOneChat';
-  // static const String serviceRequestScreen = '/serviceRequestScreen';
+  static const String serviceRequestScreen = '/serviceRequestScreen';
   static const String registration = '/registration';
   static const String cpfBottomNav = '/cpfBottomNav';
   static const String cpnjBottomNav = '/cpnjBottomNav';
   static const String forgetPassword = '/forgetPassword';
   static const String cpfProfile = '/cpfProfile';
-  // static const String bottomNavCpf = '/bottomNavCpf';
+  static const String bottomNavCpf = '/bottomNavCpf';
   static const String cnpjProfile = '/cnpjProfile';
   static const String serviceScreen = '/serviceScreen';
   static const String otpPin = '/otpPin';
@@ -45,7 +45,7 @@ class AppRoutes {
     cnpjProfile: (context) => CNPJProfileUploadScreen(),
     serviceScreen: (context) => ServicesScreen(),
     notificationcpnf: (context) => NotificationCpnfScreen(),
-    // bottomNavCpf: (context) => BottomNavScreen(),
+    bottomNavCpf: (context) => BottomNavScreen(),
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),
