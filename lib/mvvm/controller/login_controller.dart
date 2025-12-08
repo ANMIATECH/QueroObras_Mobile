@@ -281,8 +281,7 @@ class LoginController extends GetxController {
         var token = message["token"];
         var userStatus = message["user"]["user_status"];
 
-        print("TOKEN FROM API: $token");
-        print("USER STATUS FROM API: $userStatus");
+
 
         // REMEMBER ME LOGIC
         if (rememberMeNotifier.value) {
@@ -300,8 +299,7 @@ class LoginController extends GetxController {
           StorageDesign.createItem(StorageDesign.tokenExpiry, expiry.toIso8601String());
         }
 
-        print("READ TOKEN AFTER SAVE: ${StorageDesign.readItem(StorageDesign.token)}");
-        print("READ USER TYPE AFTER SAVE: ${StorageDesign.readItem(StorageDesign.userType)}");
+     
 
         // Navigation
         if (token != null && token.toString().isNotEmpty) {

@@ -1,12 +1,12 @@
 import '../mvvm/const/export.dart';
-import 'mvvm/controller/service_controller.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Get.put(LoginController());
-  Get.put(ServiceController());
+  
 
   await StorageService.init(); // Initialize GetStorage
+  Get.put(LoginController());
+  Get.put(ServiceController());
   runApp(ProviderScope(child: const MyApp()));
 }
 

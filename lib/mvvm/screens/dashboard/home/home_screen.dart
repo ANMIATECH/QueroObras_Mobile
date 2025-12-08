@@ -92,7 +92,7 @@ class HomeScreen extends StatelessWidget {
                               onTap: () {
                                 Navigator.of(
                                   context,
-                                ).pushNamed(AppRoutes.notification);
+                                ).pushNamed(AppRoutes.notificationCpnScreen);
                               },
                               child: Container(
                                 width: 50,
@@ -386,12 +386,13 @@ class HomeScreen extends StatelessWidget {
                                 imageUrl: "assets/images/Meu_pedido.svg",
                                 title: 'Meu pedido',
                                 onTap: () async {
-                                  String? token = StorageDesign.readItem(StorageDesign.token);
+                                  String? token = StorageDesign.readItem(
+                                    StorageDesign.token,
+                                  );
                                   if (token == null || token.isEmpty) {
                                     Get.toNamed(AppRoutes.login);
                                   } else {
                                     Get.toNamed(AppRoutes.checkout);
-
                                   }
                                 },
                               ),

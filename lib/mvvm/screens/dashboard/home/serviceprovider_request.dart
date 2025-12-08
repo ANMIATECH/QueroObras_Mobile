@@ -5,6 +5,7 @@ class ServiceRequestScreen extends StatefulWidget {
   final String serviceName;
   final String amount;
   final String imageUrl;
+  final String serviceProviderId;
   final double providerLat; // latitude of provider
   final double providerLng; // longitude of provider
 
@@ -16,6 +17,7 @@ class ServiceRequestScreen extends StatefulWidget {
     required this.imageUrl,
     required this.providerLat,
     required this.providerLng,
+    required this.serviceProviderId,
   });
 
   @override
@@ -76,8 +78,10 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
         estimatedMinutes = minutes;
       });
     } catch (e) {
-      print("Error getting location or calculating arrival: $e");
-    }
+   CustomLoading.showNotification(
+          message: e.toString(),
+          messageType: MessageType.error,
+        );    }
   }
 
   String formatArrivalTime(int totalMinutes) {
@@ -257,7 +261,8 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                       backgroundColor: const Color(0xFFF9761E),
                       textColor: Colors.white,
                       onPressed: () {
-                        Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
+                        Get.to(()=>RequestService(serviceProviderId: widget.serviceProviderId,));
+                        // Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
 
                       },
                     ),

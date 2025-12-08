@@ -31,21 +31,21 @@ class ServiceController extends GetxController {
     }
 
     // Now get location safely
-    Position position = await Geolocator.getCurrentPosition(
-      desiredAccuracy: LocationAccuracy.high,
+    await Geolocator.getCurrentPosition(
+      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
     );
+    // print("Current location: ${position.latitude}, ${position.longitude}");
   }
-
 
   Future<double> calculateDistance(
-      double startLat,
-      double startLng,
-      double endLat,
-      double endLng,
-      ) async {
-    return Geolocator.distanceBetween(startLat, startLng, endLat, endLng) / 1000; // km
+    double startLat,
+    double startLng,
+    double endLat,
+    double endLng,
+  ) async {
+    return Geolocator.distanceBetween(startLat, startLng, endLat, endLng) /
+        1000; // km
   }
-
 
   var isLoading = false.obs;
 
@@ -56,9 +56,247 @@ class ServiceController extends GetxController {
     getCurrentLocation();
     getConstructionServiceProvider();
     getAcabamentoServiceProvider();
+    loadNofication(isInitial: true);
+    loadNoficationCpn(isInitial: true);
   }
+
   @override
-  void onClose() {
+  void onClose() {}
+
+  final RxList<Item> itemList =
+      <Item>[].obs; // To store the list of fetched items
+  final RxInt currentPage = 1.obs; // Tracks the current page number
+  final RxInt itemsPerPage =
+      10.obs; // Sets the limit (e.g., 10 items per request)
+  final RxBool isLoadingNotification =
+      false.obs; // Tracks initial loading state
+  final RxBool isPaginating =
+      false.obs; // Tracks loading state for subsequent pages (load more)
+  final RxBool hasMoreData =
+      true.obs; // Indicates if there are more pages to load
+  final notificaitoncpnf = NotificationCpnf().obs;
+  final RxList<dynamic> masterItemList = <dynamic>[].obs;
+
+  void loadNextPage() {
+    if (!isLoadingNotification.value &&
+        !isPaginating.value &&
+        hasMoreData.value) {
+      loadNofication();
+    }
+  }
+
+  void loadNextPageCpn() {
+    if (!isLoadingNotification.value &&
+        !isPaginating.value &&
+        hasMoreData.value) {
+      loadNoficationCpn();
+    }
+  }
+
+  final requestPricing = TextEditingController();
+  final notePricing = TextEditingController();
+  var approveRequestIsLoading = false.obs;
+
+  Future<void> approveRequest({required String id}) async {
+    if (requestPricing.text.isEmpty) {
+      CustomLoading.showNotification(
+        message: 'Kindly enter a price',
+        messageType: MessageType.error,
+      );
+      return;
+    }
+    try {
+      final Map<String, dynamic> body = {
+        'amount': num.parse(requestPricing.text.trim()),
+        'note': notePricing.text.trim(),
+      };
+      approveRequestIsLoading.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/reply",
+        body,
+        true,
+      );
+      approveRequestIsLoading.value = false;
+
+      if (response.statusCode == 201) {
+        requestPricing.clear();
+        notePricing.clear();
+        CustomLoading.showNotification(
+          message: 'Request price sent successful.',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to Approve.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      approveRequestIsLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      approveRequestIsLoading.value = false;
+    }
+  }
+
+  Future loadNofication({bool isInitial = false}) async {
+    if (!hasMoreData.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingNotification.value = true;
+      currentPage.value = 1; // Reset to page 1 for initial load/refresh
+      itemList.clear(); // Clear list for initial load/refresh
+      hasMoreData.value = true;
+    } else {
+      isPaginating.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPage.value.toString(),
+        'per_page': itemsPerPage.value.toString(),
+      };
+
+      var response = await _apiManager.read(
+        ApiUrl.serviceRequestAssigned,
+        true,
+        params,
+      );
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        notificaitoncpnf.value = NotificationCpnf.fromJson(data);
+
+        final List<DatumCpnf> fetchedItems =
+            notificaitoncpnf.value.data?.datacpnf ?? [];
+        final int totalPages =
+            notificaitoncpnf.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemList.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPage.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPage.value > totalPages) {
+          hasMoreData.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Failed to load items.',
+          messageType: MessageType.error,
+        );
+        hasMoreData.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingNotification.value = false;
+      isPaginating.value = false;
+    }
+  }
+
+  final RxList<Item> itemListCpn =
+      <Item>[].obs; // To store the list of fetched items
+  final RxInt currentPageCpn = 1.obs; // Tracks the current page number
+  final RxInt itemsPerPageCpn =
+      10.obs; // Sets the limit (e.g., 10 items per request)
+  final RxBool isLoadingNotificationCpn =
+      false.obs; // Tracks initial loading state
+  final RxBool isPaginatingCpn =
+      false.obs; // Tracks loading state for subsequent pages (load more)
+  final RxBool hasMoreDataCpn =
+      true.obs; // Indicates if there are more pages to load
+  final notificaitoncpnfCpn = NotificationCpnf().obs;
+  final notificaitoncpn = NotificationCpn().obs;
+  final RxList<dynamic> masterItemListCpn = <dynamic>[].obs;
+
+  Future loadNoficationCpn({bool isInitial = false}) async {
+    if (!hasMoreDataCpn.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingNotificationCpn.value = true;
+      currentPageCpn.value = 1; // Reset to page 1 for initial load/refresh
+      itemListCpn.clear(); // Clear list for initial load/refresh
+      hasMoreDataCpn.value = true;
+    } else {
+      isPaginatingCpn.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPage.value.toString(),
+        'per_page': itemsPerPage.value.toString(),
+      };
+
+      var response = await _apiManager.read(
+        ApiUrl.myServiceRequest,
+        true,
+        params,
+      );
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        notificaitoncpn.value = NotificationCpn.fromJson(data);
+
+        final List<DatumCpn> fetchedItems =
+            notificaitoncpn.value.data?.data ?? [];
+        final int totalPages =
+            notificaitoncpn.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemListCpn.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPageCpn.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPageCpn.value > totalPages) {
+          hasMoreDataCpn.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Failed to load items.',
+          messageType: MessageType.error,
+        );
+        hasMoreDataCpn.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingNotificationCpn.value = false;
+      isPaginatingCpn.value = false;
+    }
   }
 
   Future<void> getPopularServiceProvider() async {
@@ -73,17 +311,15 @@ class ServiceController extends GetxController {
         var error =
             message["error"]?["message"] ?? "Failed to fetch categories";
 
-        SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+        CustomLoading.showNotification(
           message: error,
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Error",
+      CustomLoading.showNotification(
         message: e.toString(),
-        type: SnackbarType.error,
+        messageType: MessageType.error,
       );
     }
   }
@@ -100,63 +336,57 @@ class ServiceController extends GetxController {
         var error =
             message["error"]?["message"] ?? "Failed to fetch categories";
 
-        SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+        CustomLoading.showNotification(
           message: error,
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Error",
+      CustomLoading.showNotification(
         message: e.toString(),
-        type: SnackbarType.error,
+        messageType: MessageType.error,
       );
     }
   }
 
+  // 👈 New: Function to remove an image
+  void removeImage(File file) {
+    selectedImages.remove(file);
+  }
+
   Future<void> getAcabamentoServiceProvider() async {
     try {
-
       var response = await _apiManager.read(ApiUrl.acabamentoCategory, false);
-
-
-
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         aCategories.value = data["categories"] ?? [];
-
       } else {
         var message = jsonDecode(response.body);
         var error =
             message["error"]?["message"] ?? "Failed to fetch categories";
 
-        SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+        CustomLoading.showNotification(
           message: error,
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Error",
+      CustomLoading.showNotification(
         message: e.toString(),
-        type: SnackbarType.error,
+        messageType: MessageType.error,
       );
     }
   }
 
   Future<void> getPopularServiceProviderBySlug(String slug) async {
     try {
-
       final url = "v1/category/$slug/users";
 
       var response = await _apiManager.read(url, false);
 
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
-        print(response.body);
 
         providers.value = data["users"] ?? [];
         filteredProviders.value = List.from(providers);
@@ -164,20 +394,16 @@ class ServiceController extends GetxController {
         categoryName.value = data["category"]?["name"] ?? "";
       } else {
         var message = jsonDecode(response.body);
-        var error =
-            message["error"]?["message"] ?? "Failed to fetch providers";
-
-        SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+        var error = message["error"]?["message"] ?? "Failed to fetch providers";
+        CustomLoading.showNotification(
           message: error,
-          type: SnackbarType.error,
+          messageType: MessageType.error,
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Error",
+      CustomLoading.showNotification(
         message: e.toString(),
-        type: SnackbarType.error,
+        messageType: MessageType.error,
       );
     }
   }
@@ -191,6 +417,119 @@ class ServiceController extends GetxController {
         final name = (provider['name'] ?? '').toString().toLowerCase();
         return name.contains(query.toLowerCase());
       }).toList();
+    }
+  }
+
+  final RxList<File> selectedImages = <File>[].obs;
+  final int maxImages = 5; // Set a limit for the number of images
+  final ImagePicker _picker = ImagePicker();
+  var isCreateItemLoading = false.obs;
+
+  // 👈 New: Function to pick multiple images
+  Future<void> pickImages() async {
+    // Calculate how many more images can be added
+    int remainingSlots = maxImages - selectedImages.length;
+
+    // Only proceed if there are slots available
+    if (remainingSlots > 0) {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+        limit: remainingSlots,
+        imageQuality: 70, // Adjust image quality as needed
+      );
+
+      if (pickedFiles.isNotEmpty) {
+        // Convert XFile to File and add to the observable list
+        for (var xFile in pickedFiles) {
+          selectedImages.add(File(xFile.path));
+        }
+      }
+    } else {
+      CustomLoading.showNotification(
+        message: "You can upload a maximum of $maxImages images.",
+        messageType: MessageType.info,
+      );
+    }
+  }
+
+  final addressRequest = TextEditingController();
+  final serviceToMake = TextEditingController();
+
+  // 👈 Updated: Publish Item Logic
+  Future<void> sendRequest(dynamic context, String serviceProviderId) async {
+    // 1. Validation
+    if (addressRequest.text.isEmpty || serviceToMake.text.isEmpty) {
+      CustomLoading.showNotification(
+        message: 'Please fill in all fields.',
+        messageType: MessageType.error,
+      );
+      return;
+    }
+
+    if (selectedImages.isEmpty) {
+      CustomLoading.showNotification(
+        message: 'Please upload at least one image.',
+        messageType: MessageType.error,
+      );
+      return;
+    }
+
+    // 2. Prepare Data and Files
+    final Map<String, String> data = {
+      "service_provider_id": serviceProviderId,
+      'address': addressRequest.text,
+      'description': serviceToMake.text,
+    };
+
+    // 3. API Call
+    try {
+      // Show loading indicator (e.g., using Get.dialog or a loading overlay)
+      isCreateItemLoading.value = true;
+      FocusScope.of(context).unfocus();
+      final response = await _apiManager.uploadMultipleFilesWithData(
+        endpoint: ApiUrl.serviceRequests, // Your endpoint
+        files: selectedImages.toList(),
+        data: data,
+        fileField: 'images[]', // The array field name from your request example
+        bearerToken: true,
+      );
+      isCreateItemLoading.value = false;
+
+      // Handle response
+      if (response.statusCode == 201) {
+        addressRequest.clear();
+        serviceToMake.clear();
+        // Successful upload
+        CustomLoading.showNotification(
+          message: "Request sent",
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        final responseBody = await response.stream.bytesToString();
+        final message =
+            jsonDecode(responseBody)['error']["message"] ??
+            'Failed to publish item.';
+        CustomLoading.showNotification(
+          message: message,
+          messageType: MessageType.error,
+        );
+      }
+    } on Exception catch (e) {
+      // 👈 CATCHES the Exception re-thrown by ApiManager (SocketException, TimeoutException, etc.)
+
+      // e.toString() will contain the message like "Exception: No Internet connection..."
+      final errorMessage = e.toString().replaceFirst('Exception: ', '');
+      CustomLoading.showNotification(
+        message: errorMessage,
+        messageType: MessageType.error,
+      );
+    } catch (e) {
+      isCreateItemLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'An unexpected error occurred: ${e.toString()}',
+        messageType: MessageType.error,
+      );
     }
   }
 }
