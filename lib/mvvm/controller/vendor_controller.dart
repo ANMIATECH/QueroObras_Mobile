@@ -66,8 +66,8 @@ class VendorFormController extends GetxController {
   String? itemId = "";
   final RxList<String> existingImageUrls =
       <String>[].obs; // To hold existing image URLs
-  final RxList<FileElement>? existingImageUrlsEdit =
-      <FileElement>[].obs; // To hold existing image URLs
+  final RxList<dynamic>? existingImageUrlsEdit =
+      <dynamic>[].obs; // To hold existing image URLs
   final RxList<String> imagesToDelete =
       <String>[].obs; // To track images marked for deletion
   final RxString selectedType =
@@ -105,7 +105,9 @@ class VendorFormController extends GetxController {
     // 4. Set the existing image URLs
     existingImageUrlsEdit?.clear();
     if (item.files != null) {
-      existingImageUrlsEdit?.addAll(item.files?.toList() ?? []);
+      existingImageUrlsEdit?.addAll(
+        item.files?.map((e) => e.path).toList() ?? [],
+      );
     }
   }
 
@@ -146,14 +148,19 @@ class VendorFormController extends GetxController {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         itemByCurrentUser.value = ItemForCurrentUser.fromJson(data);
-
+        final Set<int?> existingIds = itemList.map((item) => item.id).toSet();
         final List<Item> fetchedItems = itemByCurrentUser.value.items ?? [];
+
+        final List<Item> uniqueNewItems = fetchedItems.where((item) {
+          // <--- The error might be here!
+          return item.id != null && !existingIds.contains(item.id);
+        }).toList(); // <--- Or you forgot this part!
         final int totalPages =
             itemByCurrentUser.value.pagination?.lastPage ??
             1; // Adjust keys based on your API
 
         if (fetchedItems.isNotEmpty) {
-          itemList.addAll(fetchedItems);
+          itemList.addAll(uniqueNewItems);
           // Increment page number for the next request
           currentPage.value++;
         }
