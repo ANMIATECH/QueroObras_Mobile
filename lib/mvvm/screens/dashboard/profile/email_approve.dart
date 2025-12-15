@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
 
 class ApprovalDialog extends StatelessWidget {
   final VoidCallback? onApprove;
@@ -34,26 +35,12 @@ class ApprovalDialog extends StatelessWidget {
               decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
-              child: Image.network(
+              child: CustomImageView(
+                imagePath:
                 'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/935f19edc3ff37deacedf6d12f5a88aa4cc4124e?placeholderIfAbsent=true',
                 width: 54,
                 height: 54,
                 fit: BoxFit.contain,
-                errorBuilder: (context, error, stackTrace) {
-                  return Container(
-                    width: 54,
-                    height: 54,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.email,
-                      color: Color(0xFFF9761E),
-                      size: 30,
-                    ),
-                  );
-                },
               ),
             ),
           ),
@@ -62,7 +49,7 @@ class ApprovalDialog extends StatelessWidget {
 
           // Description Text
           Text(
-            'This email is used to login the app if you want to change it. the new email will be used as your primary login.',
+            'Este e-mail é usado para fazer login no aplicativo. Se você quiser alterá-lo, o novo e-mail será usado como seu login principal.',
             textAlign: TextAlign.center,
             style: TextStyle(
               color: Colors.white,
@@ -89,7 +76,7 @@ class ApprovalDialog extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(70, 12, 70, 12),
                   child: Text(
-                    'I Approve',
+                    'Aprovar',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.white,
@@ -120,7 +107,7 @@ class ApprovalDialog extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.fromLTRB(70, 12, 70, 12),
                   child: Text(
-                    'I Deny',
+                    'Negar',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       color: Colors.black,

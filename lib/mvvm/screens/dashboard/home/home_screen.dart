@@ -392,7 +392,7 @@ class HomeScreen extends StatelessWidget {
                                   if (token == null || token.isEmpty) {
                                     Get.toNamed(AppRoutes.login);
                                   } else {
-                                    Get.toNamed(AppRoutes.checkout);
+                                    Get.toNamed(AppRoutes.myOrder);
                                   }
                                 },
                               ),

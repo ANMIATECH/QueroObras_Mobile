@@ -28,6 +28,8 @@ class CustomText {
   static const String entrar = 'Entrar';
   static final String checkOut = 'Check out all item : R ';
   static const String update = 'Update';
+  static const String updateStatus = 'Atualizar status';
+  static const String trackOrder = 'Acompanhe seu pedido';
   static const String cadastrar = 'Cadastrar-se';
   static const String newPassword = 'New password';
   static const String desenvolvido = 'Desenvolvido por miatech.pro';

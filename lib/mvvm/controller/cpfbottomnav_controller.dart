@@ -1,4 +1,5 @@
 import '../const/export.dart';
+import '../screens/dashboard/profile/profile_screen_cpf.dart';
 
 class CPfBottomNavController extends GetxController {
   var selectedIndex = 0.obs;
@@ -19,7 +20,7 @@ class CpfBottomNavScreen extends StatelessWidget {
    StorageDesign.validKey(StorageDesign.token)? OrdersScreen() : Container(),
     ChatScreen(),
     StorageDesign.validKey(StorageDesign.token)? MaterialShopScreen(appbarName: 'Buscar',showAppBar: false) : Container(),
-    ProfileScreen(),
+    ProfileScreenCpf(),
   ];
 
   final List<Map<String, String>> navItems = [

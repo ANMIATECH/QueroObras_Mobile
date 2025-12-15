@@ -1,7 +1,7 @@
 import '/mvvm/const/export.dart';
 
-class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+class ProfileScreenCpf extends StatelessWidget {
+  const ProfileScreenCpf({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -177,12 +177,21 @@ class ProfileMenuSection extends StatelessWidget {
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.edit,
+                  title: 'Meu Hire',
+                  hasArrow: true,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(AppRoutes.myHire);
+                  },
+                ),
+                ProfileMenuItemWidget(
+                  icon: Icons.edit,
                   title: 'Meu Pedido',
                   hasArrow: true,
                   onTap: () {
                     Navigator.of(context).pushNamed(AppRoutes.myOrder);
                   },
-                ),     const SizedBox(height: 10),
+                ),
+                const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.edit,
                   title: 'Editar Perfil',

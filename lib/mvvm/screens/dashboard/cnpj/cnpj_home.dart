@@ -317,25 +317,46 @@ class CnpjHomeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          QuickAccessCard(
-                            imageUrl: "assets/images/Vender.svg",
-                            title: 'Vender',
-                            onTap: () async {
-                              String? token = StorageDesign.readItem(
-                                StorageDesign.token,
-                              );
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Vender.svg",
+                              title: 'Vender',
+                              onTap: () async {
+                                String? token = StorageDesign.readItem(
+                                  StorageDesign.token,
+                                );
 
-                              if (token == null || token.isEmpty) {
-                                // Get.toNamed(RouteNameV1.login);
-                              } else {
-                                // Get.toNamed(RouteNameV1.vender);
-                              }
-                            },
+                                if (token == null || token.isEmpty) {
+                                  // Get.toNamed(RouteNameV1.login);
+                                } else {
+                                  // Get.toNamed(RouteNameV1.vender);
+                                }
+                              },
+                            ),
                           ),
                           const SizedBox(width: 20),
-                          QuickAccessCard(
-                            imageUrl: "assets/images/Favorito.svg",
-                            title: 'Favorito',
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Meu_pedido.svg",
+                              title: 'Meu pedido',
+                              onTap: () async {
+                                String? token = StorageDesign.readItem(
+                                  StorageDesign.token,
+                                );
+                                if (token == null || token.isEmpty) {
+                                  Get.toNamed(AppRoutes.login);
+                                } else {
+                                  Get.toNamed(AppRoutes.myOrder);
+                                }
+                              },
+                            ),
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Favorito.svg",
+                              title: 'Favorito',
+                            ),
                           ),
                         ],
                       ),

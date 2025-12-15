@@ -19,7 +19,7 @@ class ProfileEdit extends StatelessWidget {
             ),
           ),
           title: const Text(
-            'Edit Profile', // 🇧🇷
+            'Editar Perfil', // 🇧🇷
             style: TextStyle(
               color: Colors.black,
               fontSize: 32,
@@ -40,7 +40,7 @@ class ProfileEdit extends StatelessWidget {
                 margin: const EdgeInsets.only(top: 26),
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 child: Text(
-                  'As a service provider to allow changes on this page will require some autoriasaion from the admin for security purpose.',
+                  'Como prestador de serviços, para permitir alterações nesta página será necessário autorização do administrador por motivos de segurança.',
                   style: TextStyle(
                     color: const Color(0xFF969696),
                     fontSize: 14,
@@ -70,8 +70,8 @@ class ProfileEdit extends StatelessWidget {
                       ),
                       child: ClipRRect(
                         borderRadius: const BorderRadius.all(Radius.circular(100)),
-                        child:   CustomImageView(imagePath:
-                        'assets/images/profile_dummy.png',
+                        child: CustomImageView(
+                          imagePath: 'assets/images/profile_dummy.png',
                           width: 105,
                           height: 105,
                           fit: BoxFit.cover,
@@ -97,10 +97,10 @@ class ProfileEdit extends StatelessWidget {
                               children: [
                                 Row(
                                   children: [
-                                   Icon(Icons.person),
+                                    Icon(Icons.person),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Username',
+                                      'Nome de Usuário',
                                       style: TextStyle(
                                         color: const Color(0xFF828282),
                                         fontSize: 14,
@@ -133,7 +133,7 @@ class ProfileEdit extends StatelessWidget {
                                     Icon(Icons.email_outlined),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Email Address',
+                                      'Endereço de Email',
                                       style: TextStyle(
                                         color: const Color(0xFF828282),
                                         fontSize: 14,
@@ -166,7 +166,7 @@ class ProfileEdit extends StatelessWidget {
                                     Icon(Icons.phone),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'Phone number',
+                                      'Número de Telefone',
                                       style: TextStyle(
                                         color: const Color(0xFF828282),
                                         fontSize: 14,
@@ -199,7 +199,7 @@ class ProfileEdit extends StatelessWidget {
                                     Icon(Icons.shopping_bag_rounded),
                                     const SizedBox(width: 8),
                                     Text(
-                                      'service provider',
+                                      'Prestador de Serviço',
                                       style: TextStyle(
                                         color: const Color(0xFF828282),
                                         fontSize: 14,
@@ -229,7 +229,7 @@ class ProfileEdit extends StatelessWidget {
                                 Icon(Icons.money),
                                 const SizedBox(width: 8),
                                 Text(
-                                  '20\$',
+                                  'R\$ 20',
                                   style: TextStyle(
                                     color: const Color(0xFF828282),
                                     fontSize: 14,
@@ -264,7 +264,7 @@ class ProfileEdit extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 12),
                   child: Center(
                     child: Text(
-                      'Update Information',
+                      'Atualizar Informações',
                       style: TextStyle(
                         color: const Color(0xFFFFFFFF),
                         fontSize: 14,

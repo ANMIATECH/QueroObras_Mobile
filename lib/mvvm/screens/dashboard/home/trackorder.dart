@@ -1,88 +1,81 @@
-import 'package:flutter/material.dart';
-import 'package:queroobras_mobile/mvvm/const/custom_image_view.dart';
+import '../../../const/export.dart';
+
 
 class OrderTrackingScreen extends StatelessWidget {
   const OrderTrackingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth <= 640;
-    final isMediumScreen = screenWidth <= 991;
+    return Scaffold(
+      backgroundColor: Colors.white,
+        appBar: AppBar( title: Text(
+          "Meu pedidos",
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
+          ),
+        ),
+          backgroundColor: Colors.white,),
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+        ),
+        child: SafeArea(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Order Details Section
-              RichText(
-                text: const TextSpan(
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    fontFamily: 'Josefin Sans',
-                    height: 24 / 14,
-                  ),
-                  children: [
-                    TextSpan(text: 'Order #1735828712\n'),
-                    TextSpan(text: 'Placed on: 26-10-2025\n'),
-                    TextSpan(text: 'N° of items: 3\n'),
-                    TextSpan(text: 'Total: #53,750'),
-                  ],
-                ),
-              ),
+              // Order Details Content
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 25),
 
-              const SizedBox(height: 20),
+                      RichText(
+                        text: const TextSpan(
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Josefin Sans',
+                            height: 24 / 14,
+                          ),
+                          children: [
+                            TextSpan(text: 'Pedido nº 1735828712\n'),
+                            TextSpan(text: 'Realizado em: 26-10-2025\n'),
+                            TextSpan(text: 'Nº de itens: 3\n'),
+                            TextSpan(text: 'Total: R\$ 53.750'),
 
-              // Order Item Card Section
-              OrderItemCard(
-                status: 'In transit',
-                statusColor: const Color(0xFF2CA3AB),
-                imageUrl:
-                'https://api.builder.io/api/v1/image/assets/TEMP/8fec0c3caf1a623e34843fe0d7c9f35def636d41?width=104',
-                title: 'Título',
-                subtitle: 'Legenda',
-                price: '\$20',
-              ),
+                          ],
+                        ),
+                      ),
 
-              const SizedBox(height: 15),
 
-              // Track Order Button
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: () {
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFF9761E),
-                    padding: EdgeInsets.symmetric(
-                      vertical: 13,
-                      horizontal: isSmallScreen
-                          ? 20
-                          : isMediumScreen
-                          ? 80
-                          : 120,
-                    ),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    'Track your order',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Josefin Sans',
-                      height: 24 / 20,
-                    ),
-                    textAlign: TextAlign.center,
+                      const SizedBox(height: 15),
+
+                      // Order Item Card
+                      const OrderItemCard(),
+
+                      const SizedBox(height: 15),
+
+                      CustomButton(
+                        text: CustomText.trackOrder,
+                        onPressed: () async {
+                          Navigator.of(
+                            context,
+                          ).pushNamed(AppRoutes.progressTracker);
+                        },
+                      ),
+
+                      const SizedBox(height: 20),
+                    ],
                   ),
                 ),
               ),
@@ -94,106 +87,107 @@ class OrderTrackingScreen extends StatelessWidget {
   }
 }
 
-
 class OrderItemCard extends StatelessWidget {
-  final String status;
-  final String imageUrl;
-  final String title;
-  final String subtitle;
-  final String price;
-  final Color statusColor;
-
-  const OrderItemCard({
-    super.key,
-    required this.status,
-    required this.imageUrl,
-    required this.title,
-    required this.subtitle,
-    required this.price,
-    required this.statusColor,
-  });
+  const OrderItemCard({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isSmallScreen = screenWidth <= 640;
-
     return Container(
-      padding: EdgeInsets.all(17),
+      width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFFF8F8F8),
         borderRadius: BorderRadius.circular(10),
+        color: const Color(0xFFF8F8F8),
       ),
+      padding: const EdgeInsets.all(17),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          StatusBadge(
-            text: status,
-            backgroundColor: statusColor,
-            textColor: Colors.white,
+          // Status Badge
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(30),
+              color: const Color(0xFF2CA3AB),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 1),
+            child: const Text(
+              'Em trânsito',
+              style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w700,
+                fontFamily: 'Josefin Sans',
+                color: Colors.white,
+              ),
+            ),
           ),
+
           const SizedBox(height: 14),
-          Flex(
-            direction: isSmallScreen ? Axis.vertical : Axis.horizontal,
+
+          // Product Information Row
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+              // Product Image
               Container(
-                width: isSmallScreen ? 100 : 122,
-                height: isSmallScreen ? 100 : 122,
+                width: 122,
+                height: 122,
                 decoration: BoxDecoration(
-                  color: const Color(0xFFE3E3E3),
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(0),
                 ),
-                child: Center(
-                  child: CustomImageView(imagePath:
-                    imageUrl,
-                    width: isSmallScreen ? 42 : 52,
-                    height: isSmallScreen ? 65 : 80,
-                    fit: BoxFit.contain,
-                  ),
+                child: CustomImageView(imagePath:
+                  'assets/images/cement.png',
+                  width: 122,
+                  height: 122,
+                  fit: BoxFit.cover,
                 ),
               ),
-              SizedBox(
-                width: isSmallScreen ? 0 : 10,
-                height: isSmallScreen ? 15 : 0,
-              ),
+
+              const SizedBox(width: 10),
+
+              // Product Details
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Josefin Sans',
-                        height: 24 / 16,
+                child: SizedBox(
+                  height: 56,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Title and Description
+                      const Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Título',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Josefin Sans',
+                              color: Colors.black,
+                            ),
+                          ),
+                          Text(
+                            'Legenda',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              fontFamily: 'Josefin Sans',
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      subtitle,
-                      style: TextStyle(
-                        color: Colors.black.withValues(alpha: 0.3),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Josefin Sans',
-                        height: 24 / 14,
+
+                      // Price
+                      const Text(
+                        '\$20',
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Josefin Sans',
+                          color: Colors.black,
+                          height: 1.7,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 10),
-                    Text(
-                      price,
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Josefin Sans',
-                        height: 24 / 14,
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -233,6 +227,34 @@ class StatusBadge extends StatelessWidget {
           fontWeight: FontWeight.w700,
           fontFamily: 'Josefin Sans',
           height: 24 / 13,
+        ),
+      ),
+    );
+  }
+}
+
+
+class TrackButton extends StatelessWidget {
+  const TrackButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: const Color(0xFFF9761E),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 13),
+      child: const Text(
+        'Track your order',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.w700,
+          fontFamily: 'Josefin Sans',
+          color: Colors.white,
+          height: 1.2,
         ),
       ),
     );
