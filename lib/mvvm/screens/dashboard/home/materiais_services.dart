@@ -141,7 +141,7 @@ final String appbarName;
                                   title: '${dd.name}',
                                   subtitle: '${dd.type}',
                                   price: '\$ ${dd.price}',
-                                  imageUrl: "assets/images/lawn_mower.png",
+                                  imageUrl: "${dd.files.first.path}",
                                   onTap: () {
                                     // Navigate to product detail
                                     Get.to(() => ProductDetailsScreen(dd: dd));

@@ -1,4 +1,5 @@
 import 'package:queroobras_mobile/mvvm/const/export.dart';
+import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
 
 class ProductDetailsController extends GetxController {
   RxInt quantity = 1.obs;
@@ -163,6 +164,7 @@ class ProductDetailsController extends GetxController {
       isLoading.value = false;
 
       if (response.statusCode == 200) {
+        await getCart();
         CustomLoading.showNotification(
           message: 'Produto adicionado ao carrinho',
           messageType: MessageType.success,
@@ -178,6 +180,32 @@ class ProductDetailsController extends GetxController {
 
       CustomLoading.showNotification(
         message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    }
+  }
+
+  Future<void> checkoutChart() async {
+    try {
+      isLoading.value = true;
+      var response = await _apiManager.post(ApiUrl.cartCheckout, {}, true);
+      isLoading.value = false;
+      var decode = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        Get.to(() => WebViewScreen(url: '${decode["checkout_url"]}'));
+        await getCart();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to get payment link.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
         messageType: MessageType.error,
       );
     }

@@ -129,7 +129,6 @@ class VenderScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 20),
 
-                    
                           Expanded(
                             child: RefreshIndicator(
                               onRefresh: () =>
@@ -160,7 +159,7 @@ class VenderScreen extends StatelessWidget {
                                         subtitle: dd.description ?? "",
                                         price: '\$${dd.price ?? ""}',
                                         quantity: dd.quantity ?? "",
-                                        imageUrl: 'assets/images/cement.png',
+                                        imageUrl: "${dd.files?.first.path}",
                                         onTap: () {
                                           Get.to(
                                             () => VendorEditScreen(itemId: dd),
@@ -253,7 +252,7 @@ class ItemCard extends StatelessWidget {
                   imagePath: imageUrl,
                   width: 27,
                   height: 42,
-                  fit: BoxFit.contain,
+                  fit: BoxFit.cover,
                 ),
               ),
             ),

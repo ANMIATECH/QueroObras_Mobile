@@ -17,6 +17,8 @@ class ApiUrl {
   static String getProduct = "v1/item/list";
   static String serviceRequestAssigned = "v1/service-requests/assigned";
   static String addToCart= "v1/cart/sync";
+  static String cartCheckout= "v1/cart/checkout";
+  static String cartCheckoutDemo= "v1/orders/checkout";
   static String cart= "v1/cart";
   static String resetPasswordEmail = "v1/password/otp/request";
   static String createItem = "v1/vendor/item/create";

@@ -57,22 +57,33 @@ class ProductDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const SizedBox(height: 15),
-
-                        // Product Image
-                        Container(
-                          height: 406,
+                        SizedBox(
+                          height: 300,
                           width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: const Color(0xFFEEEEEE),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: Center(
-                            child: CustomImageView(
-                              imagePath: "assets/images/eastern_cement.png",
+                          child: PageView(
+                            children: List.generate(
+                              dd.files?.length ?? [].length,
+                              (index) {
+                                var dds = dd.files?[index];
+                                return Container(
+                                  height: 406,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFFEEEEEE),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Center(
+                                    child: CustomImageView(
+                                      imagePath: "${dds?.path}",
+                                    ),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
 
+                        // Product Image
                         const SizedBox(height: 20),
 
                         // Product Info and Quantity

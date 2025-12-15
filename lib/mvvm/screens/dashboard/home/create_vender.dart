@@ -184,6 +184,7 @@ class VendorFormScreen extends StatelessWidget {
                           hintText: 'Quantos itens você possui',
                           iconUrl: "assets/images/price.svg",
                           iconWidth: 14,
+                          keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 20),
 
@@ -202,6 +203,7 @@ class VendorFormScreen extends StatelessWidget {
                           hintText: 'Digite o preço',
                           iconUrl: "assets/images/price.svg",
                           iconWidth: 14,
+                          keyboardType: TextInputType.number,
                         ),
                         const SizedBox(height: 20),
 

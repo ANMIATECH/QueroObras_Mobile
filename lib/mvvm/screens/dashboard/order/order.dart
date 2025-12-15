@@ -70,7 +70,7 @@ class OrdersScreen extends StatelessWidget {
                           onTap: () => controller.removeFromCart(
                             itemSlug: "${data.item?.slug}",
                           ),
-                          imageUrl: 'assets/images/Ferramentas.svg',
+                          imageUrl: '${data.item?.files?.first.path}',
                           title: '${data.item?.name} ',
                           subtitle: '${data.item?.type}',
                           price:
@@ -87,10 +87,14 @@ class OrdersScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(16.0),
                 child: Obx(() {
                   return CustomButton(
+                    isLoading: controller.isLoading.value,
+
                     text:
                         "${CustomText.checkOut} \$${controller.cart.value.data?.totalPrice}",
 
-                    onPressed: () {},
+                    onPressed: () {
+                      controller.checkoutChart();
+                    },
                   );
                 }),
               ),
