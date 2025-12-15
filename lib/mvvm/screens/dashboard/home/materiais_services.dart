@@ -1,17 +1,24 @@
 import '../../../const/export.dart';
 
 class MaterialShopScreen extends StatelessWidget {
-  const MaterialShopScreen({super.key});
+  const MaterialShopScreen({
+    super.key, required this.appbarName,
+    this.showAppBar = true,   // 👈 default: AppBar is visible
 
+  });
+final String appbarName;
+
+  final bool showAppBar;
   @override
   Widget build(BuildContext context) {
     final pController = Get.find<ProductDetailsController>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
-            'Material',
-            style: TextStyle(
+          automaticallyImplyLeading: showAppBar,
+          title: Text(
+            appbarName,
+            style: const TextStyle(
               color: Colors.black,
               fontSize: 32,
               fontWeight: FontWeight.w700,

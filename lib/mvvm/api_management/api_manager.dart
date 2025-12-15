@@ -116,6 +116,7 @@ class ApiManager implements ApiReuse {
 
     final headers = {
       'Content-Type': 'application/json',
+      'Accept-Language': 'pt',
       // 'User-Agent': d,
       if (bearerToken == true) 'Authorization': 'Bearer $token',
     };

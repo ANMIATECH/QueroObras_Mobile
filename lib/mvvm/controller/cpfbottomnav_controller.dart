@@ -18,7 +18,7 @@ class CpfBottomNavScreen extends StatelessWidget {
     const HomeScreen(),
    StorageDesign.validKey(StorageDesign.token)? OrdersScreen() : Container(),
     ChatScreen(),
-    StorageDesign.validKey(StorageDesign.token)? SearchScreen() : Container(),
+    StorageDesign.validKey(StorageDesign.token)? MaterialShopScreen(appbarName: 'Buscar',showAppBar: false) : Container(),
     ProfileScreen(),
   ];
 
@@ -26,12 +26,12 @@ class CpfBottomNavScreen extends StatelessWidget {
     {
       'activeIcon': CustomImage.homeActive,
       'inactiveIcon': CustomImage.homeInactive,
-      'label': 'Home',
+      'label': 'Início',
     },
     {
       'activeIcon': CustomImage.orderActive,
       'inactiveIcon': CustomImage.orderInactive,
-      'label': 'Order',
+      'label': 'Pedidos',
     },
     {
       'activeIcon': CustomImage.chat,
@@ -41,12 +41,12 @@ class CpfBottomNavScreen extends StatelessWidget {
     {
       'activeIcon': CustomImage.searchActive,
       'inactiveIcon': CustomImage.searchInactive,
-      'label': 'Search',
+      'label': 'Buscar',
     },
     {
       'activeIcon': CustomImage.profileActive,
       'inactiveIcon': CustomImage.profileInactive,
-      'label': 'Profile',
+      'label': 'Perfil',
     },
   ];
 

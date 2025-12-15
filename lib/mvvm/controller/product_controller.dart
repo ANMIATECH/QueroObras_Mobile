@@ -131,7 +131,7 @@ class ProductDetailsController extends GetxController {
       } else {
         // Handle API errors (e.g., 404, 500)
         CustomLoading.showNotification(
-          message: 'Failed to load items.',
+          message: 'Falha ao carregar os itens',
           messageType: MessageType.error,
         );
         hasMoreData.value =
@@ -139,7 +139,7 @@ class ProductDetailsController extends GetxController {
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -164,12 +164,12 @@ class ProductDetailsController extends GetxController {
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
-          message: 'Product add to cart',
+          message: 'Produto adicionado ao carrinho',
           messageType: MessageType.success,
         );
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to add to cart.',
+          message: 'Falha ao adicionar ao carrinho.',
           messageType: MessageType.error,
         );
       }
@@ -177,7 +177,7 @@ class ProductDetailsController extends GetxController {
       isLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     }
@@ -219,7 +219,7 @@ class ProductDetailsController extends GetxController {
         cart.value = CartModel.fromJson(date);
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to get == cart.',
+          message: 'Falha ao obter o carrinho.',
           messageType: MessageType.error,
         );
       }
@@ -227,7 +227,7 @@ class ProductDetailsController extends GetxController {
       isLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     }

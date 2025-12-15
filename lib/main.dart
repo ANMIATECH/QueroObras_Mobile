@@ -23,7 +23,6 @@ class MyApp extends StatelessWidget {
         final String? token = StorageService.has(StorageDesign.token)
             ? StorageService.read(StorageDesign.token)
             : null;
-
         final String? userStatus = StorageService.has("user_status")
             ? StorageService.read("user_status")
             : null;
@@ -36,7 +35,6 @@ class MyApp extends StatelessWidget {
             initialRoute = AppRoutes.cpnjBottomNav;
           }
         }
-
         return OverlaySupport.global(
           child: GetMaterialApp(
             title: 'Quero Obra',

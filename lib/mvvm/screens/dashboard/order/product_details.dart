@@ -37,7 +37,7 @@ class ProductDetailsScreen extends StatelessWidget {
                       ),
                       const SizedBox(width: 33),
                       const Text(
-                        'Details',
+                        'Detalhes',
                         style: TextStyle(
                           fontFamily: 'Josefin Sans',
                           fontSize: 24,
@@ -127,7 +127,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                   width: 126,
                                   height: 48,
                                   child: Text(
-                                    'Available in stock : ${dd.quantity} quantity',
+                                    'Disponível em estoque: ${dd.quantity} unidades',
                                     textAlign: TextAlign.right,
                                     style: TextStyle(
                                       fontFamily: 'Josefin Sans',
@@ -163,7 +163,7 @@ class ProductDetailsScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Description',
+                              'Descrição',
                               style: TextStyle(
                                 fontFamily: 'Josefin Sans',
                                 fontSize: 20,

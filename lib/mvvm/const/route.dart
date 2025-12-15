@@ -49,7 +49,7 @@ class AppRoutes {
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),
-    materiaisServiceProvider: (context) => MaterialShopScreen(),
+    materiaisServiceProvider: (context) => MaterialShopScreen(appbarName: 'Material',),
     vender: (context) => VenderScreen(),
     venderCreate: (context) => VendorFormScreen(),
     uploadSuccessScreen: (context) => UploadSuccessScreen(),

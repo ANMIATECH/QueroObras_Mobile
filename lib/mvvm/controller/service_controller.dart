@@ -197,7 +197,7 @@ class ServiceController extends GetxController {
       } else {
         // Handle API errors (e.g., 404, 500)
         CustomLoading.showNotification(
-          message: 'Failed to load items.',
+          message: 'Falha ao carregar os itens.',
           messageType: MessageType.error,
         );
         hasMoreData.value =
@@ -205,7 +205,7 @@ class ServiceController extends GetxController {
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -282,7 +282,7 @@ class ServiceController extends GetxController {
       } else {
         // Handle API errors (e.g., 404, 500)
         CustomLoading.showNotification(
-          message: 'Failed to load items.',
+          message: 'Falha ao carregar os itens.',
           messageType: MessageType.error,
         );
         hasMoreDataCpn.value =
@@ -290,7 +290,7 @@ class ServiceController extends GetxController {
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -459,7 +459,7 @@ class ServiceController extends GetxController {
     // 1. Validation
     if (addressRequest.text.isEmpty || serviceToMake.text.isEmpty) {
       CustomLoading.showNotification(
-        message: 'Please fill in all fields.',
+        message: 'Por favor, preencha todos os campos.',
         messageType: MessageType.error,
       );
       return;
@@ -467,7 +467,7 @@ class ServiceController extends GetxController {
 
     if (selectedImages.isEmpty) {
       CustomLoading.showNotification(
-        message: 'Please upload at least one image.',
+        message: 'Por favor, envie pelo menos uma imagem.',
         messageType: MessageType.error,
       );
       return;
@@ -500,7 +500,7 @@ class ServiceController extends GetxController {
         serviceToMake.clear();
         // Successful upload
         CustomLoading.showNotification(
-          message: "Request sent",
+          message: "Solicitação enviada",
           messageType: MessageType.success,
         );
         Get.back();
@@ -508,7 +508,7 @@ class ServiceController extends GetxController {
         final responseBody = await response.stream.bytesToString();
         final message =
             jsonDecode(responseBody)['error']["message"] ??
-            'Failed to publish item.';
+                'Falha ao publicar o item.';
         CustomLoading.showNotification(
           message: message,
           messageType: MessageType.error,
@@ -527,7 +527,7 @@ class ServiceController extends GetxController {
       isCreateItemLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'An unexpected error occurred: ${e.toString()}',
+        message: 'Ocorreu um erro inesperado: ${e.toString()}',
         messageType: MessageType.error,
       );
     }
