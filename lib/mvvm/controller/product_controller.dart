@@ -1,4 +1,5 @@
 import 'package:queroobras_mobile/mvvm/const/export.dart';
+import 'package:queroobras_mobile/mvvm/model/pay_order.dart';
 import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
 
 class ProductDetailsController extends GetxController {
@@ -10,6 +11,7 @@ class ProductDetailsController extends GetxController {
     super.onInit();
     getCart();
     getAllProduct(isInitial: true);
+    getAllOrders(isInitial: true);
   }
 
   void incrementQuantity(num maxAllowedQuantity) {
@@ -35,6 +37,17 @@ class ProductDetailsController extends GetxController {
 
   // 1. Master List (The complete list fetched from the API)
   final RxList<dynamic> masterItemList = <dynamic>[].obs;
+  final RxList<dynamic> masterItemListOrder = <dynamic>[].obs;
+  var selectedLevelUpdateProduct = "".obs;
+
+
+  void initializeWithItemTracking(DataItemPayOrder? dd) {
+    selectedLevelUpdateProduct.value = dd?.orderItem?.status??"packaging";
+    // 1. Set the item ID for update/delete logic
+
+   
+  }
+
   void updateSearchTerm(String term) {
     // Update the search term immediately, which triggers the UI rebuild
     // because the UI is watching filteredItemList (which uses searchTerm).
@@ -72,6 +85,7 @@ class ProductDetailsController extends GetxController {
   }
 
   final product = ItemForCurrentUser().obs;
+  final productOrder = OrderPayed().obs;
 
   final RxList<Item> itemList =
       <Item>[].obs; // To store the list of fetched items
@@ -83,6 +97,13 @@ class ProductDetailsController extends GetxController {
       false.obs; // Tracks loading state for subsequent pages (load more)
   final RxBool hasMoreData =
       true.obs; // Indicates if there are more pages to load
+  final RxList<Item> itemListOrder = <Item>[].obs;
+  final RxBool hasMoreOrder = true.obs;
+  final RxBool isLoadingOrder = false.obs;
+  final RxInt currentPageOrder = 1.obs;
+
+  final RxBool isPaginatingOrder = false.obs;
+  final RxInt itemsPerPageOrder = 10.obs;
 
   Future getAllProduct({bool isInitial = false}) async {
     if (!hasMoreData.value && !isInitial) {
@@ -149,10 +170,82 @@ class ProductDetailsController extends GetxController {
     }
   }
 
+  Future getAllOrders({bool isInitial = false}) async {
+    if (!hasMoreOrder.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingOrder.value = true;
+      currentPageOrder.value = 1; // Reset to page 1 for initial load/refresh
+      itemListOrder.clear(); // Clear list for initial load/refresh
+      hasMoreOrder.value = true;
+    } else {
+      isPaginatingOrder.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPageOrder.value.toString(),
+        'per_page': itemsPerPageOrder.value.toString(),
+      };
+
+      var response = await _apiManager.read(ApiUrl.orders, true, params);
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        productOrder.value = OrderPayed.fromJson(data);
+
+        final List<DataItemPayOrder> fetchedItems =
+            productOrder.value.data?.items ?? [];
+        final int totalPages =
+            productOrder.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemListOrder.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPageOrder.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPageOrder.value > totalPages) {
+          hasMoreOrder.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Falha ao carregar os itens',
+          messageType: MessageType.error,
+        );
+        hasMoreOrder.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingOrder.value = false;
+      isPaginatingOrder.value = false;
+    }
+  }
+
   // 2. Function to be called when the user scrolls to the bottom
   void loadNextPage() {
-    if (!isLoading.value && !isPaginating.value && hasMoreData.value) {
+    if (!isLoading.value && !isPaginatingOrder.value && hasMoreData.value) {
       getAllProduct();
+    }
+  }
+
+  void loadNextPageOrder() {
+    if (!isLoadingOrder.value && !isPaginating.value && hasMoreOrder.value) {
+      getAllOrders();
     }
   }
 

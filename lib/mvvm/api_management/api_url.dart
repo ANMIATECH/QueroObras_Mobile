@@ -15,6 +15,7 @@ class ApiUrl {
   static String changePassword = "auth/verify/otp";
   static String forgetPassword = "auth/signup";
   static String getProduct = "v1/item/list";
+  static String orders = "v1/orders/my";
   static String serviceRequestAssigned = "v1/service-requests/assigned";
   static String addToCart= "v1/cart/sync";
   static String cartCheckout= "v1/cart/checkout";

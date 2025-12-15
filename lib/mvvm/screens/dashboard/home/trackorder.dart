@@ -1,14 +1,19 @@
+import 'package:queroobras_mobile/mvvm/const/extension.dart';
+import 'package:queroobras_mobile/mvvm/model/pay_order.dart';
+import 'package:queroobras_mobile/mvvm/screens/dashboard/order/trackmy_order.dart';
+
 import '../../../const/export.dart';
 
-
 class OrderTrackingScreen extends StatelessWidget {
-  const OrderTrackingScreen({super.key});
+  const OrderTrackingScreen({super.key, this.dd});
+  final DataItemPayOrder? dd;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-        appBar: AppBar( title: Text(
+      appBar: AppBar(
+        title: Text(
           "Meu pedidos",
           style: const TextStyle(
             color: Colors.black,
@@ -18,7 +23,8 @@ class OrderTrackingScreen extends StatelessWidget {
             height: 1,
           ),
         ),
-          backgroundColor: Colors.white,),
+        backgroundColor: Colors.white,
+      ),
 
       body: Container(
         decoration: BoxDecoration(
@@ -39,7 +45,7 @@ class OrderTrackingScreen extends StatelessWidget {
                       const SizedBox(height: 25),
 
                       RichText(
-                        text: const TextSpan(
+                        text: TextSpan(
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 14,
@@ -48,29 +54,33 @@ class OrderTrackingScreen extends StatelessWidget {
                             height: 24 / 14,
                           ),
                           children: [
-                            TextSpan(text: 'Pedido nº 1735828712\n'),
-                            TextSpan(text: 'Realizado em: 26-10-2025\n'),
-                            TextSpan(text: 'Nº de itens: 3\n'),
-                            TextSpan(text: 'Total: R\$ 53.750'),
-
+                            TextSpan(text: 'Pedido nº ${dd?.order?.slug}\n'),
+                            TextSpan(
+                              text:
+                                  'Realizado em: ${dd?.order?.createdAt?.toYearMonthDay}\n',
+                            ),
+                            TextSpan(
+                              text:
+                                  'Nº de itens: ${dd?.order?.totalQuantity}\n',
+                            ),
+                            TextSpan(
+                              text: 'Total: R\$ ${dd?.order?.totalPrice}',
+                            ),
                           ],
                         ),
                       ),
 
-
                       const SizedBox(height: 15),
 
                       // Order Item Card
-                      const OrderItemCard(),
+                      OrderItemCard(dd: dd),
 
                       const SizedBox(height: 15),
 
                       CustomButton(
                         text: CustomText.trackOrder,
                         onPressed: () async {
-                          Navigator.of(
-                            context,
-                          ).pushNamed(AppRoutes.progressTracker);
+                          Get.to(() => SellerProgressTracking(dd: dd));
                         },
                       ),
 
@@ -88,12 +98,19 @@ class OrderTrackingScreen extends StatelessWidget {
 }
 
 class OrderItemCard extends StatelessWidget {
-  const OrderItemCard({super.key});
+  const OrderItemCard({super.key, this.dd});
+  final DataItemPayOrder? dd;
 
   @override
   Widget build(BuildContext context) {
+    // Get screen width for responsive sizing
+    final double screenWidth = MediaQuery.of(context).size.width;
+
+    // Define a responsive size for the image (e.g., 30% of screen width, or a max of 122)
+    final double imageSize = (screenWidth * 0.3).clamp(90.0, 122.0);
+
     return Container(
-      width: double.infinity,
+      // The width is already set to double.infinity, which is good.
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: const Color(0xFFF8F8F8),
@@ -103,15 +120,16 @@ class OrderItemCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Status Badge
+          // This section is already fairly responsive as it sizes based on its content.
           Container(
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(30),
               color: const Color(0xFF2CA3AB),
             ),
             padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 1),
-            child: const Text(
-              'Em trânsito',
-              style: TextStyle(
+            child: Text(
+              '${dd?.orderItem?.status}',
+              style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,
                 fontFamily: 'Josefin Sans',
@@ -126,68 +144,75 @@ class OrderItemCard extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Product Image
+              // Product Image (Responsive Size)
               Container(
-                width: 122,
-                height: 122,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(0),
+                width: imageSize,
+                height: imageSize,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(0)),
                 ),
-                child: CustomImageView(imagePath:
-                  'assets/images/cement.png',
-                  width: 122,
-                  height: 122,
+                child: CustomImageView(
+                  imagePath: dd?.item?.files?.first.path,
+                  width: imageSize, // Use responsive size
+                  height: imageSize, // Use responsive size
                   fit: BoxFit.cover,
                 ),
               ),
 
               const SizedBox(width: 10),
 
-              // Product Details
+              // Product Details (Uses Expanded for remaining space)
               Expanded(
-                child: SizedBox(
-                  height: 56,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Title and Description
-                      const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Título',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                              color: Colors.black,
-                            ),
+                // Remove the fixed height (height: 56) from SizedBox
+                // to allow the content to take the necessary height.
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Title and Description
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Title (uses maxLines and overflow for small screens)
+                        Text(
+                          '${dd?.item?.name}',
+                          maxLines: 2, // Limit lines for cleaner display
+                          overflow: TextOverflow.ellipsis, // Handle overflow
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.w700,
+                            fontFamily: 'Josefin Sans',
+                            color: Colors.black,
                           ),
-                          Text(
-                            'Legenda',
-                            style: TextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Josefin Sans',
-                              color: Colors.black,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      // Price
-                      const Text(
-                        '\$20',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Josefin Sans',
-                          color: Colors.black,
-                          height: 1.7,
                         ),
+                        // Description (uses maxLines and overflow for small screens)
+                        Text(
+                          '${dd?.item?.description}',
+                          maxLines: 2, // Limit lines
+                          overflow: TextOverflow.ellipsis, // Handle overflow
+                          style: const TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Josefin Sans',
+                            color: Colors.black,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    // Price
+                    // Added a small vertical space before the price
+                    const SizedBox(height: 5),
+                    Text(
+                      '\$ ${dd?.item?.price}',
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Josefin Sans',
+                        color: Colors.black,
+                        height: 1.2, // Adjusted height for better spacing
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -197,7 +222,6 @@ class OrderItemCard extends StatelessWidget {
     );
   }
 }
-
 
 class StatusBadge extends StatelessWidget {
   final String text;
@@ -232,7 +256,6 @@ class StatusBadge extends StatelessWidget {
     );
   }
 }
-
 
 class TrackButton extends StatelessWidget {
   const TrackButton({super.key});

@@ -1,138 +1,194 @@
+import 'package:queroobras_mobile/mvvm/model/pay_order.dart';
+
 import '../../../const/export.dart';
 
-
+// --- Main Class ---
 class SellerProgressTracking extends StatelessWidget {
-  const SellerProgressTracking({super.key});
+  SellerProgressTracking({super.key, this.dd}) {
+    final controller = Get.find<ProductDetailsController>();
+    controller.initializeWithItemTracking(dd);
+  }
+  final DataItemPayOrder? dd;
+
+  // Helper to calculate padding based on screen width
+  EdgeInsets _getResponsiveContainerPadding(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    // Calculate padding as a proportion of the screen width.
+    // e.g., 20% of the screen width for left/right padding
+    final horizontalPadding = width * 0.1;
+    // Top/bottom padding can be fixed or a smaller proportion
+    const verticalPadding = 30.0;
+
+    // Ensure padding doesn't get too small or too large on extreme screens
+    final effectiveHorizontalPadding = horizontalPadding.clamp(20.0, 100.0);
+
+    return EdgeInsets.only(
+      top: verticalPadding,
+      left: effectiveHorizontalPadding,
+      right: effectiveHorizontalPadding,
+      bottom: 5,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductDetailsController>();
+
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar( title: Text(
-        "Meu pedidos",
-        style: const TextStyle(
-          color: Colors.black,
-          fontSize: 32,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Josefin Sans',
-          height: 1,
+      appBar: AppBar(
+        title: Text(
+          "Meu ${dd?.item?.name ?? 'Produto'}",
+          style: TextStyle(
+            color: Colors.black,
+            // Scale font size based on screen width for a better responsive title
+            fontSize: screenWidth * 0.07,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
+          ),
         ),
-      ),
         backgroundColor: Colors.white,
-        elevation: 0,),
+        elevation: 0,
+      ),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
+        // Keep main padding, but use a proportion or slightly smaller fixed value
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: SingleChildScrollView(
           child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment.center, // Center the main items
             children: [
-              const SizedBox(height: 35),
+              // Use proportional spacing
+              SizedBox(height: screenWidth * 0.08),
+
+              // --- Main Content Container ---
               Container(
                 width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
+                // Adjust horizontal margin proportionally
+                margin: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(36),
                   color: const Color(0xFFF5F5F5),
                 ),
-                child: AspectRatio(
-                  aspectRatio: 1,
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 39, left: 80, right: 80, bottom: 5),
-                    child: Column(
-                      children: [
-                        Expanded(
-                          child: SizedBox(
-                            width: 170,
-                            child: Column(
-                              children: [
-                                Expanded(
-                                  child: CustomImageView(imagePath:
-                                  'assets/images/cement.png',
-                                    width: double.infinity,
-                                    fit: BoxFit.contain,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                SizedBox(
-                                  width: 94,
-                                  child: Column(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          const Text(
-                                            'Título',
-                                            style: TextStyle(
-                                              fontSize: 20,
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: 'Josefin Sans',
-                                              color: Colors.black,
-                                              height: 37 / 20,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          const Text(
-                                            'Legenda',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Josefin Sans',
-                                              color: Colors.black,
-                                              height: 37 / 16,
-                                            ),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
-                                      ),
-                                      Row(
-                                        mainAxisAlignment: MainAxisAlignment.start,
-                                        children: [
-                                          const Text(
-                                            '\$180',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w400,
-                                              fontFamily: 'Josefin Sans',
-                                              color: Colors.black,
-                                              height: 1.5,
-                                            ),
-                                          ),
-                                          const SizedBox(width: 6),
-                                          const Text(
-                                            '3 items',
-                                            style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.w700,
-                                              fontFamily: 'Josefin Sans',
-                                              color: Colors.black,
-                                              height: 1.5,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
+                // **Responsiveness change**: Removed AspectRatio.
+                // We let the content determine the height, or use a flexible approach.
+                // If AspectRatio is essential, keep it, but it locks the width/height relation.
+                // For better flexibility, I'll remove it and rely on content/Expanded.
+                child: Padding(
+                  // Use responsive padding helper
+                  padding: _getResponsiveContainerPadding(context),
+                  child: Column(
+                    children: [
+                      // Removed SizedBox with fixed width (170)
+                      Column(
+                        children: [
+                          // Image Section - Use Expanded to fill available space within the column
+                          SizedBox(
+                            // Give the image section a maximum height if you want to cap it
+                            // or keep it flexible. Expanded is good for flexible height.
+                            height: screenWidth * 0.4,
+                            child: CustomImageView(
+                              imagePath: dd?.item?.files?.first.path ?? '',
+                              width: double.infinity,
+                              fit: BoxFit.contain,
                             ),
                           ),
-                        ),
-                      ],
-                    ),
+                          const SizedBox(height: 12),
+                          // Details Section - Removed fixed width (94) to allow wrapping
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Column(
+                                children: [
+                                  Text(
+                                    dd?.item?.name ?? 'Item Name',
+                                    style: const TextStyle(
+                                      fontSize: 20, // Consider scaling this too
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Josefin Sans',
+                                      height: 37 / 20,
+                                      color: Colors.black,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  Text(
+                                    dd?.item?.description ?? 'Description',
+                                    style: const TextStyle(
+                                      fontSize: 16, // Consider scaling this too
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Josefin Sans',
+                                      color: Colors.black,
+
+                                      height: 37 / 16,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(
+                                height: 8,
+                              ), // Added space for clarity
+                              Row(
+                                // Use MainAxisAlignment.center for better layout on smaller screens
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    '\$${dd?.order?.totalPrice ?? '0.00'}',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w400,
+                                      fontFamily: 'Josefin Sans',
+                                      height: 1.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 6),
+                                  Text(
+                                    '${dd?.order?.totalQuantity ?? '0'} Quantity',
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w700,
+                                      fontFamily: 'Josefin Sans',
+                                      height: 1.5,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          const SizedBox(
+                            height: 12,
+                          ), // Added space at the bottom
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(height: 44),
-              ProgressTracker(currentStatus: 'Em Verificação'),
-              const SizedBox(height: 36),
+
+              SizedBox(height: screenWidth * 0.1), // Proportional spacing
+              // Progress Tracker
+              Obx(() {
+                return ProgressTracker(
+                  currentStatus: controller.selectedLevelUpdateProduct.value,
+                  dd: dd,
+                );
+              }),
+
+              SizedBox(height: screenWidth * 0.08), // Proportional spacing
+              // Custom Button - Let it take full width with padding/margin
               CustomButton(
                 text: CustomText.updateStatus,
                 onPressed: () async {
-                  // Navigator.of(
-                  //   context,
-                  // ).pushNamed(AppRoutes.progressTracker);
+                  // Button logic
                 },
               ),
 
-              const SizedBox(height: 37),
+              SizedBox(height: screenWidth * 0.1), // Proportional spacing
             ],
           ),
         ),
@@ -143,28 +199,50 @@ class SellerProgressTracking extends StatelessWidget {
 
 class ProgressTracker extends StatelessWidget {
   final String currentStatus;
+  final bool? vendor;
+  final DataItemPayOrder? dd;
 
-  const ProgressTracker({super.key, required this.currentStatus});
+  const ProgressTracker({
+    super.key,
+    required this.currentStatus,
+    this.vendor = false,
+    this.dd,
+  });
 
-  static const List<String> statuses = [
-    'Em Embalagem',           // Packaging
-    'Em Trânsito',            // In Road
-    'Em Verificação',         // In Checking
-    'Revisando Pacote',       // In Reviewing package
-    'A Caminho de Envio',     // In your way to be shipped
-    'Entregue',               // Deliver
-  ];
-
+  // Map English keys to Portuguese display names
+  static const Map<String, String> statusMap = {
+    'packaging': 'Em Embalagem',
+    'in_road': 'Em Trânsito',
+    'in_checking': 'Em Verificação',
+    'in_reviewing_packaging': 'Revisando Pacote',
+    'shipped': 'A Caminho de Envio',
+    'deliver': 'Entregue',
+  };
   @override
   Widget build(BuildContext context) {
-    final int activeIndex = statuses.indexOf(currentStatus);
+    final controller = Get.find<ProductDetailsController>();
 
+    // Get all English keys (the internal order)
+    final List<String> statusKeys = statusMap.keys.toList();
+
+    // Find the index of the current active status
+    final int activeIndex = statusKeys.indexOf(currentStatus);
     return Container(
       margin: const EdgeInsets.all(20),
       child: Column(
-        children: List.generate(statuses.length, (index) {
-          final isActive = index <= activeIndex;
-          final isLast = index == statuses.length - 1;
+        children: List.generate(statusKeys.length, (index) {
+          final String key = statusKeys[index];
+          final String displayStatus = statusMap[key]!;
+          final bool isActive = index <= activeIndex;
+          final bool isLast = index == statusKeys.length - 1;
+          // final bool isCurrent = index == activeIndex;
+
+          // Define the size for the dot and checkmark circle
+          // const double dotSize = 16.0;
+          // const double lineLength = 40.0;
+          // const double lineWidth = 2.0;
+          // final Color activeColor = const Color(0xFF16577F);
+          // final Color inactiveColor = Colors.grey.shade300;
 
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -178,7 +256,9 @@ class ProgressTracker extends StatelessWidget {
                     height: 20,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: isActive ? const Color(0xFF16577F) : Colors.grey.shade300,
+                      color: isActive
+                          ? const Color(0xFF16577F)
+                          : Colors.grey.shade300,
                     ),
                   ),
                   // Line connecting to next dot
@@ -186,7 +266,9 @@ class ProgressTracker extends StatelessWidget {
                     Container(
                       width: 4,
                       height: 40,
-                      color: isActive ? const Color(0xFF16577F) : Colors.grey.shade300,
+                      color: isActive
+                          ? const Color(0xFF16577F)
+                          : Colors.grey.shade300,
                     ),
                 ],
               ),
@@ -196,7 +278,7 @@ class ProgressTracker extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(top: 0),
                   child: Text(
-                    statuses[index],
+                    displayStatus,
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.w700,
@@ -207,22 +289,35 @@ class ProgressTracker extends StatelessWidget {
                 ),
               ),
               // Right check dot
-              Container(
-                width: 20,
-                height: 20,
-                margin: const EdgeInsets.only(top: 0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: isActive ? const Color(0xFF16577F) : Colors.grey.shade300,
-                ),
-                child: isActive
-                    ? const Icon(
-                  Icons.check,
-                  size: 14,
-                  color: Colors.white,
-                )
-                    : null,
-              ),
+              vendor == false
+                  ? Container()
+                  : GestureDetector(
+                      onTap: () {
+                        statusKeys[index];
+                        controller.selectedLevelUpdateProduct.value = key;
+                        // print(
+                        //   'Status selected and updated in controller: $key',
+                        // );
+                      },
+                      child: Container(
+                        width: 20,
+                        height: 20,
+                        margin: const EdgeInsets.only(top: 0),
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: isActive
+                              ? const Color(0xFF16577F)
+                              : Colors.grey.shade300,
+                        ),
+                        child: isActive
+                            ? const Icon(
+                                Icons.check,
+                                size: 14,
+                                color: Colors.white,
+                              )
+                            : null,
+                      ),
+                    ),
             ],
           );
         }),
@@ -230,4 +325,3 @@ class ProgressTracker extends StatelessWidget {
     );
   }
 }
-

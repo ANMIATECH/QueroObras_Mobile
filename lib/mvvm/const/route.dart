@@ -1,12 +1,10 @@
 import 'package:queroobras_mobile/mvvm/screens/auth/cnpjprofilepic_update.dart';
 
 import '../const/export.dart';
-import '../screens/dashboard/home/trackorder.dart';
 import '../screens/dashboard/my_hire/my_hire.dart';
 import '../screens/dashboard/my_hire/myhire_review.dart';
 import '../screens/dashboard/notification/notification_cpnf.dart';
 import '../screens/dashboard/order/my_order.dart';
-import '../screens/dashboard/order/trackmy_order.dart';
 
 /// A utility class to hold all static route names and the route map.
 class AppRoutes {
@@ -14,7 +12,6 @@ class AppRoutes {
   static const String onboarding = '/';
   static const String welcome = '/welcome';
   static const String login = '/login';
-  static const String myOrderDetails = '/myOrderDetails';
   static const String notificationcpnf = '/notificationcpnf';
   static const String oneOnOneChat = '/oneOnOneChat';
   static const String serviceRequestScreen = '/serviceRequestScreen';
@@ -40,7 +37,6 @@ class AppRoutes {
   static const String myOrder = '/myOrder';
   static const String profileEdit = '/profileEdit';
   static const String profileReview = '/profileReview';
-  static const String progressTracker = '/progressTracker';
   static const String notificationCpnScreen = '/notificationCpnScreen';
 
   /// A map defining all application routes.
@@ -48,8 +44,6 @@ class AppRoutes {
     onboarding: (context) => const OnboardingScreen(),
     welcome: (context) => const WelcomeScreen(),
     login: (context) => LoginScreen(),
-    progressTracker: (context) => SellerProgressTracking(),
-    myOrderDetails: (context) => OrderTrackingScreen(),
     oneOnOneChat: (context) => OneOnOneChat(),
     // serviceRequestScreen: (context) => ServiceRequestScreen(),
     registration: (context) => const RegistrationScreen(),
