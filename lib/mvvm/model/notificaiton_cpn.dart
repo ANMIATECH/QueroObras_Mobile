@@ -381,6 +381,7 @@ class ReplyCpn {
     final String? serviceRequestId;
     final String? amount;
     final String? note;
+    final String? paymentLink;
     final String? slug;
     final DateTime? createdAt;
     final DateTime? updatedAt;
@@ -388,6 +389,7 @@ class ReplyCpn {
     ReplyCpn({
         this.id,
         this.serviceRequestId,
+        this.paymentLink,
         this.amount,
         this.note,
         this.slug,
@@ -398,6 +400,7 @@ class ReplyCpn {
     ReplyCpn copyWith({
         int? id,
         String? serviceRequestId,
+        String? paymentLink,
         String? amount,
         String? note,
         String? slug,
@@ -408,6 +411,7 @@ class ReplyCpn {
             id: id ?? this.id,
             serviceRequestId: serviceRequestId ?? this.serviceRequestId,
             amount: amount ?? this.amount,
+            paymentLink: paymentLink ?? this.paymentLink,
             note: note ?? this.note,
             slug: slug ?? this.slug,
             createdAt: createdAt ?? this.createdAt,
@@ -422,6 +426,7 @@ class ReplyCpn {
         id: json["id"],
         serviceRequestId: json["service_request_id"],
         amount: json["amount"],
+        paymentLink: json["payment_link"],
         note: json["note"],
         slug: json["slug"],
         createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
@@ -432,6 +437,7 @@ class ReplyCpn {
         "id": id,
         "service_request_id": serviceRequestId,
         "amount": amount,
+        "payment_link": paymentLink,
         "note": note,
         "slug": slug,
         "created_at": createdAt?.toIso8601String(),

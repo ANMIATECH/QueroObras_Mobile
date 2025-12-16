@@ -144,6 +144,81 @@ class ServiceController extends GetxController {
     }
   }
 
+  Future<void> rejectRequest({required String id}) async {
+    try {
+      final Map<String, dynamic> body = {};
+      approveRequestIsLoading.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/reject",
+        body,
+        true,
+      );
+      approveRequestIsLoading.value = false;
+
+      if (response.statusCode == 200) {
+        await loadNoficationCpn(isInitial: true);
+        requestPricing.clear();
+        notePricing.clear();
+        CustomLoading.showNotification(
+          message: 'Request price sent successful.',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to Approve.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      approveRequestIsLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      approveRequestIsLoading.value = false;
+    }
+  }
+
+  Future<void> payRequest({
+    required String id,
+    required String amount,
+    required String note,
+  }) async {
+    try {
+      final Map<String, dynamic> body = {'amount': amount, 'note': note};
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/accept",
+        body,
+        true,
+      );
+      print("${response.body}");
+
+      if (response.statusCode == 200) {
+        // await loadNoficationCpn(isInitial: true);
+        // requestPricing.clear();
+        // notePricing.clear();
+        // CustomLoading.showNotification(
+        //   message: 'Request price sent successful.',
+        //   messageType: MessageType.success,
+        // );
+        // Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to Approve.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {}
+  }
+
   Future loadNofication({bool isInitial = false}) async {
     if (!hasMoreData.value && !isInitial) {
       return; // Stop if no more data is available
@@ -254,8 +329,6 @@ class ServiceController extends GetxController {
         true,
         params,
       );
-
-      jsonDecode(response.body);
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
@@ -508,7 +581,7 @@ class ServiceController extends GetxController {
         final responseBody = await response.stream.bytesToString();
         final message =
             jsonDecode(responseBody)['error']["message"] ??
-                'Falha ao publicar o item.';
+            'Falha ao publicar o item.';
         CustomLoading.showNotification(
           message: message,
           messageType: MessageType.error,

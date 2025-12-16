@@ -1,3 +1,5 @@
+import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
+
 import '../../../const/export.dart';
 
 class NotificationCpnScreen extends StatelessWidget {
@@ -116,7 +118,11 @@ class NotificationCpnScreen extends StatelessWidget {
                                               backgroundColor: const Color(
                                                 0xFFD10000,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                controller.rejectRequest(
+                                                  id: dd?.slug ?? "",
+                                                );
+                                              },
                                             ),
                                             const SizedBox(width: 10),
 
@@ -125,7 +131,14 @@ class NotificationCpnScreen extends StatelessWidget {
                                               backgroundColor: const Color(
                                                 0xFF16577F,
                                               ),
-                                              onPressed: () {},
+                                              onPressed: () {
+                                                Get.to(
+                                                  () => WebViewScreen(
+                                                    url:
+                                                        "${dd?.replies?.first.paymentLink}",
+                                                  ),
+                                                );
+                                              },
                                             ),
                                           ],
                                         ),
@@ -177,6 +190,10 @@ class NotificationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine if we are on a small screen to adjust padding/spacing
+    double screenWidth = MediaQuery.of(context).size.width;
+    bool isSmallScreen = screenWidth < 360;
+
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
@@ -184,39 +201,45 @@ class NotificationCard extends StatelessWidget {
         color: const Color(0xFFFFF3EA),
         border: Border.all(color: const Color(0xFFFFE0C9), width: 1),
       ),
-      padding: EdgeInsets.fromLTRB(15, 18, 15, actions != null ? 18 : 14),
+      padding: EdgeInsets.all(isSmallScreen ? 12 : 18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.w700,
-                  color: Colors.black,
-                  fontFamily: 'Josefin Sans',
-                  height: 1.2,
-                ),
-              ),
-              const SizedBox(height: 14),
-              Text(
-                description,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w400,
-                  color: Colors.black,
-                  fontFamily: 'Josefin Sans',
-                  height: 1.5,
-                ),
-              ),
-            ],
+          Text(
+            title,
+            style: TextStyle(
+              // Scale font size slightly based on screen width
+              fontSize: screenWidth > 600 ? 24 : 20,
+              fontWeight: FontWeight.bold,
+              color: Colors.black,
+              fontFamily: 'Josefin Sans',
+            ),
+          ),
+          const SizedBox(height: 12),
+          Text(
+            description,
+            style: const TextStyle(
+              fontSize: 16,
+              color: Colors.black,
+              fontFamily: 'Josefin Sans',
+              height: 1.4,
+            ),
           ),
           if (actions != null) ...[
-            const SizedBox(height: 43),
-            Row(children: actions!),
+            const SizedBox(height: 24), // Reduced from 43 for better mobile fit
+            // Use Wrap instead of Row to handle button overflow
+            Wrap(
+              spacing: 12, // Horizontal space between buttons
+              runSpacing: 12, // Vertical space if buttons wrap to next line
+              children: actions!.map((button) {
+                // Ensure buttons take up appropriate space
+                return ConstraintsTransformBox(
+                  constraintsTransform: ConstraintsTransformBox.unconstrained,
+                  child: button,
+                );
+              }).toList(),
+            ),
           ],
         ],
       ),
@@ -238,30 +261,32 @@ class NotificationButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: 145,
-      height: 50,
-      child: ElevatedButton(
-        onPressed: onPressed,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Remove hardcoded width: 145 to allow button to be flexible
+        return ElevatedButton(
+          onPressed: onPressed,
+          style: ElevatedButton.styleFrom(
+            backgroundColor: backgroundColor,
+            minimumSize: const Size(120, 48), // Set a minimum rather than fixed
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
           ),
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 13),
-        ),
-        child: Text(
-          text,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w700,
-            color: Colors.white,
-            fontFamily: 'Josefin Sans',
-            height: 1.7,
+          child: Text(
+            text,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+              fontFamily: 'Josefin Sans',
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

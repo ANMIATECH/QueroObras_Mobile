@@ -12,6 +12,7 @@ class ProductDetailsController extends GetxController {
     getCart();
     getAllProduct(isInitial: true);
     getAllOrders(isInitial: true);
+    getAllOrdersRequest(isInitial: true);
   }
 
   void incrementQuantity(num maxAllowedQuantity) {
@@ -38,14 +39,12 @@ class ProductDetailsController extends GetxController {
   // 1. Master List (The complete list fetched from the API)
   final RxList<dynamic> masterItemList = <dynamic>[].obs;
   final RxList<dynamic> masterItemListOrder = <dynamic>[].obs;
+  final RxList<dynamic> masterItemListOrderRequest = <dynamic>[].obs;
   var selectedLevelUpdateProduct = "".obs;
 
-
-  void initializeWithItemTracking(DataItemPayOrder? dd) {
-    selectedLevelUpdateProduct.value = dd?.orderItem?.status??"packaging";
+  void initializeWithItemTracking(String? dd) {
+    selectedLevelUpdateProduct.value = dd ?? "packaging";
     // 1. Set the item ID for update/delete logic
-
-   
   }
 
   void updateSearchTerm(String term) {
@@ -86,6 +85,7 @@ class ProductDetailsController extends GetxController {
 
   final product = ItemForCurrentUser().obs;
   final productOrder = OrderPayed().obs;
+  final productOrderRequest = OrderPayed().obs;
 
   final RxList<Item> itemList =
       <Item>[].obs; // To store the list of fetched items
@@ -102,8 +102,15 @@ class ProductDetailsController extends GetxController {
   final RxBool isLoadingOrder = false.obs;
   final RxInt currentPageOrder = 1.obs;
 
+  final RxList<Item> itemListOrderRequest = <Item>[].obs;
+  final RxBool hasMoreOrderRequest = true.obs;
+  final RxBool isLoadingOrderRequest = false.obs;
+  final RxInt currentPageOrderRequest = 1.obs;
+
   final RxBool isPaginatingOrder = false.obs;
+  final RxBool isPaginatingOrderRequest = false.obs;
   final RxInt itemsPerPageOrder = 10.obs;
+  final RxInt itemsPerPageOrderRequest = 10.obs;
 
   Future getAllProduct({bool isInitial = false}) async {
     if (!hasMoreData.value && !isInitial) {
@@ -236,6 +243,73 @@ class ProductDetailsController extends GetxController {
     }
   }
 
+  Future getAllOrdersRequest({bool isInitial = false}) async {
+    if (!hasMoreOrderRequest.value && !isInitial) {
+      return; // Stop if no more data is available
+    }
+    // Set loading state based on whether it's the first load or a "load more"
+    if (isInitial) {
+      isLoadingOrderRequest.value = true;
+      currentPageOrderRequest.value =
+          1; // Reset to page 1 for initial load/refresh
+      itemListOrderRequest.clear(); // Clear list for initial load/refresh
+      hasMoreOrderRequest.value = true;
+    } else {
+      isPaginatingOrderRequest.value = true;
+    }
+
+    try {
+      final Map<String, String> params = {
+        'page': currentPageOrderRequest.value.toString(),
+        'per_page': itemsPerPageOrderRequest.value.toString(),
+      };
+
+      var response = await _apiManager.read(ApiUrl.orderSeller, true, params);
+
+      jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        productOrderRequest.value = OrderPayed.fromJson(data);
+
+        final List<DataItemPayOrder> fetchedItems =
+            productOrderRequest.value.data?.items ?? [];
+        final int totalPages =
+            productOrderRequest.value.data?.lastPage ??
+            1; // Adjust keys based on your API
+
+        if (fetchedItems.isNotEmpty) {
+          // itemList.addAll(fetchedItems);
+          masterItemListOrderRequest.addAll(fetchedItems);
+
+          // Increment page number for the next request
+          currentPageOrderRequest.value++;
+        }
+
+        // Check if the current page is the last page
+        if (currentPageOrderRequest.value > totalPages) {
+          hasMoreOrderRequest.value = false;
+        }
+      } else {
+        // Handle API errors (e.g., 404, 500)
+        CustomLoading.showNotification(
+          message: 'Falha ao carregar os itens',
+          messageType: MessageType.error,
+        );
+        hasMoreOrderRequest.value =
+            false; // Prevent further attempts if server error occurs
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoadingOrderRequest.value = false;
+      isPaginatingOrderRequest.value = false;
+    }
+  }
+
   // 2. Function to be called when the user scrolls to the bottom
   void loadNextPage() {
     if (!isLoading.value && !isPaginatingOrder.value && hasMoreData.value) {
@@ -246,6 +320,14 @@ class ProductDetailsController extends GetxController {
   void loadNextPageOrder() {
     if (!isLoadingOrder.value && !isPaginating.value && hasMoreOrder.value) {
       getAllOrders();
+    }
+  }
+
+  void loadNextPageOrderRequest() {
+    if (!isLoadingOrderRequest.value &&
+        !isPaginatingOrderRequest.value &&
+        hasMoreOrderRequest.value) {
+      getAllOrdersRequest();
     }
   }
 
@@ -270,6 +352,42 @@ class ProductDetailsController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    }
+  }
+
+  var loadStatusBtn = false.obs;
+  Future<void> updateOrderStatus({required String itemSlug}) async {
+    try {
+      var data = {'status': selectedLevelUpdateProduct.value};
+      loadStatusBtn.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.orderItem}/$itemSlug/status",
+        data,
+        true,
+      );
+      loadStatusBtn.value = false;
+
+      if (response.statusCode == 200) {
+        await getAllOrdersRequest(isInitial: true);
+        CustomLoading.showNotification(
+          message: 'Atualizado com sucesso',
+          messageType: MessageType.success,
+        );
+        Get.back();
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Não consigo atualizar',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      loadStatusBtn.value = false;
 
       CustomLoading.showNotification(
         message: 'Erro de rede: $e',

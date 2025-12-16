@@ -1,107 +1,103 @@
 import 'package:queroobras_mobile/mvvm/screens/dashboard/home/trackorder.dart';
 
-import '../../../const/export.dart';
+import '../../../../const/export.dart';
 
-class MyOrder extends StatelessWidget {
-  const MyOrder({super.key});
+class SellerOrder extends StatelessWidget {
+  const SellerOrder({super.key});
 
   @override
   Widget build(BuildContext context) {
     final controller = Get.find<ProductDetailsController>();
 
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title: Text(
-            "Pedidas",
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 1,
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title: Text(
+          "Solicitação de pedido",
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
         ),
-        body: SingleChildScrollView(
-          child: FutureBuilder(
-            future: controller.getAllOrders(),
-            builder: (context, asyncSnapshot) {
-              return Obx(() {
-                if (!controller.isLoading.value &&
-                    controller.productOrder.value.data?.items == null) {
-                  return Center(child: Text("You haven't placed an order yet"));
-                }
-                return RefreshIndicator(
-                  onRefresh: () => controller.getAllOrders(isInitial: true),
-                  child: NotificationListener<ScrollNotification>(
-                    onNotification: (ScrollNotification scrollInfo) {
-                      // Check if the user is scrolling near the bottom
-                      if (scrollInfo.metrics.pixels >=
-                              scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                          !controller.isPaginatingOrder.value &&
-                          controller.hasMoreOrder.value) {
-                        // 👈 IMPORTANT: Only load more pages if NOT searching
-                        controller.loadNextPageOrder();
-                      }
-                      return true;
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+        backgroundColor: Colors.white,
+        elevation: 0,
+      ),
+      body: SingleChildScrollView(
+        child: FutureBuilder(
+          future: controller.getAllOrdersRequest(),
+          builder: (context, asyncSnapshot) {
+            return Obx(() {
+              if (!controller.isLoadingOrderRequest.value &&
+                  controller.productOrderRequest.value.data?.items == null) {
+                return Center(child: Text("You haven't placed an order yet"));
+              }
+              return RefreshIndicator(
+                onRefresh: () =>
+                    controller.getAllOrdersRequest(isInitial: true),
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    // Check if the user is scrolling near the bottom
+                    if (scrollInfo.metrics.pixels >=
+                            scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                        !controller.isPaginatingOrderRequest.value &&
+                        controller.hasMoreOrderRequest.value) {
+                      // 👈 IMPORTANT: Only load more pages if NOT searching
+                      controller.loadNextPageOrderRequest();
+                    }
+                    return true;
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                        children: [
-                          // Main Content
-                          Column(
-                            children: [
-                              ListView.builder(
-                                shrinkWrap: true,
-                                physics:
-                                    const NeverScrollableScrollPhysics(), // if inside another scroll view
-                                itemCount: controller
-                                    .productOrder
+                      children: [
+                        // Main Content
+                        Column(
+                          children: [
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics:
+                                  const NeverScrollableScrollPhysics(), // if inside another scroll view
+                              itemCount: controller
+                                  .productOrderRequest
+                                  .value
+                                  .data
+                                  ?.items
+                                  ?.length,
+                              itemBuilder: (context, index) {
+                                var dd = controller
+                                    .productOrderRequest
                                     .value
                                     .data
-                                    ?.items
-                                    ?.length,
-                                itemBuilder: (context, index) {
-                                  var dd = controller
-                                      .productOrder
-                                      .value
-                                      .data
-                                      ?.items?[index];
+                                    ?.items?[index];
 
-                                  return Padding(
-                                    padding: const EdgeInsets.only(bottom: 12),
-                                    child: OrderItemCard(
-                                      name: "${dd?.item?.name}",
-                                      subtitle: "${dd?.item?.type}",
-                                      onTap: () {
-                                        Get.to(
-                                          () => OrderTrackingScreen(dd: dd),
-                                        );
-                                      },
-                                      status: "${dd?.orderItem?.status}",
-                                      avatarUrl:
-                                          "${dd?.item?.files?.first.path}",
-                                    ),
-                                  );
-                                },
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+                                return Padding(
+                                  padding: const EdgeInsets.only(bottom: 12),
+                                  child: OrderItemCard(
+                                    name: "${dd?.item?.name}",
+                                    subtitle: "${dd?.item?.type}",
+                                    onTap: () {
+                                      Get.to(() => OrderTrackingScreen(dd: dd,userType: true,));
+                                    },
+                                    status: "${dd?.status}",
+                                    avatarUrl: "${dd?.item?.files?.first.path}",
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
                   ),
-                );
-              });
-            },
-          ),
+                ),
+              );
+            });
+          },
         ),
       ),
     );

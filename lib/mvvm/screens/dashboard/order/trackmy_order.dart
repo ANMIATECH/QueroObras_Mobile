@@ -4,11 +4,14 @@ import '../../../const/export.dart';
 
 // --- Main Class ---
 class SellerProgressTracking extends StatelessWidget {
-  SellerProgressTracking({super.key, this.dd}) {
+  SellerProgressTracking({super.key, this.dd, this.userType = false}) {
     final controller = Get.find<ProductDetailsController>();
-    controller.initializeWithItemTracking(dd);
+    controller.initializeWithItemTracking(
+      userType ? dd?.status : dd?.orderItem?.status,
+    );
   }
   final DataItemPayOrder? dd;
+  final bool userType;
 
   // Helper to calculate padding based on screen width
   EdgeInsets _getResponsiveContainerPadding(BuildContext context) {
@@ -176,17 +179,24 @@ class SellerProgressTracking extends StatelessWidget {
                 return ProgressTracker(
                   currentStatus: controller.selectedLevelUpdateProduct.value,
                   dd: dd,
+                  vendor: userType,
                 );
               }),
 
               SizedBox(height: screenWidth * 0.08), // Proportional spacing
               // Custom Button - Let it take full width with padding/margin
-              CustomButton(
-                text: CustomText.updateStatus,
-                onPressed: () async {
-                  // Button logic
-                },
-              ),
+              userType
+                  ? Obx(() {
+                      return CustomButton(
+                        text: CustomText.updateStatus,
+                        isLoading: controller.loadStatusBtn.value,
+                        onPressed: () async {
+                          // Button logic
+                          controller.updateOrderStatus(itemSlug: "${dd?.slug}");
+                        },
+                      );
+                    })
+                  : Container(),
 
               SizedBox(height: screenWidth * 0.1), // Proportional spacing
             ],

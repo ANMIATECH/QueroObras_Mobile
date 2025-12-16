@@ -5,8 +5,9 @@ import 'package:queroobras_mobile/mvvm/screens/dashboard/order/trackmy_order.dar
 import '../../../const/export.dart';
 
 class OrderTrackingScreen extends StatelessWidget {
-  const OrderTrackingScreen({super.key, this.dd});
+  const OrderTrackingScreen({super.key, this.dd, this.userType = false});
   final DataItemPayOrder? dd;
+  final bool userType;
 
   @override
   Widget build(BuildContext context) {
@@ -14,10 +15,10 @@ class OrderTrackingScreen extends StatelessWidget {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text(
-          "Meu pedidos",
+          userType ? "Detalhes da Solicitação" : "Meu pedidos",
           style: const TextStyle(
             color: Colors.black,
-            fontSize: 32,
+            fontSize: 20,
             fontWeight: FontWeight.w700,
             fontFamily: 'Josefin Sans',
             height: 1,
@@ -73,14 +74,21 @@ class OrderTrackingScreen extends StatelessWidget {
                       const SizedBox(height: 15),
 
                       // Order Item Card
-                      OrderItemCard(dd: dd),
+                      OrderItemCard(dd: dd, userType: userType),
 
                       const SizedBox(height: 15),
 
                       CustomButton(
-                        text: CustomText.trackOrder,
+                        text: userType
+                            ? CustomText.updateOrder
+                            : CustomText.trackOrder,
                         onPressed: () async {
-                          Get.to(() => SellerProgressTracking(dd: dd));
+                          Get.to(
+                            () => SellerProgressTracking(
+                              dd: dd,
+                              userType: userType,
+                            ),
+                          );
                         },
                       ),
 
@@ -98,8 +106,9 @@ class OrderTrackingScreen extends StatelessWidget {
 }
 
 class OrderItemCard extends StatelessWidget {
-  const OrderItemCard({super.key, this.dd});
+  const OrderItemCard({super.key, this.dd, this.userType = false});
   final DataItemPayOrder? dd;
+  final bool userType;
 
   @override
   Widget build(BuildContext context) {
@@ -128,7 +137,7 @@ class OrderItemCard extends StatelessWidget {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 23, vertical: 1),
             child: Text(
-              '${dd?.orderItem?.status}',
+              userType ? '${dd?.status}' : '${dd?.orderItem?.status}',
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.w700,

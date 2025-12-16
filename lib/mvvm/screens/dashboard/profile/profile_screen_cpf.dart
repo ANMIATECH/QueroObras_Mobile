@@ -188,7 +188,7 @@ class ProfileMenuSection extends StatelessWidget {
                   title: 'Meu Pedido',
                   hasArrow: true,
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.myOrder);
+                    Navigator.of(context).pushNamed(AppRoutes.sellerOrder);
                   },
                 ),
                 const SizedBox(height: 10),

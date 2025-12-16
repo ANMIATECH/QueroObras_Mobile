@@ -35,6 +35,7 @@ class AppRoutes {
   static const String checkout = '/checkout';
   static const String availability = '/availability';
   static const String myOrder = '/myOrder';
+  static const String sellerOrder = '/sellerOrder';
   static const String profileEdit = '/profileEdit';
   static const String profileReview = '/profileReview';
   static const String notificationCpnScreen = '/notificationCpnScreen';
@@ -62,6 +63,7 @@ class AppRoutes {
     vender: (context) => VenderScreen(),
     venderCreate: (context) => VendorFormScreen(),
     myOrder: (context) => MyOrder(),
+    sellerOrder: (context) => SellerOrder(),
     profileEdit: (context) => ProfileEdit(),
     profileReview: (context) => ServiceProviderReview(),
     myHire: (context) => MyHireScreen(),

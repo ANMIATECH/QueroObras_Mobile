@@ -1,3 +1,5 @@
+export 'package:queroobras_mobile/mvvm/screens/dashboard/order/seller_order/seller_order.dart';
+
 export 'package:queroobras_mobile/mvvm/model/notificaiton_cpn.dart';
 
 export 'package:queroobras_mobile/mvvm/screens/dashboard/notification/notification_cpn.dart';
