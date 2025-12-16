@@ -19,7 +19,7 @@ class NotificationCpnScreen extends StatelessWidget {
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
-              future: controller.loadNoficationCpn(),
+              future: controller.loadNoficationCpn(isInitial: true),
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting &&
                     controller.notificaitoncpnfCpn.value.data == null) {
@@ -111,37 +111,44 @@ class NotificationCpnScreen extends StatelessWidget {
                                       description:
                                           'The service provider ${dd?.provider?.name} [specialisation] accept your request and the price is \$${dd?.replies?.first.amount}.',
                                       actions: [
-                                        Row(
-                                          children: [
-                                            NotificationButton(
-                                              text: 'Cancel',
-                                              backgroundColor: const Color(
-                                                0xFFD10000,
-                                              ),
-                                              onPressed: () {
-                                                controller.rejectRequest(
-                                                  id: dd?.slug ?? "",
-                                                );
-                                              },
-                                            ),
-                                            const SizedBox(width: 10),
-
-                                            NotificationButton(
-                                              text: 'Pay',
-                                              backgroundColor: const Color(
-                                                0xFF16577F,
-                                              ),
-                                              onPressed: () {
-                                                Get.to(
-                                                  () => WebViewScreen(
-                                                    url:
-                                                        "${dd?.replies?.first.paymentLink}",
+                                        dd?.status == "5"
+                                            ? Container()
+                                            : Row(
+                                                children: [
+                                                  NotificationButton(
+                                                    text: 'Cancel',
+                                                    backgroundColor:
+                                                        const Color(0xFFD10000),
+                                                    onPressed: () {
+                                                      controller.rejectRequest(
+                                                        id: dd?.slug ?? "",
+                                                      );
+                                                    },
                                                   ),
-                                                );
-                                              },
-                                            ),
-                                          ],
-                                        ),
+                                                  const SizedBox(width: 10),
+
+                                                  NotificationButton(
+                                                    text: dd?.status == "4"
+                                                        ? "Concluído"
+                                                        : 'Pay',
+                                                    backgroundColor:
+                                                        const Color(0xFF16577F),
+                                                    onPressed: () {
+                                                      dd?.status == "4"
+                                                          ? controller
+                                                                .completeRequestClient(
+                                                                  id: "${dd?.slug}",
+                                                                )
+                                                          : Get.to(
+                                                              () => WebViewScreen(
+                                                                url:
+                                                                    "${dd?.replies?.first.paymentLink}",
+                                                              ),
+                                                            );
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
                                       ],
                                     ),
 

@@ -17,7 +17,7 @@ class NotificationCpnfScreen extends StatelessWidget {
           ),
           child: SingleChildScrollView(
             child: FutureBuilder(
-              future: controller.loadNofication(),
+              future: controller.loadNofication(isInitial: true),
               builder: (context, asyncSnapshot) {
                 if (asyncSnapshot.connectionState == ConnectionState.waiting &&
                     controller.notificaitoncpnf.value.data == null) {
@@ -108,6 +108,7 @@ class CustomerRequestCard extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 640 && screenWidth <= 991;
     final isMobile = screenWidth <= 640;
+    final controller = Get.find<ServiceController>();
 
     double containerMaxWidth = 400;
     double containerPadding = 27;
@@ -265,25 +266,35 @@ class CustomerRequestCard extends StatelessWidget {
 
               // Action buttons
               isMobile
-                  ? Column(
-                      children: [
-                        _buildButton(
-                          text: 'Cancel',
-                          backgroundColor: const Color(0xFFDC2626),
-                          onPressed: () {},
-                          width: double.infinity,
-                        ),
-                        const SizedBox(height: 8),
-                        _buildButton(
-                          text: 'Approve',
-                          backgroundColor: const Color(0xFF1E40AF),
-                          onPressed: () {
-                            Get.to(()=>ApproveRequest(dd: dd,));
-                          },
-                          width: double.infinity,
-                        ),
-                      ],
-                    )
+                  ? dd?.status == "5"
+                        ? Container()
+                        : Column(
+                            children: [
+                              dd?.status == "3"
+                                  ? Container()
+                                  : _buildButton(
+                                      text: 'Cancel',
+                                      backgroundColor: const Color(0xFFDC2626),
+                                      onPressed: () {},
+                                      width: double.infinity,
+                                    ),
+                              const SizedBox(height: 8),
+                              _buildButton(
+                                text: dd?.status == "3"
+                                    ? "Completo"
+                                    : 'Aprovar',
+                                backgroundColor: const Color(0xFF1E40AF),
+                                onPressed: () {
+                                  dd?.status == "3"
+                                      ? controller.completedRequest(
+                                          id: "${dd?.slug}",
+                                        )
+                                      : Get.to(() => ApproveRequest(dd: dd));
+                                },
+                                width: double.infinity,
+                              ),
+                            ],
+                          )
                   : Row(
                       children: [
                         _buildButton(

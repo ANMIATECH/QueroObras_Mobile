@@ -143,6 +143,71 @@ class ServiceController extends GetxController {
       approveRequestIsLoading.value = false;
     }
   }
+  Future<void> completeRequestClient({required String id}) async {
+  
+    try {
+    
+      approveRequestIsLoading.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/confirm-completion",
+        {},
+        true,
+      );
+
+      if (response.statusCode == 200) {
+       
+        CustomLoading.showNotification(
+          message: 'Conclusão confirmada',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Failed to Approve.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      approveRequestIsLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {
+      approveRequestIsLoading.value = false;
+    }
+  }
+
+  Future<void> completedRequest({required String id}) async {
+    try {
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/mark-completed",
+        {},
+        true,
+      );
+
+      if (response.statusCode == 200) {
+        await loadNofication(isInitial: true);
+        Get.back();
+        CustomLoading.showNotification(
+          message: 'Serviço concluído',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Conclusão Rejeitada',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    } finally {}
+  }
 
   Future<void> rejectRequest({required String id}) async {
     try {
@@ -180,43 +245,6 @@ class ServiceController extends GetxController {
     } finally {
       approveRequestIsLoading.value = false;
     }
-  }
-
-  Future<void> payRequest({
-    required String id,
-    required String amount,
-    required String note,
-  }) async {
-    try {
-      final Map<String, dynamic> body = {'amount': amount, 'note': note};
-      var response = await _apiManager.post(
-        "${ApiUrl.serviceRequests}/$id/accept",
-        body,
-        true,
-      );
-      print("${response.body}");
-
-      if (response.statusCode == 200) {
-        // await loadNoficationCpn(isInitial: true);
-        // requestPricing.clear();
-        // notePricing.clear();
-        // CustomLoading.showNotification(
-        //   message: 'Request price sent successful.',
-        //   messageType: MessageType.success,
-        // );
-        // Get.back();
-      } else {
-        CustomLoading.showNotification(
-          message: 'Failed to Approve.',
-          messageType: MessageType.error,
-        );
-      }
-    } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Network error: $e',
-        messageType: MessageType.error,
-      );
-    } finally {}
   }
 
   Future loadNofication({bool isInitial = false}) async {
