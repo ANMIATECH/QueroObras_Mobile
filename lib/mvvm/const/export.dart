@@ -91,3 +91,5 @@ export 'dart:io'; // Keep dart:io for HeaderValue
 export 'dart:async';
 export 'dart:convert';
 export 'package:flutter_riverpod/flutter_riverpod.dart' show ProviderScope;
+export 'package:firebase_core/firebase_core.dart';
+// export 'package:cloud_firestore/cloud_firestore.dart';

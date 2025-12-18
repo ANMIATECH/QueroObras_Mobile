@@ -1,8 +1,12 @@
+import 'package:queroobras_mobile/firebase_options.dart';
+
 import '../mvvm/const/export.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+);
 
   await StorageService.init(); // Initialize GetStorage
   Get.put(LoginController());
