@@ -1,4 +1,6 @@
 import 'package:queroobras_mobile/mvvm/const/export.dart';
+import 'package:queroobras_mobile/mvvm/model/chat_model.dart';
+import 'package:queroobras_mobile/mvvm/model/chat_one_on_one.dart';
 import 'package:queroobras_mobile/mvvm/model/pay_order.dart';
 import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
 
@@ -13,6 +15,7 @@ class ProductDetailsController extends GetxController {
     getAllProduct(isInitial: true);
     getAllOrders(isInitial: true);
     getAllOrdersRequest(isInitial: true);
+    _startPolling();
   }
 
   void incrementQuantity(num maxAllowedQuantity) {
@@ -111,71 +114,81 @@ class ProductDetailsController extends GetxController {
   final RxBool isPaginatingOrderRequest = false.obs;
   final RxInt itemsPerPageOrder = 10.obs;
   final RxInt itemsPerPageOrderRequest = 10.obs;
+Future getAllProduct({bool isInitial = false}) async {
+  if (!hasMoreData.value && !isInitial) return;
 
-  Future getAllProduct({bool isInitial = false}) async {
-    if (!hasMoreData.value && !isInitial) {
-      return; // Stop if no more data is available
-    }
-    // Set loading state based on whether it's the first load or a "load more"
-    if (isInitial) {
-      isLoading.value = true;
-      currentPage.value = 1; // Reset to page 1 for initial load/refresh
-      itemList.clear(); // Clear list for initial load/refresh
-      hasMoreData.value = true;
-    } else {
-      isPaginating.value = true;
-    }
+  if (isInitial) {
+    isLoading.value = true;
+    currentPage.value = 1;
+    masterItemList.clear(); // Fresh start
+    hasMoreData.value = true;
+  } else {
+    isPaginating.value = true;
+  }
 
-    try {
-      final Map<String, String> params = {
-        'page': currentPage.value.toString(),
-        'per_page': itemsPerPage.value.toString(),
-      };
+  try {
+    final Map<String, String> params = {
+      'page': currentPage.value.toString(),
+      'per_page': itemsPerPage.value.toString(),
+    };
 
-      var response = await _apiManager.read(ApiUrl.getProduct, true, params);
+    var response = await _apiManager.read(ApiUrl.getProduct, true, params);
 
-      jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      product.value = ItemForCurrentUser.fromJson(data);
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        product.value = ItemForCurrentUser.fromJson(data);
+      final List<Item> fetchedItems = product.value.items ?? [];
+      final int totalPages = product.value.pagination?.lastPage ?? 1;
 
-        final List<Item> fetchedItems = product.value.items ?? [];
-        final int totalPages =
-            product.value.pagination?.lastPage ??
-            1; // Adjust keys based on your API
+      if (fetchedItems.isNotEmpty) {
+        // 1. De-duplication Logic using a Map (Key is ID)
+        // This ensures if an ID already exists, it gets overwritten/ignored rather than duplicated
+        final Map<int, Item> itemMap = {
+          for (var item in masterItemList) item.id!: item,
+        };
 
-        if (fetchedItems.isNotEmpty) {
-          // itemList.addAll(fetchedItems);
-          masterItemList.addAll(fetchedItems);
-
-          // Increment page number for the next request
-          currentPage.value++;
+        for (var newItem in fetchedItems) {
+          itemMap[newItem.id!] = newItem;
         }
 
-        // Check if the current page is the last page
-        if (currentPage.value > totalPages) {
-          hasMoreData.value = false;
-        }
-      } else {
-        // Handle API errors (e.g., 404, 500)
-        CustomLoading.showNotification(
-          message: 'Falha ao carregar os itens',
-          messageType: MessageType.error,
-        );
-        hasMoreData.value =
-            false; // Prevent further attempts if server error occurs
+        // 2. Convert back to list
+        List<Item> uniqueList = itemMap.values.toList();
+
+        // 3. Sorting Logic: Newest or most recently updated first
+        uniqueList.sort((a, b) {
+          final dateA = a.updatedAt ?? DateTime(0);
+          final dateB = b.updatedAt ?? DateTime(0);
+          return dateB.compareTo(dateA); // Descending order
+        });
+
+        // 4. Update the observable list
+        masterItemList.assignAll(uniqueList);
+
+        currentPage.value++;
       }
-    } catch (e) {
+
+      // Check if we reached the end
+      if (currentPage.value > totalPages) {
+        hasMoreData.value = false;
+      }
+    } else {
       CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
+        message: 'Falha ao carregar os itens',
         messageType: MessageType.error,
       );
-    } finally {
-      isLoading.value = false;
-      isPaginating.value = false;
+      hasMoreData.value = false;
     }
+  } catch (e) {
+    CustomLoading.showNotification(
+      message: 'Erro de rede: $e',
+      messageType: MessageType.error,
+    );
+  } finally {
+    isLoading.value = false;
+    isPaginating.value = false;
   }
+}
 
   Future getAllOrders({bool isInitial = false}) async {
     if (!hasMoreOrder.value && !isInitial) {
@@ -468,6 +481,239 @@ class ProductDetailsController extends GetxController {
       CustomLoading.showNotification(
         message: 'Erro de rede: $e',
         messageType: MessageType.error,
+      );
+    }
+  }
+
+  var chatModel = ChatData().obs;
+  Timer? timer;
+  void _startPolling() {
+    // Refresh every 10 seconds
+    timer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      getAllChat();
+    });
+  }
+
+  Future<void> getAllChat() async {
+    try {
+      var response = await _apiManager.read(ApiUrl.getAllChat, true);
+
+      if (response.statusCode == 200) {
+        var date = jsonDecode(response.body);
+        var fetchedData = ChatData.fromJson(date);
+
+        // SORTING LOGIC: Handle the null safety here
+        fetchedData.data?.sort((a, b) {
+          final dateA = a.updatedAt ?? DateTime(0);
+          final dateB = b.updatedAt ?? DateTime(0);
+          return dateB.compareTo(dateA); // Newest first
+        });
+
+        chatModel.value = fetchedData;
+      } else {
+        CustomLoading.showNotification(
+          message: 'Falha ao obter o carrinho.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+
+      CustomLoading.showNotification(
+        message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    }
+  }
+
+  final ScrollController scrollController = ScrollController();
+  final TextEditingController controller = TextEditingController();
+  bool isRecording = false;
+
+  void handleSend(String userId) {
+    final message = controller.text.trim();
+    sendMessageForChat(userId: userId, message: message);
+    debugPrint('Sending message: $message');
+    if (message.isNotEmpty) {
+      controller.clear();
+    }
+  }
+
+  final ImagePicker _picker = ImagePicker();
+
+  var selectedImages = <File>[].obs;
+  final int maxImages = 5;
+  var isSending = false.obs;
+
+  // --- Image Picking ---
+  Future<void> pickChatImages() async {
+    int remainingSlots = maxImages - selectedImages.length;
+    if (remainingSlots <= 0) {
+      CustomLoading.showNotification(
+        message: "Limite de $maxImages imagens",
+        messageType: MessageType.info,
+      );
+      return;
+    }
+
+    final List<XFile> pickedFiles = await _picker.pickMultiImage(
+      imageQuality: 70,
+    );
+    if (pickedFiles.isNotEmpty) {
+      selectedImages.addAll(pickedFiles.map((x) => File(x.path)));
+      // Optional: Automatically send after picking, or wait for user to hit send
+    }
+  }
+
+  // --- Sending Logic ---
+  Future<void> sendChatMessage(String chatId, {String? message}) async {
+    if (message == null && selectedImages.isEmpty) return;
+    final chatController = Get.find<ChatController>();
+
+    try {
+      isSending.value = true;
+
+      // Prepare data - match your backend requirements
+      final Map<String, String> data = {
+        'receiver_id': chatId,
+        if (message != null && message.isNotEmpty) 'message': message,
+      };
+      print(data);
+
+      final response = await _apiManager.uploadMultipleFilesWithData(
+        endpoint: "${ApiUrl.getAllChat}/send", // Adjust to your send endpoint
+        files: selectedImages.toList(),
+        data: data,
+        fileField: 'file_path', // Or 'images[]' based on your API
+        bearerToken: true,
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        selectedImages.clear();
+        controller.clear();
+        chatController.getAllChatOneOnOne(
+          chatId,
+          showLoading: false,
+        ); // Refresh chat
+      } else {
+        CustomLoading.showNotification(
+          message: 'Erro ao enviar',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      debugPrint("Send Error: $e");
+    } finally {
+      isSending.value = false;
+    }
+  }
+
+  Future<void> sendMessageForChat({
+    required String userId,
+    required String message,
+  }) async {
+    try {
+      Map<String, dynamic> body = {"receiver_id": userId, "message": message};
+      var response = await _apiManager.post(ApiUrl.sendChat, body, true);
+      jsonDecode(response.body);
+
+      if (response.statusCode != 201) {
+        CustomLoading.showNotification(
+          message: 'Failed to send message.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: 'Network error: $e',
+        messageType: MessageType.error,
+      );
+    }
+  }
+}
+
+class ChatController extends GetxController {
+  final ApiManager _apiManager = ApiManager();
+  var chatModel = ChatDataReal().obs;
+  var isLoading = false.obs;
+  Timer? _timer;
+
+  // @override
+  // void onInit() {
+  //   super.onInit();
+  //   // Start polling if you don't have WebSockets/Firebase
+  //   // _startPolling();
+  // }
+
+  @override
+  void onClose() {
+    _timer?.cancel(); // Critical to prevent memory leaks
+    super.onClose();
+  }
+
+  void startPolling(String id) {
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      getAllChatOneOnOne(id, showLoading: false);
+    });
+  }
+
+  Future<void> getAllChatOneOnOne(String id, {bool showLoading = true}) async {
+    if (showLoading) isLoading.value = true;
+    try {
+      var response = await _apiManager.read(
+        "${ApiUrl.getAllChat}/$id/messages",
+        true,
+      );
+
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var fetchedData = ChatDataReal.fromJson(data);
+
+        // Sort: Oldest at top, Newest at bottom for standard chat feel
+        fetchedData.data?.sort(
+          (a, b) => (a.createdAt ?? DateTime.now()).compareTo(
+            b.createdAt ?? DateTime.now(),
+          ),
+        );
+
+        chatModel.value = fetchedData;
+      }
+    } catch (e) {
+      debugPrint("Chat Error: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // 👈 New: Observable list to store selected image files
+  final RxList<File> selectedImages = <File>[].obs;
+  final int maxImages = 5; // Set a limit for the number of images
+
+  // 👈 New: Image Picker instance
+  final ImagePicker _picker = ImagePicker();
+
+  Future<void> pickImages() async {
+    // Calculate how many more images can be added
+    int remainingSlots = maxImages - selectedImages.length;
+
+    // Only proceed if there are slots available
+    if (remainingSlots > 0) {
+      final List<XFile> pickedFiles = await _picker.pickMultiImage(
+        limit: remainingSlots,
+        imageQuality: 70, // Adjust image quality as needed
+      );
+
+      if (pickedFiles.isNotEmpty) {
+        // Convert XFile to File and add to the observable list
+        for (var xFile in pickedFiles) {
+          selectedImages.add(File(xFile.path));
+        }
+      }
+    } else {
+      CustomLoading.showNotification(
+        message: "You can upload a maximum of $maxImages images.",
+        messageType: MessageType.info,
       );
     }
   }

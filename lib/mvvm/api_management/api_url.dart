@@ -21,6 +21,8 @@ class ApiUrl {
   static String addToCart= "v1/cart/sync";
   static String orderItem= "v1/orders/item";
   static String cartCheckout= "v1/cart/checkout";
+  static String sendChat= "v1/chat/send";
+  static String getAllChat= "v1/chat";
   static String cartCheckoutDemo= "v1/orders/checkout";
   static String cart= "v1/cart";
   static String resetPasswordEmail = "v1/password/otp/request";

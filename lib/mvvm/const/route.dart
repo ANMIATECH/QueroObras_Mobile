@@ -13,7 +13,7 @@ class AppRoutes {
   static const String welcome = '/welcome';
   static const String login = '/login';
   static const String notificationcpnf = '/notificationcpnf';
-  static const String oneOnOneChat = '/oneOnOneChat';
+  // static const String oneOnOneChat = '/oneOnOneChat';
   static const String serviceRequestScreen = '/serviceRequestScreen';
   static const String registration = '/registration';
   static const String cpfBottomNav = '/cpfBottomNav';
@@ -45,7 +45,7 @@ class AppRoutes {
     onboarding: (context) => const OnboardingScreen(),
     welcome: (context) => const WelcomeScreen(),
     login: (context) => LoginScreen(),
-    oneOnOneChat: (context) => OneOnOneChat(),
+    // oneOnOneChat: (context) => OneOnOneChat(),
     // serviceRequestScreen: (context) => ServiceRequestScreen(),
     registration: (context) => const RegistrationScreen(),
     forgetPassword: (context) => const ResetPasswordScreen(),
@@ -59,7 +59,8 @@ class AppRoutes {
     otpPin: (context) => OtpVerificationScreen(),
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),
-    materiaisServiceProvider: (context) => MaterialShopScreen(appbarName: 'Material',),
+    materiaisServiceProvider: (context) =>
+        MaterialShopScreen(appbarName: 'Material'),
     vender: (context) => VenderScreen(),
     venderCreate: (context) => VendorFormScreen(),
     myOrder: (context) => MyOrder(),

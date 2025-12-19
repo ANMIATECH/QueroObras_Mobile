@@ -58,8 +58,8 @@ class MessageBubble extends StatelessWidget {
                   padding: const EdgeInsets.only(right: 8.0),
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(6),
-                    child: CustomImageView(imagePath:
-                      avatarUrl!,
+                    child: CustomImageView(
+                      imagePath: avatarUrl!,
                       width: 35,
                       height: 35,
                       fit: BoxFit.cover,
@@ -243,8 +243,8 @@ class MessageBubble extends StatelessWidget {
               bottomLeft: Radius.circular(20.43),
               bottomRight: Radius.circular(20.43),
             ),
-            child:CustomImageView(imagePath:
-              message,
+            child: CustomImageView(
+              imagePath: message,
               width: 245,
               height: 206,
               fit: BoxFit.cover,
@@ -317,7 +317,6 @@ class CheckMarksPainter extends CustomPainter {
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }
 
-
 class ChatInput extends StatelessWidget {
   final TextEditingController controller;
   final bool isRecording;
@@ -351,13 +350,13 @@ class ChatInput extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 10),
           child: Row(
             children: [
-              GestureDetector(
-                onTap: onEmojiTap,
-                child: CustomImageView(
-                  imagePath: CustomImage.emoji,
-                ),
-              ),
-              const SizedBox(width: 18),
+              // GestureDetector(
+              //   onTap: onEmojiTap,
+              //   child: CustomImageView(
+              //     imagePath: CustomImage.emoji,
+              //   ),
+              // ),
+              // const SizedBox(width: 18),
 
               // 📝 Text input field
               Expanded(
@@ -386,28 +385,27 @@ class ChatInput extends StatelessWidget {
               const SizedBox(width: 12),
 
               // 📸 Camera button
-              GestureDetector(
-                onTap: onCameraTap,
-                child: CustomImageView(
-                  imagePath: CustomImage.inputCamera,
-                ),
-              ),
+              // GestureDetector(
+              //   onTap: onCameraTap,
+              //   child: CustomImageView(
+              //     imagePath: CustomImage.inputCamera,
+              //   ),
+              // ),
 
-              const SizedBox(width: 12),
+              // const SizedBox(width: 12),
 
-              // 🎤 Mic button (toggled state)
-              GestureDetector(
-                onTap: onMicTap,
-                child: Icon(
-                  Icons.mic,
-                  size: 24,
-                  color: isRecording
-                      ? const Color(0xFF6EB954)
-                      : const Color(0xFF6EB954),
-                ),
-              ),
-
-              const SizedBox(width: 12),
+              // // 🎤 Mic button (toggled state)
+              // GestureDetector(
+              //   onTap: onMicTap,
+              //   child: Icon(
+              //     Icons.mic,
+              //     size: 24,
+              //     color: isRecording
+              //         ? const Color(0xFF6EB954)
+              //         : const Color(0xFF6EB954),
+              //   ),
+              // ),
+              // const SizedBox(width: 12),
 
               // 📩 Send button
               GestureDetector(
@@ -416,9 +414,7 @@ class ChatInput extends StatelessWidget {
                     onSendTap?.call();
                   }
                 },
-                child: CustomImageView(
-                  imagePath: CustomImage.send,
-                ),
+                child: CustomImageView(imagePath: CustomImage.send),
               ),
             ],
           ),
@@ -427,4 +423,3 @@ class ChatInput extends StatelessWidget {
     );
   }
 }
-

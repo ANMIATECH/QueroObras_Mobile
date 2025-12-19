@@ -50,19 +50,21 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyB99ZXr_et3NDv0uZED4ZZV6tjGvlSJq1s',
-    appId: '1:2697221512:android:708176d58711925784163d',
-    messagingSenderId: '2697221512',
-    projectId: 'quero-obras-2cd72',
-    storageBucket: 'quero-obras-2cd72.firebasestorage.app',
+    apiKey: 'AIzaSyDUMfhs11GrOzIxUaQfKLfJgSFXuckuLrQ',
+    appId: '1:50753149040:android:6db75f1041a7119fa97cb5',
+    messagingSenderId: '50753149040',
+    projectId: 'quero-obras-notification',
+    databaseURL: 'https://quero-obras-notification-default-rtdb.firebaseio.com',
+    storageBucket: 'quero-obras-notification.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyBamMi5DV14m-NSSwxgB4OsR9m0Aqu96MQ',
-    appId: '1:2697221512:ios:128ddb1c2388765b84163d',
-    messagingSenderId: '2697221512',
-    projectId: 'quero-obras-2cd72',
-    storageBucket: 'quero-obras-2cd72.firebasestorage.app',
+    apiKey: 'AIzaSyBlOwKkHT4shMclX29JKqCOwuQobSwOXY0',
+    appId: '1:50753149040:ios:6fb2a62248088d8ca97cb5',
+    messagingSenderId: '50753149040',
+    projectId: 'quero-obras-notification',
+    databaseURL: 'https://quero-obras-notification-default-rtdb.firebaseio.com',
+    storageBucket: 'quero-obras-notification.firebasestorage.app',
     iosBundleId: 'com.popopipo.queroobras',
   );
 

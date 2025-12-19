@@ -1,7 +1,6 @@
 // ignore_for_file: must_be_immutable
 
 import '../const/export.dart';
-
 class CustomImageView extends StatelessWidget {
   CustomImageView({
     super.key,
@@ -15,30 +14,20 @@ class CustomImageView extends StatelessWidget {
     this.radius,
     this.margin,
     this.border,
-    this.placeHolder = 'assets/images/Image_not_found.png',
+    // Default asset for both sellers and users
+    this.placeHolder = 'assets/images/profile_dummy.png', 
   });
 
-  ///[imagePath] is required parameter for showing image
   String? imagePath;
-
   double? height;
-
   double? width;
-
   Color? color;
-
   BoxFit? fit;
-
   final String placeHolder;
-
   Alignment? alignment;
-
   VoidCallback? onTap;
-
   EdgeInsetsGeometry? margin;
-
   BorderRadius? radius;
-
   BoxBorder? border;
 
   @override
@@ -52,114 +41,112 @@ class CustomImageView extends StatelessWidget {
     return Padding(
       padding: margin ?? EdgeInsets.zero,
       child: Material(
-        color: Colors.transparent, // avoid unwanted background color
-
+        color: Colors.transparent,
         child: InkWell(onTap: onTap, child: _buildCircleImage()),
       ),
     );
   }
 
-  ///build the image with border radius
   dynamic _buildCircleImage() {
-    if (radius != null) {
-      return ClipRRect(
-        borderRadius: radius ?? BorderRadius.zero,
-        child: _buildImageWithBorder(),
-      );
-    } else {
-      return _buildImageWithBorder();
-    }
+    return radius != null
+        ? ClipRRect(borderRadius: radius!, child: _buildImageWithBorder())
+        : _buildImageWithBorder();
   }
 
-  ///build the image with border and border radius style
   Widget _buildImageWithBorder() {
-    if (border != null) {
-      return Container(
-        decoration: BoxDecoration(border: border, borderRadius: radius),
-        child: _buildImageView(),
-      );
-    } else {
-      return _buildImageView();
-    }
+    return border != null
+        ? Container(
+            decoration: BoxDecoration(border: border, borderRadius: radius),
+            child: _buildImageView(),
+          )
+        : _buildImageView();
   }
 
   Widget _buildImageView() {
-    if (imagePath != null) {
-      final type = imagePath!.imageType;
-      switch (type) {
-        case ImageType.svg:
-          if (imagePath!.startsWith('http')) {
-            return SvgPicture.network(
-              imagePath!,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.contain,
-              placeholderBuilder: (context) =>
-                  const Center(child: CircularProgressIndicator()),
-              colorFilter: color != null
-                  ? ColorFilter.mode(color!, BlendMode.srcIn)
-                  : null,
-            );
-          } else {
-            return SvgPicture.asset(
-              imagePath!,
-              height: height,
-              width: width,
-              fit: fit ?? BoxFit.contain,
-              colorFilter: color != null
-                  ? ColorFilter.mode(color!, BlendMode.srcIn)
-                  : null,
-            );
-          }
-        case ImageType.file:
-          return Image.file(
-            File(imagePath!),
-            height: height,
-            width: width,
-            fit: fit,
-          );
-        case ImageType.network:
-          return CachedNetworkImage(
-            imageUrl: imagePath!,
-            height: height,
-            width: width,
-            fit: fit,
-            placeholder: (context, url) => const CircularProgressIndicator(),
-            errorWidget: (context, url, error) => Image.asset(
-              placeHolder,
-              height: height,
-              width: width,
-              fit: fit,
-            ),
-          );
-        case ImageType.png:
-        default:
-          return Image.asset(
-            imagePath!,
-            height: height,
-            width: width,
-            fit: fit,
-          );
-      }
+    // 1. Check if path is null or effectively empty
+    if (imagePath == null || imagePath!.trim().isEmpty) {
+      return _buildPlaceholder();
     }
-    return const SizedBox();
+
+    final type = imagePath!.imageType;
+
+    switch (type) {
+      case ImageType.network:
+        return CachedNetworkImage(
+          imageUrl: imagePath!,
+          height: height,
+          width: width,
+          fit: fit ?? BoxFit.cover,
+          placeholder: (context, url) => const Center(
+            child: SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+          ),
+          // 2. If the URL is valid but the image fails to load (404, etc.)
+          errorWidget: (context, url, error) => _buildPlaceholder(),
+        );
+
+      case ImageType.svg:
+        return imagePath!.startsWith('http')
+            ? SvgPicture.network(
+                imagePath!,
+                height: height,
+                width: width,
+                fit: fit ?? BoxFit.contain,
+                placeholderBuilder: (context) => const CircularProgressIndicator(),
+              )
+            : SvgPicture.asset(
+                imagePath!,
+                height: height,
+                width: width,
+                fit: fit ?? BoxFit.contain,
+              );
+
+      case ImageType.file:
+        return Image.file(
+          File(imagePath!.replaceFirst('file://', '')),
+          height: height,
+          width: width,
+          fit: fit,
+        );
+
+      case ImageType.png:
+      default:
+        return Image.asset(
+          imagePath!,
+          height: height,
+          width: width,
+          fit: fit,
+          errorBuilder: (context, error, stackTrace) => _buildPlaceholder(),
+        );
+    }
+  }
+
+  // Common placeholder builder
+  Widget _buildPlaceholder() {
+    return Image.asset(
+      placeHolder,
+      height: height,
+      width: width,
+      fit: fit ?? BoxFit.cover,
+    );
   }
 }
 
 extension ImageTypeExtension on String {
   ImageType get imageType {
-    if (startsWith('http') || startsWith('https')) {
+    // Check if it's a valid URL format
+    bool isNetwork = Uri.tryParse(this)?.hasAbsolutePath ?? false;
+    
+    if (isNetwork && (startsWith('http') || startsWith('https'))) {
       return ImageType.network;
     } else if (endsWith('.svg')) {
       return ImageType.svg;
-    } else if (startsWith('file://')) {
+    } else if (startsWith('file://') || startsWith('/data/')) {
       return ImageType.file;
     } else {
       return ImageType.png;
     }
   }
 }
-
 enum ImageType { svg, png, network, file, unknown }
 
 class CustomImageViewTwo extends StatelessWidget {

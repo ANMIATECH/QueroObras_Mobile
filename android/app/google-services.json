@@ -1,32 +1,14 @@
 {
   "project_info": {
-    "project_number": "2697221512",
-    "project_id": "quero-obras-2cd72",
-    "storage_bucket": "quero-obras-2cd72.firebasestorage.app"
+    "project_number": "50753149040",
+    "firebase_url": "https://quero-obras-notification-default-rtdb.firebaseio.com",
+    "project_id": "quero-obras-notification",
+    "storage_bucket": "quero-obras-notification.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:2697221512:android:227b9204e97d4c2784163d",
-        "android_client_info": {
-          "package_name": "com.example.queroobras_mobile"
-        }
-      },
-      "oauth_client": [],
-      "api_key": [
-        {
-          "current_key": "AIzaSyB99ZXr_et3NDv0uZED4ZZV6tjGvlSJq1s"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": []
-        }
-      }
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:2697221512:android:708176d58711925784163d",
+        "mobilesdk_app_id": "1:50753149040:android:6db75f1041a7119fa97cb5",
         "android_client_info": {
           "package_name": "com.popopipo.queroobras"
         }
@@ -34,7 +16,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyB99ZXr_et3NDv0uZED4ZZV6tjGvlSJq1s"
+          "current_key": "AIzaSyDUMfhs11GrOzIxUaQfKLfJgSFXuckuLrQ"
         }
       ],
       "services": {

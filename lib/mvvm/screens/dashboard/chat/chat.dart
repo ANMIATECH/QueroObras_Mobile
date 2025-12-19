@@ -1,11 +1,12 @@
 import 'package:queroobras_mobile/mvvm/const/export.dart';
 
-
 class ChatScreen extends StatelessWidget {
   const ChatScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.find<ProductDetailsController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -15,8 +16,6 @@ class ChatScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-
-
             // Chat Title
             Container(
               width: double.infinity,
@@ -43,30 +42,56 @@ class ChatScreen extends StatelessWidget {
             ),
 
             // Chat Messages List
-            Expanded(
-              child: ListView.builder(
-                itemCount: 8,
-                padding: EdgeInsets.zero,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 11.0,left: 16,right: 16),
-                    child: ChatMessageCard(
-                      avatarUrl:
-                      "https://plus.unsplash.com/premium_photo-1689568126014-06fea9d5d341?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=2340",
-                      username: 'UserName $index',
-                      status: 'Online',
-                      message: 'Sim, já ouvi falar disso.',
+            FutureBuilder(
+              future: controller.getAllChat(),
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
+                    controller.chatModel.value.data == null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(),
                     ),
                   );
-                },
-              ),
-            ),
+                }
 
+                return Expanded(
+                  child: Obx(() {
+                    return ListView.builder(
+                      itemCount: controller.chatModel.value.data?.length,
+                      padding: EdgeInsets.zero,
+                      itemBuilder: (context, index) {
+                        var ddd = controller.chatModel.value.data?[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(
+                            bottom: 11.0,
+                            left: 16,
+                            right: 16,
+                          ),
+                          child: ChatMessageCard(
+                            avatarUrl: "${ddd?.receiver?.profile?.avatar}",
+                            username: "${ddd?.receiver?.name}",
+                            status: '',
+                            message: "${ddd?.latestMessage}",
+                            onTap: () {
+                              Get.to(
+                                () => OneOnOneChat(
+                                  id: '${ddd?.receiver?.profile?.id}',
+                                  userName: '${ddd?.receiver?.name}',
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    );
+                  }),
+                );
+              },
+            ),
           ],
         ),
       ),
     );
   }
 }
-
-

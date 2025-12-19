@@ -5,6 +5,7 @@ class ChatMessageCard extends StatelessWidget {
   final String username;
   final String status;
   final String message;
+  final void Function()? onTap;
 
   const ChatMessageCard({
     super.key,
@@ -12,15 +13,13 @@ class ChatMessageCard extends StatelessWidget {
     required this.username,
     required this.status,
     required this.message,
+    required this.onTap,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: (){
-        // Get.toNamed(RouteNameV1.oneOnOneChat);
-
-      },
+      onTap:onTap,
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -39,8 +38,8 @@ class ChatMessageCard extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: CustomImageView(imagePath:
-                  avatarUrl,
+                child: CustomImageView(
+                  imagePath: avatarUrl,
                   width: 64,
                   height: 64,
                   fit: BoxFit.cover,

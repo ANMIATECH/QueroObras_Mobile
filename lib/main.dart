@@ -12,7 +12,7 @@ Future<void> main() async {
   Get.put(LoginController());
   Get.put(ServiceController());
   runApp(ProviderScope(child: const MyApp()));
-}
+} 
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
