@@ -1,3 +1,4 @@
+import '../../../controller/profile_controller.dart';
 import '/mvvm/const/export.dart';
 
 class ProfileEdit extends StatelessWidget {
@@ -5,6 +6,8 @@ class ProfileEdit extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controllers = Get.put(ProfileController());
+
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -86,161 +89,66 @@ class ProfileEdit extends StatelessWidget {
                       child: Column(
                         children: [
                           // Username field
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xFFF7F7F7),
+                          CustomInputFieldLive(
+                            isPhoneNumber: false,
+                            obscureText: false,
+
+                            controller: controllers.usernameController,
+                            hintText: "Nome de Usuário",
+                            prefixWidget: const Icon(
+                              Icons.person_outline_outlined,
+                              color: CustomColor.hintText,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.person),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Nome de Usuário',
-                                      style: TextStyle(
-                                        color: const Color(0xFF828282),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Josefin Sans',
-                                        height: 24 / 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.edit_rounded),
-                              ],
-                            ),
+                            keyboardType: TextInputType.name,
                           ),
+                          const SizedBox(height: 14),
+                          CustomInputFieldLive(
+                            isPhoneNumber: false,
+                            obscureText: false,
 
-                          const SizedBox(height: 11),
-
-                          // Email Address field
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xFFF7F7F7),
+                            controller: controllers.emailController,
+                            hintText: CustomText.hintEmail,
+                            prefixWidget: const Icon(
+                              Icons.email_outlined,
+                              color: CustomColor.hintText,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.email_outlined),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Endereço de Email',
-                                      style: TextStyle(
-                                        color: const Color(0xFF828282),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Josefin Sans',
-                                        height: 24 / 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.edit_rounded),
-                              ],
-                            ),
+                            keyboardType: TextInputType.emailAddress,
                           ),
-
                           const SizedBox(height: 11),
+                          CustomInputFieldLive(
+                            isPhoneNumber: false,
+                            obscureText: false,
 
-                          // Phone number field
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xFFF7F7F7),
+                            controller: controllers.phoneController,
+                            hintText: CustomText.houseNumber,
+                            prefixWidget: const Icon(
+                              Icons.phone,
+                              color: CustomColor.hintText,
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.phone),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Número de Telefone',
-                                      style: TextStyle(
-                                        color: const Color(0xFF828282),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Josefin Sans',
-                                        height: 24 / 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.edit_rounded),
-                              ],
-                            ),
+                            keyboardType: TextInputType.phone,
                           ),
 
                           const SizedBox(height: 11),
 
                           // Service provider field
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xFFF7F7F7),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    Icon(Icons.shopping_bag_rounded),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'Prestador de Serviço',
-                                      style: TextStyle(
-                                        color: const Color(0xFF828282),
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Josefin Sans',
-                                        height: 24 / 14,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Icon(Icons.edit_rounded),
-                              ],
-                            ),
-                          ),
+                          Obx(() {
+                            return CustomDropdownField(
+                              label: CustomText.role,
+                              selectedValue: controllers.selectedRoleName.value,
+                              options: controllers.userRoleList
+                                  .map((item) => item.name)
+                                  .toList(),
+                              icon: Icons.verified_user,
+                              onChanged: (String selectedName) {
+                                final selected = controllers.userRoleList.firstWhere(
+                                      (item) => item.name == selectedName,
+                                );
 
-                          const SizedBox(height: 11),
-
-                          // Price field
-                          Container(
-                            decoration: const BoxDecoration(
-                              borderRadius: BorderRadius.all(Radius.circular(100)),
-                              color: Color(0xFFF7F7F7),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-                            child: Row(
-                              children: [
-                                Icon(Icons.money),
-                                const SizedBox(width: 8),
-                                Text(
-                                  'R\$ 20',
-                                  style: TextStyle(
-                                    color: const Color(0xFF828282),
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Josefin Sans',
-                                    height: 24 / 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
+                                controllers.selectedRoleId.value = selected.id;
+                                controllers.selectedRoleName.value = selected.name;
+                              },
+                            );
+                          }),
                         ],
                       ),
                     ),
@@ -248,33 +156,19 @@ class ProfileEdit extends StatelessWidget {
                 ),
               ),
 
-              // Spacer
-              const SizedBox(height: 379),
-
-              // Update Information button
-              Container(
-                margin: const EdgeInsets.only(bottom: 48),
-                width: double.infinity,
-                constraints: const BoxConstraints(maxWidth: 398),
-                child: Container(
-                  decoration: const BoxDecoration(
-                    borderRadius: BorderRadius.all(Radius.circular(50)),
-                    color: Color(0xFFF9761E),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 12),
-                  child: Center(
-                    child: Text(
-                      'Atualizar Informações',
-                      style: TextStyle(
-                        color: const Color(0xFFFFFFFF),
-                        fontSize: 14,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Josefin Sans',
-                        height: 24 / 14,
-                      ),
-                    ),
-                  ),
-                ),
+              const SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Obx(() {
+                  return CustomButton(
+                    text: "Atualizar Informações",
+                    isLoading: controllers.isLoading.value, // ✅ built-in loader
+                    isActive: !controllers.isLoading.value, // ✅ disables button
+                    onPressed: () {
+                      controllers.updateProfile();
+                    },
+                  );
+                }),
               ),
             ],
           ),

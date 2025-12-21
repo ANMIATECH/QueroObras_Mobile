@@ -1,36 +1,14 @@
+import '../../../controller/profile_controller.dart';
 import '/mvvm/const/export.dart';
 
 class ServiceProviderReview extends StatelessWidget {
-  const ServiceProviderReview({super.key});
+  final int? userId;
+
+  const ServiceProviderReview({super.key,  this.userId});
 
   @override
   Widget build(BuildContext context) {
-    // Example review data (Brazil Portuguese)
-    final List<Map<String, dynamic>> reviews = [
-      {
-        'name': 'David Lion',
-        'avatar':
-        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 2,
-        'text':
-        'Seu serviço foi bom, mas percebi que você não terminou no tempo esperado.',
-      },
-      {
-        'name': 'Brooklyn Simmons',
-        'avatar':
-        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 4,
-        'text':
-        'Excelente trabalho! Fiquei muito satisfeito com o serviço.',
-      },
-      {
-        'name': 'Floyd Miles',
-        'avatar':
-        'https://api.builder.io/api/v1/image/assets/4495d4efdd6e4cd5855f0b01e1944c13/b1eaac0227aee86230a8efdedb0e1c4cf5849bb5?placeholderIfAbsent=true',
-        'rating': 3,
-        'text': 'O serviço foi bom, mas ainda há espaço para melhorias.',
-      },
-    ];
+    final controller = Get.put(ProfileController(initialUserId: userId)); // GetX controller
 
     return SafeArea(
       child: Scaffold(
@@ -39,14 +17,10 @@ class ServiceProviderReview extends StatelessWidget {
           elevation: 0,
           leading: GestureDetector(
             onTap: () => Navigator.of(context).pop(),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 20,
-            ),
+            child: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
           ),
           title: const Text(
-            'Avaliações', // 🇧🇷 translated
+            'Avaliações',
             style: TextStyle(
               color: Colors.black,
               fontSize: 32,
@@ -57,19 +31,24 @@ class ServiceProviderReview extends StatelessWidget {
           ),
           centerTitle: false,
         ),
-        body: ListView.builder(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 5),
-          itemCount: 8,
-          itemBuilder: (context, index) {
-            final review = reviews[index % reviews.length];
-            return ReviewCard(
-              customerName: review['name'],
-              avatarUrl: review['avatar'],
-              rating: review['rating'],
-              reviewText: review['text'], // Already translated
-            );
-          },
-        ),
+        body: Obx(() {
+          if (controller.ratingsList.isEmpty) {
+            return const Center(child: Text("Nenhuma avaliação disponível"));
+          }
+          return ListView.builder(
+            itemCount: controller.ratingsList.length,
+            itemBuilder: (context, index) {
+              final rating = controller.ratingsList[index];
+              return ReviewCard(
+                customerName: rating.rater?.name ?? "",
+                avatarUrl: rating.rater?.profile?.avatar ?? "",
+                rating: int.tryParse(rating.stars ?? "0") ?? 0,
+                reviewText: rating.comment ?? "",
+              );
+            },
+          );
+        })
+        ,
       ),
     );
   }
@@ -103,7 +82,7 @@ class ReviewCard extends StatelessWidget {
           width: 1,
         ),
       ),
-      padding: const EdgeInsets.fromLTRB(23, 8, 80, 30),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -120,33 +99,33 @@ class ReviewCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 9),
-              SizedBox(
-                width: 84,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      customerName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        color: Colors.black,
-                        fontFamily: 'Josefin Sans',
-                        height: 1.5,
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        customerName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.black,
+                          fontFamily: 'Josefin Sans',
+                        ),
                       ),
+                    ],
+                  ),
+                  const Text(
+                    'customer',
+                    style: TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black,
+                      fontFamily: 'Josefin Sans',
+                      height: 1.71,
                     ),
-                    const Text(
-                      'customer',
-                      style: TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: Colors.black,
-                        fontFamily: 'Josefin Sans',
-                        height: 1.71,
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ],
           ),

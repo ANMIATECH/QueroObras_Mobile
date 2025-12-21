@@ -245,8 +245,18 @@ class ProfileMenuSection extends StatelessWidget {
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   onTap: () {
-                    StorageDesign.deleteItem(StorageDesign.token);
-                    Get.offAllNamed(AppRoutes.login);
+                    Get.defaultDialog(
+                      title: "Confirmar Logout",
+                      middleText: "Tem certeza de que deseja sair?",
+                      textCancel: "Cancelar",
+                      textConfirm: "Sair",
+                      confirmTextColor: Colors.white,
+                      onCancel: () {},
+                      onConfirm: () {
+                        StorageDesign.deleteItem(StorageDesign.token);
+                        Get.offAllNamed(AppRoutes.login);
+                      },
+                    );
                   },
                   icon: Icons.logout,
                   title: 'Sair',

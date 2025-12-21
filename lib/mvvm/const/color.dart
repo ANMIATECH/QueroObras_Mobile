@@ -473,15 +473,18 @@ class CustomDropdownField extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 14),
+
         Container(
-          height: 50,
           decoration: BoxDecoration(
             color: CustomColor.sprimary,
             borderRadius: BorderRadius.circular(217.391),
           ),
           child: DropdownButtonFormField<String>(
-            initialValue: selectedValue,
-            onChanged: (value) => value != null ? onChanged(value) : null,
+            value: selectedValue,
+            isExpanded: true, // ✅ CRITICAL FIX
+            onChanged: (value) {
+              if (value != null) onChanged(value);
+            },
             dropdownColor: CustomColor.sprimary,
             style: const TextStyle(
               color: Colors.white,
@@ -492,9 +495,9 @@ class CustomDropdownField extends StatelessWidget {
             decoration: InputDecoration(
               prefixIcon: customIcon != null
                   ? Padding(
-                      padding: const EdgeInsets.all(12.0),
-                      child: customIcon,
-                    )
+                padding: const EdgeInsets.all(12.0),
+                child: customIcon,
+              )
                   : icon != null
                   ? Icon(icon, color: Colors.white)
                   : null,
@@ -506,21 +509,23 @@ class CustomDropdownField extends StatelessWidget {
               ),
               contentPadding: const EdgeInsets.symmetric(
                 horizontal: 18,
-                vertical: 18,
+                vertical: 14, // ⬅ reduced to avoid squeeze
               ),
             ),
-            icon: const Icon(Icons.keyboard_arrow_down, color: Colors.white),
-            items: options
-                .map(
-                  (value) => DropdownMenuItem(
-                    value: value,
-                    child: Text(
-                      value,
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  ),
-                )
-                .toList(),
+            icon: const Icon(
+              Icons.keyboard_arrow_down,
+              color: Colors.white,
+            ),
+            items: options.map((value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Text(
+                  value,
+                  overflow: TextOverflow.ellipsis, // ✅ prevents overflow
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }).toList(),
           ),
         ),
       ],

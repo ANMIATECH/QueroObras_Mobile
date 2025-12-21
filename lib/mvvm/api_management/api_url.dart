@@ -1,6 +1,9 @@
 class ApiUrl {
   static String login = "v1/login";
-  static String updateProfile = "users/profile/update";
+  static String user = "v1/user";
+  static String updateProfile = "v1/user/profile/update";
+  static String updateIsAvailability = "v1/user/profile/availability";
+  static String listAvailability = "v1/user/profile/availability";
   static String serviceCategory = "v1/categories";
   static String logout = "auth/login";
   static String signup = "v1/register";

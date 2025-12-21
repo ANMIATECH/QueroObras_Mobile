@@ -277,6 +277,7 @@ class LoginController extends GetxController {
 
       if (response.statusCode == 200) {
 
+
         // Extract login info
         var token = message["token"];
         var userStatus = message["user"]["user_status"];
@@ -299,7 +300,12 @@ class LoginController extends GetxController {
           StorageDesign.createItem(StorageDesign.tokenExpiry, expiry.toIso8601String());
         }
 
-     
+        // ✅ SUCCESS MESSAGE
+        CustomLoading.showNotification(
+          message: "Login realizado com sucesso",
+          messageType: MessageType.success,
+        );
+
 
         // Navigation
         if (token != null && token.toString().isNotEmpty) {

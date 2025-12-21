@@ -1,154 +1,76 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import '/mvvm/const/export.dart';
 
-class ServiceProviderAvailability extends StatefulWidget {
-  const ServiceProviderAvailability({super.key});
+import '../../../controller/profile_controller.dart';
 
-  @override
-  State<ServiceProviderAvailability> createState() =>
-      _ServiceProviderAvailabilityState();
-}
 
-class _ServiceProviderAvailabilityState
-    extends State<ServiceProviderAvailability> {
-  bool isAvailable = true;
+class ServiceProviderAvailability extends StatelessWidget {
+  ServiceProviderAvailability({super.key});
+
+  final controller = Get.put(ProfileController());
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.black,
-              size: 20,
-            ),
-          ),
-          title: const Text(
-            'Disponibilidade', // 🇧🇷
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 0.75,
-            ),
-          ),
-          centerTitle: false,
-        ),
+    controller.getAvailability();
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        body: Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(maxWidth: 440),
-          margin: const EdgeInsets.symmetric(horizontal: 0),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_ios, color: Colors.black),
+          onPressed: () => Get.back(),
+        ),
+        title: const Text(
+          'Disponibilidade',
+          style: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            color: Colors.black,
+          ),
+        ),
+      ),
+      body: Obx(() {
+        if (controller.isLoading.value) {
+        }
+
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
+              const SizedBox(height: 40),
 
-              // Main content
+              /// 🔥 AVAILABILITY TOGGLE
+              AvailabilityToggle(
+                isEnabled: controller.isAvailable.value,
+                onToggle: controller.updateIsAvailability,
+              ),
+
+              const SizedBox(height: 20),
+
+              /// 🔥 SCHEDULE LIST
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.only(top: 65),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // Availability toggle section
-                      AvailabilityToggle(
-                        isEnabled: isAvailable,
-                        onToggle: (value) {
-                          setState(() {
-                            isAvailable = value;
-                          });
-                        },
+                child: ListView.builder(
+                  itemCount: controller.availabilityList.length,
+                  itemBuilder: (_, index) {
+                    final item = controller.availabilityList[index];
+
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 9),
+                      child: ExpandableDaySchedule(
+                        day: item.dayPt?.toUpperCase() ?? "",
+                        startTime: item.startTime ?? "--",
+                        endTime: item.endTime ?? "--",
                       ),
-
-                      const SizedBox(height: 9),
-
-                      // Last update text
-                      const Text(
-                        'Última atualização na terça-feira 12/05/2026', // 🇧🇷
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700,
-                          fontFamily: 'Josefin Sans',
-                          height: 1.71,
-                        ),
-                      ),
-
-                      const SizedBox(height: 9),
-
-                      // Schedule list
-                      Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          children: [
-                            ExpandableDaySchedule(
-                              day: 'SEGUNDA-FEIRA',
-                              startTime: '08h',
-                              endTime: '08h',
-                            ),
-                            const SizedBox(height: 9),
-
-                            const DayScheduleItem(day: 'TERÇA-FEIRA', timeRange: '08h-21h'),
-                            const SizedBox(height: 9),
-
-                            const DayScheduleItem(day: 'QUARTA-FEIRA', timeRange: '08h-21h'),
-                            const SizedBox(height: 9),
-
-                            const DayScheduleItem(day: 'QUINTA-FEIRA', timeRange: '08h-21h'),
-                            const SizedBox(height: 9),
-
-                            const DayScheduleItem(day: 'SEXTA-FEIRA', timeRange: '08h-21h'),
-                            const SizedBox(height: 9),
-
-                            const DayScheduleItem(day: 'SÁBADO', timeRange: '08h-21h'),
-                          ],
-                        ),
-                      ),
-
-                      // Update button
-                      Container(
-                        width: double.infinity,
-                        margin: const EdgeInsets.only(top: 40, bottom: 20),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            HapticFeedback.lightImpact();
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF9761E),
-                            foregroundColor: Colors.white,
-                            elevation: 0,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(40),
-                            ),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                          ),
-                          child: const Text(
-                            'Atualizar', // 🇧🇷
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                              height: 1.71,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                    );
+                  },
                 ),
               ),
             ],
           ),
-        ),
-      ),
+        );
+      }),
     );
   }
 }
