@@ -1,3 +1,4 @@
+import '../../../controller/profile_controller.dart';
 import '/mvvm/const/export.dart';
 
 class ProfileScreenCpf extends StatelessWidget {
@@ -45,20 +46,31 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ProfileController());
+
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = screenWidth > 440 ? 440.0 : screenWidth;
 
-    return SizedBox(
-      width: maxWidth,
-      height: 284,
-      child: Stack(
-        children: [
-          Positioned(
-            left: -2,
-            top: 0,
-            child: Container(
-              width: maxWidth + 4,
-              height: 151,
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const SizedBox(
+          height: 284,
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      return Container(
+        width: maxWidth,
+        padding: const EdgeInsets.only( bottom: 16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            // Orange curved background
+            Container(
+              width: maxWidth,
+              height: 150,
               decoration: const BoxDecoration(
                 color: Color(0xFFF9761E),
                 borderRadius: BorderRadius.only(
@@ -67,82 +79,68 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
             ),
-          ),
 
-          // Profile image
-          Positioned(
-            left: (maxWidth - 105) / 2,
-            top: 92,
-            child: Container(
-              width: 105,
-              height: 105,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: Colors.white, width: 6),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: CustomImageView(
-                  imagePath: 'assets/images/profile_dummy.png',
-                  width: 105,
-                  height: 105,
-                  fit: BoxFit.cover,
+            // Profile Image
+            Transform.translate(
+              offset: const Offset(0, -50),
+              child: Container(
+                width: 105,
+                height: 105,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.white, width: 6),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: CustomImageView(
+                    imagePath: controller.userAvatar.value.isNotEmpty
+                        ? controller.userAvatar.value
+                        : 'assets/images/profile_dummy.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // User info translated
-          Positioned(
-            left: (maxWidth - 241) / 2,
-            top: 205,
-            child: SizedBox(
-              height: 79,
+            // User Info
+            Transform.translate(
+              offset: const Offset(0, -40),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Nome do Usuário',
+                    controller.userName.value,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 20,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
-                    'Eletricista',
+                    'Category: ${controller.userCategoryName.value}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF787878),
+                    style: const TextStyle(
+                      color: Color(0xFF787878),
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 14,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
-                    'ID do Usuário: 2203494 | Turquia, Istambul',
+                    'User ID: ${controller.userId.value} | ${controller.userAddress.value}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF787878),
+                    style: const TextStyle(
+                      color: Color(0xFF787878),
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 14,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -153,6 +151,7 @@ class ProfileMenuSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth = screenWidth > 440 ? 400.0 : screenWidth - 40;
+    final controller = Get.find<ProfileController>();
 
     return SizedBox(
       width: containerWidth,
@@ -254,8 +253,8 @@ class ProfileMenuSection extends StatelessWidget {
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   onTap: () {
-                    StorageDesign.deleteItem(StorageDesign.token);
-                    Get.offAllNamed(AppRoutes.login);
+                    showLogoutDialog(controller);
+
                   },
                   icon: Icons.logout,
                   title: 'Sair',
@@ -385,4 +384,83 @@ class ProfileMenuItemWidget extends StatelessWidget {
       ),
     );
   }
+}
+
+void showLogoutDialog(ProfileController controller) {
+  Get.dialog(
+    Dialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      backgroundColor: Colors.white,
+      child: SizedBox(
+        width: 300,
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Title
+              Text(
+                "Confirmar Logout",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: CustomColor.primary, // Orange
+                ),
+              ),
+              const SizedBox(height: 12),
+              // Message
+              const Text(
+                "Tem certeza de que deseja sair?",
+                style: TextStyle(fontSize: 16, color: Colors.black87),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 24),
+              // Buttons
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => Get.back(),
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(color: CustomColor.sprimary),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        "Cancelar",
+                        style: TextStyle(color: CustomColor.sprimary, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: ElevatedButton(
+                      onPressed: () {
+                        StorageDesign.deleteItem(StorageDesign.token);
+                        Get.offAllNamed(AppRoutes.login);
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: CustomColor.primary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        padding: const EdgeInsets.symmetric(vertical: 12),
+                      ),
+                      child: const Text(
+                        "Sair",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    ),
+  );
 }

@@ -9,7 +9,7 @@ import '../screens/dashboard/order/my_order.dart';
 /// A utility class to hold all static route names and the route map.
 class AppRoutes {
   // Define route names as static constants for type-safe navigation
-  static const String onboarding = '/';
+  static const String onboarding = '/onboarding';
   static const String welcome = '/welcome';
   static const String login = '/login';
   static const String notificationcpnf = '/notificationcpnf';

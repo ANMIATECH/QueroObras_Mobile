@@ -1,3 +1,6 @@
+import 'package:queroobras_mobile/mvvm/screens/dashboard/profile/profile_screen_cpf.dart';
+
+import '../../../controller/profile_controller.dart';
 import '/mvvm/const/export.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -45,20 +48,31 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ProfileController());
+
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = screenWidth > 440 ? 440.0 : screenWidth;
 
-    return SizedBox(
-      width: maxWidth,
-      height: 284,
-      child: Stack(
-        children: [
-          Positioned(
-            left: -2,
-            top: 0,
-            child: Container(
-              width: maxWidth + 4,
-              height: 151,
+    return Obx(() {
+      if (controller.isLoading.value) {
+        return const SizedBox(
+          height: 284,
+          child: Center(child: CircularProgressIndicator()),
+        );
+      }
+
+      return Container(
+        width: maxWidth,
+        padding: const EdgeInsets.only( bottom: 16),
+        decoration: const BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            // Orange curved background
+            Container(
+              width: maxWidth,
+              height: 150,
               decoration: const BoxDecoration(
                 color: Color(0xFFF9761E),
                 borderRadius: BorderRadius.only(
@@ -67,82 +81,68 @@ class ProfileHeader extends StatelessWidget {
                 ),
               ),
             ),
-          ),
 
-          // Profile image
-          Positioned(
-            left: (maxWidth - 105) / 2,
-            top: 92,
-            child: Container(
-              width: 105,
-              height: 105,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                border: Border.all(color: Colors.white, width: 6),
-              ),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(100),
-                child: CustomImageView(
-                  imagePath: 'assets/images/profile_dummy.png',
-                  width: 105,
-                  height: 105,
-                  fit: BoxFit.cover,
+            // Profile Image
+            Transform.translate(
+              offset: const Offset(0, -50),
+              child: Container(
+                width: 105,
+                height: 105,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  border: Border.all(color: Colors.white, width: 6),
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(100),
+                  child: CustomImageView(
+                    imagePath: controller.userAvatar.value.isNotEmpty
+                        ? controller.userAvatar.value
+                        : 'assets/images/profile_dummy.png',
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // User info translated
-          Positioned(
-            left: (maxWidth - 241) / 2,
-            top: 205,
-            child: SizedBox(
-              height: 79,
+            // User Info
+            Transform.translate(
+              offset: const Offset(0, -40),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Nome do Usuário',
+                    controller.userName.value,
                     textAlign: TextAlign.center,
-                    style: TextStyle(
+                    style: const TextStyle(
                       color: Colors.black,
                       fontSize: 20,
                       fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 20,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
-                    'Eletricista',
+                    'Category: ${controller.userCategoryName.value}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF787878),
+                    style: const TextStyle(
+                      color: Color(0xFF787878),
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 14,
                     ),
                   ),
-                  const SizedBox(height: 2),
+                  const SizedBox(height: 4),
                   Text(
-                    'ID do Usuário: 2203494 | Turquia, Istambul',
+                    'User ID: ${controller.userId.value} | ${controller.userAddress.value}',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: const Color(0xFF787878),
+                    style: const TextStyle(
+                      color: Color(0xFF787878),
                       fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'SF Pro',
-                      height: 24 / 14,
                     ),
                   ),
                 ],
               ),
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+      );
+    });
   }
 }
 
@@ -153,6 +153,7 @@ class ProfileMenuSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final containerWidth = screenWidth > 440 ? 400.0 : screenWidth - 40;
+    final controller = Get.find<ProfileController>();
 
     return SizedBox(
       width: containerWidth,
@@ -177,12 +178,21 @@ class ProfileMenuSection extends StatelessWidget {
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.edit,
+                  title: 'Meu Hire',
+                  hasArrow: true,
+                  onTap: () {
+                    Navigator.of(context).pushNamed(AppRoutes.myHire);
+                  },
+                ),
+                ProfileMenuItemWidget(
+                  icon: Icons.edit,
                   title: 'Meu Pedido',
                   hasArrow: true,
                   onTap: () {
-                    Navigator.of(context).pushNamed(AppRoutes.myOrder);
+                    Navigator.of(context).pushNamed(AppRoutes.sellerOrder);
                   },
-                ),     const SizedBox(height: 10),
+                ),
+                const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.edit,
                   title: 'Editar Perfil',
@@ -245,18 +255,8 @@ class ProfileMenuSection extends StatelessWidget {
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   onTap: () {
-                    Get.defaultDialog(
-                      title: "Confirmar Logout",
-                      middleText: "Tem certeza de que deseja sair?",
-                      textCancel: "Cancelar",
-                      textConfirm: "Sair",
-                      confirmTextColor: Colors.white,
-                      onCancel: () {},
-                      onConfirm: () {
-                        StorageDesign.deleteItem(StorageDesign.token);
-                        Get.offAllNamed(AppRoutes.login);
-                      },
-                    );
+                    showLogoutDialog(controller);
+
                   },
                   icon: Icons.logout,
                   title: 'Sair',
@@ -294,9 +294,8 @@ class ProfileMenuItemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
+    return GestureDetector(
       onTap: onTap, // ✅ ADD TAP HERE
-      borderRadius: BorderRadius.circular(10),
       child: Container(
         width: double.infinity,
         decoration: BoxDecoration(

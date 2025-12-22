@@ -19,7 +19,7 @@ class BottomNavScreen extends StatelessWidget {
     const CnpjHomeScreen(),
     // OrdersScreen(),
     // ChatScreen(),
-    SearchScreen(),
+    OrdersScreen(),
     ProfileScreen(),
   ];
 

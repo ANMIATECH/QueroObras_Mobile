@@ -65,22 +65,7 @@ class ProfileEdit extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Profile image
-                    Container(
-                      width: 105,
-                      height: 105,
-                      decoration: const BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(100)),
-                      ),
-                      child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(100)),
-                        child: CustomImageView(
-                          imagePath: 'assets/images/profile_dummy.png',
-                          width: 105,
-                          height: 105,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    ),
+                    ProfilePics(),
 
                     const SizedBox(width: 21),
 
@@ -175,5 +160,36 @@ class ProfileEdit extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class ProfilePics extends StatelessWidget {
+  const ProfilePics({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final controller = Get.find<ProfileController>();
+
+    return Obx(() {
+      return Container(
+        width: 105,
+        height: 105,
+        decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(100)),
+          border: Border.fromBorderSide(BorderSide(color: Colors.white, width: 3)),
+        ),
+        child: ClipRRect(
+          borderRadius: const BorderRadius.all(Radius.circular(100)),
+          child: CustomImageView(
+            imagePath: controller.userAvatar.value.isNotEmpty
+                ? controller.userAvatar.value
+                : 'assets/images/profile_dummy.png',
+            width: 105,
+            height: 105,
+            fit: BoxFit.cover,
+          ),
+        ),
+      );
+    });
   }
 }

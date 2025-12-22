@@ -11,8 +11,8 @@ class ProfileController extends GetxController {
 
   /// Categories
   var userRoleList = <CategoryModel>[].obs;
-  var selectedRoleId = RxnInt(); // nullable int
-  var selectedRoleName = RxnString(); // for dropdown display
+  var selectedRoleId = RxnInt();
+  var selectedRoleName = RxnString();
 
   /// Form controllers
   final emailController = TextEditingController();
@@ -32,11 +32,27 @@ class ProfileController extends GetxController {
   final averageRating = 0.0.obs;
   final totalReviews = 0.obs;
 
+  final userName = ''.obs;
+  final userAvatar = ''.obs;
+  final userAddress = ''.obs;
+  final categoryId = ''.obs;
+
+// Inside ProfileController
+  RxString get userCategoryName {
+    final id = int.tryParse(categoryId.value) ?? 0;
+    final category = userRoleList.firstWhere(
+          (c) => c.id == id,
+      orElse: () => CategoryModel(id: 0, name: "Unknown"),
+    );
+    return category.name.obs;
+  }
+
 
   @override
   void onInit() {
     super.onInit();
     getServiceCategory();
+    getUserP();
     getAvailability();
     if (initialUserId != null) {
       // Use provided userId to fetch ratings directly
@@ -58,6 +74,30 @@ class ProfileController extends GetxController {
         userRoleList.value = categories
             .map((e) => CategoryModel.fromJson(e))
             .toList();
+      } else {
+        var message = jsonDecode(response.body);
+        CustomLoading.showNotification(
+          message: message["error"]?["message"] ?? "Failed to fetch categories",
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      CustomLoading.showNotification(
+        message: e.toString(),
+        messageType: MessageType.error,
+      );
+    }
+  }
+
+  Future<void> getServiceCategory1() async {
+    try {
+      var response = await _apiManager.read(ApiUrl.serviceCategory, false);
+      if (response.statusCode == 200) {
+        var data = jsonDecode(response.body);
+        var categories = data['categories'] as List<dynamic>? ?? [];
+
+        userRoleList.value =
+            categories.map((e) => CategoryModel.fromJson(e)).toList();
       } else {
         var message = jsonDecode(response.body);
         CustomLoading.showNotification(
@@ -144,6 +184,41 @@ class ProfileController extends GetxController {
     }
   }
 
+  Future<void> getUserP() async {
+    try {
+      isLoading.value = true;
+
+      final response = await _apiManager.read(ApiUrl.user, true);
+
+      if (response.statusCode == 200) {
+        final decodedJson = jsonDecode(response.body);
+
+
+        final user = UserResponse1.fromJson(decodedJson);
+
+        userId.value = user.id;
+        userName.value = user.name;
+        userAvatar.value = user.profile.avatar;
+        userAddress.value = user.profile.address;
+        categoryId.value = user.categoryId;
+      } else {
+
+        CustomLoading.showNotification(
+          message: "Failed to fetch user",
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e, stackTrace) {
+
+      CustomLoading.showNotification(
+        message: e.toString(),
+        messageType: MessageType.error,
+      );
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
   Future<void> getUserRating(int userId) async {
     try {
       isLoading.value = true;
@@ -197,6 +272,8 @@ class ProfileController extends GetxController {
     }
   }
 
+
+
   Future<void> updateProfile() async {
     try {
       isLoading.value = true;
@@ -220,7 +297,7 @@ class ProfileController extends GetxController {
         usernameController.clear();
         phoneController.clear();
         selectedRoleId.value = 0;
-
+Get.back();
         CustomLoading.showNotification(
           message: "Perfil atualizado com sucesso",
           messageType: MessageType.success,
@@ -302,3 +379,46 @@ class UserResponse {
     );
   }
 }
+
+class UserResponse1 {
+  final int id;
+  final String name;
+  final String categoryId;
+  final Profile profile;
+
+  UserResponse1({
+    required this.id,
+    required this.name,
+    required this.categoryId,
+    required this.profile,
+  });
+
+  factory UserResponse1.fromJson(Map<String, dynamic> json) {
+    final user = json['user'];
+
+    return UserResponse1(
+      id: user['id'],
+      name: user['name'], // ✅ THIS IS WHAT YOU WANT
+      categoryId: user['category_id'].toString(),
+      profile: Profile.fromJson(user['profile']),
+    );
+  }
+}
+
+class Profile {
+  final String avatar;
+  final String address;
+
+  Profile({
+    required this.avatar,
+    required this.address,
+  });
+
+  factory Profile.fromJson(Map<String, dynamic> json) {
+    return Profile(
+      avatar: json['avatar'] ?? '',
+      address: json['address'] ?? '',
+    );
+  }
+}
+
