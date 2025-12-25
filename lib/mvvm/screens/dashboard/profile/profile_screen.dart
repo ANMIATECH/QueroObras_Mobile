@@ -170,11 +170,11 @@ class ProfileMenuSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(21, 19.5, 18, 18.5),
             child: Column(
               children: [
-                ProfileMenuItemWidget(
-                  icon: Icons.account_balance_wallet_outlined,
-                  title: 'Carteira',
-                  hasArrow: true,
-                ),
+                // ProfileMenuItemWidget(
+                //   icon: Icons.account_balance_wallet_outlined,
+                //   title: 'Carteira',
+                //   hasArrow: true,
+                // ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   icon: Icons.edit,
@@ -222,13 +222,13 @@ class ProfileMenuSection extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 10),
-                ProfileMenuItemWidget(
-                  icon: Icons.language,
-                  title: 'Idioma',
-                  subtitle: 'Português',
-                  hasArrow: true,
-                  isExpanded: true,
-                ),
+                // ProfileMenuItemWidget(
+                //   icon: Icons.language,
+                //   title: 'Idioma',
+                //   subtitle: 'Português',
+                //   hasArrow: true,
+                //   isExpanded: true,
+                // ),
               ],
             ),
           ),
@@ -246,12 +246,12 @@ class ProfileMenuSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(21, 25, 18, 25),
             child: Column(
               children: [
-                ProfileMenuItemWidget(
-                  icon: Icons.delete,
-                  title: 'Excluir Conta',
-                  hasArrow: false,
-                  titleFontSize: 14,
-                ),
+                // ProfileMenuItemWidget(
+                //   icon: Icons.delete,
+                //   title: 'Excluir Conta',
+                //   hasArrow: false,
+                //   titleFontSize: 14,
+                // ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   onTap: () {

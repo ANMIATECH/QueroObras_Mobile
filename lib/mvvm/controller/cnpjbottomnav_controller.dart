@@ -18,7 +18,7 @@ class BottomNavScreen extends StatelessWidget {
   final List<Widget> screens = [
     const CnpjHomeScreen(),
     // OrdersScreen(),
-    // ChatScreen(),
+    ChatScreen(),
     OrdersScreen(),
     ProfileScreen(),
   ];
@@ -34,11 +34,11 @@ class BottomNavScreen extends StatelessWidget {
     //   'inactiveIcon': CustomImage.orderInactive,
     //   'label': 'Order',
     // },
-    // {
-    //   'activeIcon': CustomImage.chat,
-    //   'inactiveIcon': CustomImage.chat,
-    //   'label': '',
-    // },
+    {
+      'activeIcon': CustomImage.chat,
+      'inactiveIcon': CustomImage.chat,
+      'label': '',
+    },
     {
       'activeIcon': CustomImage.searchActive,
       'inactiveIcon': CustomImage.searchInactive,
@@ -73,20 +73,20 @@ class BottomNavScreen extends StatelessWidget {
               children: List.generate(navItems.length, (index) {
                 final item = navItems[index];
 
-                // // ✅ Middle button (Chat button)
-                // if (index == 2) {
-                //   return GestureDetector(
-                //     onTap: () => controller.changeIndex(2), // ✅ Go to ChatScreen
-                //     child: SizedBox(
-                //       width: 50,
-                //       height: 50,
-                //       child: CustomImageView(
-                //         imagePath: item['activeIcon'],
-                //         fit: BoxFit.contain,
-                //       ),
-                //     ),
-                //   );
-                // }
+                // ✅ Middle button (Chat button)
+                if (index == 1) {
+                  return GestureDetector(
+                    onTap: () => controller.changeIndex(1), // ✅ Go to ChatScreen
+                    child: SizedBox(
+                      width: 50,
+                      height: 50,
+                      child: CustomImageView(
+                        imagePath: item['activeIcon'],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  );
+                }
 
                 // Other tabs
                 return GestureDetector(
