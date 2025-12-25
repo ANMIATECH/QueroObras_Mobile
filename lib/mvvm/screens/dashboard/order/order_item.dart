@@ -34,7 +34,7 @@ class OrderItem extends StatelessWidget {
             imagePath: imageUrl,
             width: 27,
             height: 42,
-            fit: BoxFit.cover,
+            fit: BoxFit.fill,
           ),
           const SizedBox(width: 10),
           Expanded(

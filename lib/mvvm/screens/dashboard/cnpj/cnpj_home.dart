@@ -36,7 +36,7 @@ class CnpjHomeScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(4),
                         ),
                         child: CustomImageView(
-                          imagePath: CustomImage.welcomeLogo,
+                          imagePath: CustomImage.newLogo,
                         ),
                       ),
                       const SizedBox(height: 10),

@@ -30,6 +30,10 @@ class NotificationCpnScreen extends StatelessWidget {
                     ),
                   );
                 }
+                final notifications = controller
+                    .notificaitoncpn.value.data?.data ??
+                    [];
+
                 return Container(
                   constraints: const BoxConstraints(maxWidth: 480),
                   width: double.infinity,
@@ -55,7 +59,7 @@ class NotificationCpnScreen extends StatelessWidget {
                                 height: 34,
                                 alignment: Alignment.centerLeft,
                                 child: const Text(
-                                  'Notification',
+                                  'Notificações',
                                   style: TextStyle(
                                     fontSize: 32,
                                     fontWeight: FontWeight.w700,
@@ -70,6 +74,28 @@ class NotificationCpnScreen extends StatelessWidget {
                         ),
                       ),
 
+                      /// EMPTY STATE
+                      if (notifications.isEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 150),
+                          child: Center(
+                            child: Column(
+                              children: [
+                                CustomImageView(imagePath: "assets/images/new_notification.svg",),
+                                Text(
+                                  'Ainda não há notificações',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.grey.shade600,
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        )
+                      else
                       // Notifications Section
                       NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollInfo) {

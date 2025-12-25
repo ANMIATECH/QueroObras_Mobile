@@ -8,6 +8,7 @@ class CustomImage {
   static const String onboarding4 = "$baseImage/service.svg";
   static String clapping = "$baseImage/clapping1.svg";
   static String welcomeLogo = "$baseImage/logo.png";
+  static String newLogo = "assets/images/queropnglogo.png";
   static String logo = "$baseImage/img_5.png";
   static String nigeriaFlag = "$baseImage/img_5.png";
   static String emoji = "$baseImage/emoji.svg";

@@ -73,8 +73,14 @@ class ProductDetailsScreen extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(20),
                                   ),
                                   child: Center(
-                                    child: CustomImageView(
-                                      imagePath: "${dds?.path}",
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(29),
+                                      child: CustomImageView(
+                                        imagePath: "${dds?.path}",
+                                        fit: BoxFit.fill,
+                                        width: 221,
+                                        height: 340,
+                                      ),
                                     ),
                                   ),
                                 );
@@ -117,7 +123,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 11),
                                   Text(
-                                    '\$${dd.price}',
+                                    '\R${dd.price}',
                                     style: TextStyle(
                                       fontFamily: 'Josefin Sans',
                                       fontSize: 36,
@@ -240,7 +246,7 @@ class ProductDetailsScreen extends StatelessWidget {
                               // Chat Button
                               GestureDetector(
                                 onTap: () {
-                                  Get.to(() =>  OneOnOneChat(id: '${dd.userId}',));
+                                  Get.to(() =>  OneOnOneChat(id: '${dd.userId}', userName: '${dd.userId}',));
                                 },
                                 child: Container(
                                   width: 45,
@@ -266,7 +272,7 @@ class ProductDetailsScreen extends StatelessWidget {
                               Expanded(
                                 child: Obx(
                                   () => CustomButton(
-                                    text: CustomText.enter,
+                                    text: CustomText.addToCart,
                                     isLoading: controller.isLoading.value,
                                     onPressed: () async {
                                       controller.addToCart(

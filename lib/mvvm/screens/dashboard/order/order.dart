@@ -44,37 +44,49 @@ class OrdersScreen extends StatelessWidget {
               // Orders List
               Expanded(
                 child: Obx(() {
-                  // Check loading state (assuming getCart() sets a loading flag)
+                  // Loading state
                   if (controller.isLoading.value &&
                       controller.cart.value.data == null) {
                     return const Center(child: CircularProgressIndicator());
                   }
 
-                  var dd = controller.cart.value.data?.items ?? [];
+                  final items = controller.cart.value.data?.items ?? [];
 
-                  // Check for empty cart
-                  if (dd.isEmpty) {
-                    return const Center(child: Text('Your cart is empty!'));
+                  // Empty cart state
+                  if (items.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Seu carrinho está vazio!',
+                        style: TextStyle(
+                          fontSize: 18,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    );
                   }
+
+                  // Cart items list
                   return Container(
                     width: double.infinity,
                     constraints: const BoxConstraints(maxWidth: 400),
                     margin: const EdgeInsets.only(top: 16),
                     padding: const EdgeInsets.symmetric(horizontal: 20),
                     child: ListView.builder(
-                      itemCount: dd.length, // dynamically create 5 items
+                      itemCount: items.length,
                       itemBuilder: (context, index) {
-                        var data = dd[index];
+                        final data = items[index];
+
                         return OrderItem(
                           dd: data.item!,
                           onTap: () => controller.removeFromCart(
                             itemSlug: "${data.item?.slug}",
                           ),
                           imageUrl: '${data.item?.files?.first.path}',
-                          title: '${data.item?.name} ',
+                          title: '${data.item?.name}',
                           subtitle: '${data.item?.type}',
                           price:
-                              '\$${data.item?.price} (Q${data.item?.quantity})', // just to vary the price
+                          '\R${data.item?.price} (Q${data.item?.quantity})',
                         );
                       },
                     ),
@@ -90,7 +102,7 @@ class OrdersScreen extends StatelessWidget {
                     isLoading: controller.isLoading.value,
 
                     text:
-                        "${CustomText.checkOut} \$${controller.cart.value.data?.totalPrice}",
+                        "${CustomText.checkOut} \R${controller.cart.value.data?.totalPrice}",
 
                     onPressed: () {
                       controller.checkoutChart();

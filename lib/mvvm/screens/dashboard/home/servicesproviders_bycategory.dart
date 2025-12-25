@@ -112,6 +112,23 @@ class ServicesProvidersByCategory extends StatelessWidget {
 
                       Expanded(
                         child: Obx(() {
+                          if (controller.filteredProviders.isEmpty) {
+                            return const Center(
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(horizontal: 20),
+                                child: Text(
+                                  "Nenhum prestador de serviço disponível nesta categoria.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Color(0xFF7F7F7F),
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'Josefin Sans',
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
                           return ListView.builder(
                             itemCount: controller.filteredProviders.length,
                             itemBuilder: (context, index) {

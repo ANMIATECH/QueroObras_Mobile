@@ -90,8 +90,8 @@ final String appbarName;
                         return Center(
                           child: Text(
                             pController.searchTerm.isEmpty
-                                ? 'No products available.'
-                                : 'No products found matching "${pController.searchTerm.value}".',
+                                ? 'Nenhum produto disponível.'
+                                : 'Nenhum produto encontrado correspondendo a"${pController.searchTerm.value}".',
                           ),
                         );
                       }
@@ -140,7 +140,7 @@ final String appbarName;
                                   // ... (ProductCardM content)
                                   title: '${dd.name}',
                                   subtitle: '${dd.type}',
-                                  price: '\$ ${dd.price}',
+                                  price: '\R${dd.price}',
                                   imageUrl: "${dd.files.first.path}",
                                   onTap: () {
                                     // Navigate to product detail
@@ -165,7 +165,7 @@ final String appbarName;
                                           child: Padding(
                                             padding: EdgeInsets.all(12.0),
                                             child: Text(
-                                              "You've reached the end of the list.",
+                                              "Você chegou ao fim da lista.",
                                             ),
                                           ),
                                         )
@@ -223,12 +223,12 @@ class ProductCardM extends StatelessWidget {
           children: [
             // Image
             Padding(
-              padding: const EdgeInsets.only(top: 8),
+              padding: const EdgeInsets.symmetric(vertical: 16,horizontal: 16),
               child: CustomImageView(
                 imagePath: imageUrl,
                 width: 70,
                 height: 65,
-                fit: BoxFit.contain,
+                fit: BoxFit.fill,
               ),
             ),
 
@@ -247,30 +247,25 @@ class ProductCardM extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          title,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w700,
-                            fontFamily: 'Josefin Sans',
-                          ),
-                        ),
-                        Text(
-                          subtitle,
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Josefin Sans',
-                          ),
-                        ),
-                      ],
+                    Text(
+                      title,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: 'Josefin Sans',
+                      ),
+                    ),
+                    Text(
+                      subtitle,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Josefin Sans',
+                      ),
                     ),
 
                     Row(

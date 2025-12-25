@@ -363,7 +363,7 @@ class ChatInput extends StatelessWidget {
                 child: TextField(
                   controller: controller,
                   decoration: const InputDecoration(
-                    hintText: 'Write here...',
+                    hintText: 'Escreva aqui…',
                     hintStyle: TextStyle(
                       color: Color(0x664C4C4C),
                       fontSize: 12,

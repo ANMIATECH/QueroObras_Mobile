@@ -33,6 +33,7 @@ class NotificationCpnfScreen extends StatelessWidget {
                   width: double.infinity,
                   child: Builder(
                     builder: (context) {
+
                       return NotificationListener<ScrollNotification>(
                         onNotification: (ScrollNotification scrollInfo) {
                           // Check if the user is scrolling near the bottom
