@@ -9,6 +9,7 @@ class CustomText {
   static const String encontre4 = 'Resolva qualquer problema de forma rápida e simples.';
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
   static const String enter = 'Adicionar ao carrinho';
+  static const String addToCart = 'Adicionar ao carrinho';
   static const String publish = 'Publish';
   static const String resetPassword = 'Reset Password';
   static const String changeUrPassword = 'Change your password ';
@@ -26,8 +27,9 @@ class CustomText {
   static const String otpPinSub = 'SENHA OTP';
   static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
-  static final String checkOut = 'Check out all item : R ';
-  static const String update = 'Update';
+  static final String checkOut = 'Finalizar compra de todos os itens: ';
+  static const String update = 'Atualizar';
+
   static const String updateStatus = 'Atualizar status';
   static const String trackOrder = 'Acompanhe seu pedido';
   static const String updateOrder = 'Atualize seu pedido';

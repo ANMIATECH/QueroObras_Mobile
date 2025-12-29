@@ -439,7 +439,7 @@ class ProductDetailsController extends GetxController {
         await getCart();
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to get payment link.',
+          message: 'Não foi possível obter o link de pagamento..',
           messageType: MessageType.error,
         );
       }
@@ -463,18 +463,18 @@ class ProductDetailsController extends GetxController {
       if (response.statusCode == 200) {
         await getCart();
         CustomLoading.showNotification(
-          message: 'Item removed from cart.', // Adjusted message
+          message: 'Item removido do carrinho.',
           messageType: MessageType.success,
         );
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to add to cart.',
+          message: 'Falha ao remover o item do carrinho.',
           messageType: MessageType.error,
         );
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     }
