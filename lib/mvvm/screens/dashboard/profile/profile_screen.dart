@@ -1,4 +1,5 @@
 import 'package:queroobras_mobile/mvvm/screens/dashboard/profile/profile_screen_cpf.dart';
+import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
 
 import '../../../controller/profile_controller.dart';
 import '/mvvm/const/export.dart';
@@ -222,7 +223,9 @@ class ProfileMenuSection extends StatelessWidget {
                     Get.toNamed(AppRoutes.profileReview);
                   },
                 ),
+
                 const SizedBox(height: 10),
+
                 // ProfileMenuItemWidget(
                 //   icon: Icons.language,
                 //   title: 'Idioma',
@@ -247,12 +250,20 @@ class ProfileMenuSection extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(21, 25, 18, 25),
             child: Column(
               children: [
-                // ProfileMenuItemWidget(
-                //   icon: Icons.delete,
-                //   title: 'Excluir Conta',
-                //   hasArrow: false,
-                //   titleFontSize: 14,
-                // ),
+                const SizedBox(height: 10),
+                ProfileMenuItemWidget(
+                  icon: Icons.help,
+                  title: 'centro de ajuda',
+                  hasArrow: true,
+                  onTap: () {
+                    Get.to(
+                      () => WebViewScreen(
+                        url:
+                            'https://tawk.to/chat/694ffc0b8a4fb0197ea55c11/1jdg713ib',
+                      ),
+                    );
+                  },
+                ),
                 const SizedBox(height: 10),
                 ProfileMenuItemWidget(
                   onTap: () {
