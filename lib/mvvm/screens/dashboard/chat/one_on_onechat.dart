@@ -1,115 +1,4 @@
 import 'package:queroobras_mobile/mvvm/const/export.dart';
-// import 'package:queroobras_mobile/mvvm/const/extension.dart';
-
-// class OneOnOneChat extends StatelessWidget {
-//   const OneOnOneChat({
-//     super.key,
-//     required this.id,
-//     this.userName = "Chat with Seller",
-//   });
-//   final String id;
-//   final String userName;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final controller = Get.find<ProductDetailsController>();
-//     final controllerChat = Get.put(ChatController());
-
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: Colors.white,
-//         body: Column(
-//           children: [
-//             // Header
-//             _buildHeader(context, userName),
-
-//             // Messages
-//             Expanded(
-//               child: _buildMessagesList(
-//                 controller.scrollController,
-//                 controllerChat,
-//                 id,
-//               ),
-//             ),
-
-//             // Input Field
-//             ChatInput(
-//               controller: controller.controller,
-//               isRecording: controller.isRecording,
-//               onEmojiTap: () => debugPrint('Emoji tapped'),
-//               onCameraTap: () => debugPrint('Camera tapped'),
-//               onMicTap: () {},
-//               onSendTap: () => controller.handleSend(id),
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   Widget _buildHeader(BuildContext context, String? userName) {
-//     return Container(
-//       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-//       child: Row(
-//         children: [
-//           GestureDetector(
-//             onTap: () => Navigator.pop(context),
-//             child: const Icon(Icons.arrow_back, size: 24, color: Colors.black),
-//           ),
-//           const SizedBox(width: 33),
-//           Text(
-//             userName ?? 'David',
-//             style: TextStyle(
-//               color: Colors.black,
-//               fontSize: 24,
-//               fontWeight: FontWeight.w700,
-//               fontFamily: 'Josefin Sans',
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-
-//   // ✅ Messages List
-//   Widget _buildMessagesList(
-//     ScrollController scrollController,
-//     ChatController controllerChat,
-//     String id,
-//   ) {
-//     return FutureBuilder(
-//       future: controllerChat.getAllChatOneOnOne(id),
-//       builder: (context, asyncSnapshot) {
-//         if (asyncSnapshot.connectionState == ConnectionState.waiting &&
-//             controllerChat.chatModel.value.data == null) {
-//           return Center(
-//             child: Padding(
-//               padding: EdgeInsets.all(12.0),
-//               child: CircularProgressIndicator(),
-//             ),
-//           );
-//         }
-//         return ListView(
-//           controller: scrollController,
-//           padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-//           children: List.generate(
-//             controllerChat.chatModel.value.data?.length ?? 0,
-//             (index) {
-//               var dd = controllerChat.chatModel.value.data?[index];
-//               return MessageBubble(
-//                 messageType: "text",
-//                 message: "${dd?.message}",
-//                 isMe: "${dd?.sender?.id}" == id.toString() ? true : false,
-//                 timestamp: "${dd?.createdAt?.toYearMonthDay}",
-//                 isRead: true,
-//               );
-//             },
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
 
 class OneOnOneChat extends StatefulWidget {
   final String id;
@@ -129,6 +18,7 @@ class _OneOnOneChatState extends State<OneOnOneChat> {
   void initState() {
     super.initState();
     // Initial fetch and start background sync
+    print(widget.id);
     chatController.getAllChatOneOnOne(widget.id);
     chatController.startPolling(widget.id);
   }

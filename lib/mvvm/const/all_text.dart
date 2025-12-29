@@ -8,7 +8,7 @@ class CustomText {
   static const String encontre3 = 'Conecte-se com prestadores de serviço qualificados.';
   static const String encontre4 = 'Resolva qualquer problema de forma rápida e simples.';
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
-  static const String enter = 'Entrar';
+  static const String enter = 'Adicionar ao carrinho';
   static const String publish = 'Publish';
   static const String resetPassword = 'Reset Password';
   static const String changeUrPassword = 'Change your password ';

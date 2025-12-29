@@ -5,6 +5,8 @@ class CnpjHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final controller = Get.put(ProductDetailsController());
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -110,50 +112,127 @@ class CnpjHomeScreen extends StatelessWidget {
                               ),
                             ),
                           ),
+                          const SizedBox(width: 3),
+
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.checkout);
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEEEEE),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Center(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  clipBehavior: Clip
+                                      .none, // Allows the badge to sit outside the icon bounds
+                                  children: [
+                                    const Icon(Icons.shopping_cart, size: 28),
+                                    Positioned(
+                                      right: -4,
+                                      top: -4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Badge color
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ), // Adds contrast
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 18,
+                                          minHeight: 18,
+                                        ),
+                                        child: FutureBuilder(
+                                          future: controller.getCart(),
+                                          builder: (context, asyncSnapshot) {
+                                            if (asyncSnapshot.connectionState ==
+                                                    ConnectionState.waiting &&
+                                                controller
+                                                        .cart
+                                                        .value
+                                                        .data
+                                                        ?.items ==
+                                                    null) {
+                                              return SizedBox.shrink();
+                                            }
+                                            if (asyncSnapshot.hasError) {
+                                              return Text(
+                                                'Error: ${asyncSnapshot.error}',
+                                              );
+                                            }
+                                            return Obx(() {
+                                              return Text(
+                                                '${controller.cart.value.data?.items?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ],
                       ),
 
-                      const SizedBox(height: 25),
+                      // const SizedBox(height: 25),
 
-                      // Recent Search Section
-                      Text(
-                        'Busca recente',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'Josefin Sans',
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
+                      // // Recent Search Section
+                      // Text(
+                      //   'Busca recente',
+                      //   style: TextStyle(
+                      //     color: Colors.black,
+                      //     fontSize: 16,
+                      //     fontFamily: 'Josefin Sans',
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
 
-                      const SizedBox(height: 20),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            RecentSearchChip(
-                              text: 'Eletricista',
-                              onRemove: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            RecentSearchChip(
-                              text: 'Encanador',
-                              onRemove: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            RecentSearchChip(
-                              text: 'Eletricista',
-                              onRemove: () {},
-                            ),
-                            const SizedBox(width: 8),
-                            RecentSearchChip(
-                              text: 'Eletricista',
-                              onRemove: () {},
-                              showRemoveIcon: false,
-                            ),
-                          ],
-                        ),
-                      ),
+                      // const SizedBox(height: 20),
+                      // SingleChildScrollView(
+                      //   scrollDirection: Axis.horizontal,
+                      //   child: Row(
+                      //     children: [
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Encanador',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //         showRemoveIcon: false,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                       const SizedBox(height: 20),
                       Text(
                         'Categorias em destaque',

@@ -5,63 +5,69 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        body: Container(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color.fromRGBO(22, 87, 127, 0.1), // rgba(22, 87, 127, 0.1)
-                Color(0xFFFFFFFF), // #FFFFFF
-              ],
-              stops: [0.0, 1.0387], // 103.87% converted to 1.0387
-            ),
+    final controller = Get.put(ProductDetailsController());
+
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color.fromRGBO(22, 87, 127, 0.1), // rgba(22, 87, 127, 0.1)
+              Color(0xFFFFFFFF), // #FFFFFF
+            ],
+            stops: [0.0, 1.0387], // 103.87% converted to 1.0387
           ),
-          child: Column(
-            children: [
-              // Main Content
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Container(
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 19),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          width: 53,
-                          height: 35,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          child: CustomImageView(
-                            imagePath: CustomImage.welcomeLogo,
-                          ),
+        ),
+        child: Column(
+          children: [
+            // Main Content
+            Expanded(
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(20, 5, 20, 19),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: 53,
+                        height: 35,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        const SizedBox(height: 10),
-                        // Search Bar Section
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(217),
-                                  color: const Color(0xFFEEEEEE),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 19,
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(
-                                      Icons.search_outlined,
-                                      color: Color(0xFF7F7F7F),
-                                    ),
-                                    const SizedBox(width: 19),
-                                    Expanded(
+                        child: CustomImageView(
+                          imagePath: CustomImage.welcomeLogo,
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      // Search Bar Section
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(217),
+                                color: const Color(0xFFEEEEEE),
+                              ),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 19,
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(
+                                    Icons.search_outlined,
+                                    color: Color(0xFF7F7F7F),
+                                  ),
+                                  const SizedBox(width: 19),
+                                  Expanded(
+                                    child: GestureDetector(
+                                      onTap: () => Get.toNamed(
+                                        AppRoutes.materiaisServiceProvider,
+                                      ),
                                       child: TextField(
+                                        enabled: false,
                                         decoration: const InputDecoration(
                                           hintText:
                                               'O que você está procurando?',
@@ -83,92 +89,361 @@ class HomeScreen extends StatelessWidget {
                                         onChanged: (value) {},
                                       ),
                                     ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.notificationCpnScreen);
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFEEEEEE,
+                                ), // background color
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Center(
+                                child: CustomImageView(
+                                  imagePath: CustomImage.notification,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 3),
+
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.checkout);
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEEEEE),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Center(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  clipBehavior: Clip
+                                      .none, // Allows the badge to sit outside the icon bounds
+                                  children: [
+                                    const Icon(Icons.shopping_cart, size: 28),
+                                    Positioned(
+                                      right: -4,
+                                      top: -4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Badge color
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ), // Adds contrast
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 18,
+                                          minHeight: 18,
+                                        ),
+                                        child: FutureBuilder(
+                                          future: controller.getCart(),
+                                          builder: (context, asyncSnapshot) {
+                                            if (asyncSnapshot.connectionState ==
+                                                    ConnectionState.waiting &&
+                                                controller
+                                                        .cart
+                                                        .value
+                                                        .data
+                                                        ?.items ==
+                                                    null) {
+                                              return SizedBox.shrink();
+                                            }
+                                            if (asyncSnapshot.hasError) {
+                                              return Text(
+                                                'Error: ${asyncSnapshot.error}',
+                                              );
+                                            }
+                                            return Obx(() {
+                                              return Text(
+                                                '${controller.cart.value.data?.items?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
                                   ],
                                 ),
                               ),
                             ),
-                            const SizedBox(width: 3),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(AppRoutes.notificationCpnScreen);
-                              },
-                              child: Container(
-                                width: 50,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFEEEEEE,
-                                  ), // background color
-                                  borderRadius: BorderRadius.circular(999),
+                          ),
+                        ],
+                      ),
+
+                      // const SizedBox(height: 25),
+
+                      // // Recent Search Section
+                      // Text(
+                      //   'Busca recente',
+                      //   style: TextStyle(
+                      //     color: Colors.black,
+                      //     fontSize: 16,
+                      //     fontFamily: 'Josefin Sans',
+                      //     fontWeight: FontWeight.w500,
+                      //   ),
+                      // ),
+
+                      // const SizedBox(height: 20),
+                      // SingleChildScrollView(
+                      //   scrollDirection: Axis.horizontal,
+                      //   child: Row(
+                      //     children: [
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Encanador',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //       ),
+                      //       const SizedBox(width: 8),
+                      //       RecentSearchChip(
+                      //         text: 'Eletricista',
+                      //         onRemove: () {},
+                      //         showRemoveIcon: false,
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
+                      const SizedBox(height: 20),
+                      Text(
+                        'Categorias em destaque',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'Josefin Sans',
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              String? token = StorageDesign.readItem(
+                                StorageDesign.token,
+                              );
+
+                              if (token == null || token.isEmpty) {
+                                // User NOT logged in → go to Login
+                                Get.toNamed(AppRoutes.login);
+                              } else {
+                                Get.toNamed(AppRoutes.materiaisServiceProvider);
+                              }
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              width: 400,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFF9761E,
+                                ).withValues(alpha: 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: "assets/images/s_home.svg",
+                                    ),
+                                    const SizedBox(width: 10),
+
+                                    Text(
+                                      "Loja/ Materials",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.7,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                child: Center(
-                                  child: CustomImageView(
-                                    imagePath: CustomImage.notification,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          GestureDetector(
+                            onTap: () {
+                              // Get.toNamed(RouteNameV1.serviceScreen);
+                              Navigator.of(
+                                context,
+                              ).pushNamed(AppRoutes.serviceScreen);
+                            },
+                            child: AnimatedContainer(
+                              duration: const Duration(milliseconds: 300),
+                              curve: Curves.easeOut,
+                              width: 400,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(
+                                  0xFFF9761E,
+                                ).withValues(alpha: 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: "assets/images/s_service.svg",
+                                    ),
+                                    const SizedBox(width: 10),
+
+                                    Text(
+                                      "Serviços",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 20,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1.7,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          color: const Color(0xFF16577F),
+                        ),
+                        padding: const EdgeInsets.fromLTRB(19, 8, 19, 0),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              flex: 62,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'PROMOÇÕES',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontFamily: 'Josefin Sans',
+                                      fontWeight: FontWeight.w700,
+                                    ),
                                   ),
-                                ),
+                                  const SizedBox(height: 5),
+                                  Text(
+                                    'Há um desconto de 60% em alguns prestadores de serviço.',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Josefin Sans',
+                                      fontWeight: FontWeight.w400,
+                                      height: 1.7,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.white,
+                                    ),
+                                    padding: const EdgeInsets.fromLTRB(
+                                      39,
+                                      9,
+                                      39,
+                                      18,
+                                    ),
+                                    child: Text(
+                                      'Ver',
+                                      style: TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                        fontFamily: 'Josefin Sans',
+                                        fontWeight: FontWeight.w400,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
+                            ),
+                            const SizedBox(width: 20),
+                            Expanded(
+                              flex: 38,
+                              child: CustomImageView(
+                                imagePath: "assets/images/service_provider.png",
+                                width: 137,
+                                fit: BoxFit.contain,
                               ),
                             ),
                           ],
                         ),
+                      ),
 
-                        const SizedBox(height: 25),
+                      const SizedBox(height: 20),
 
-                        // Recent Search Section
-                        Text(
-                          'Busca recente',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Josefin Sans',
-                            fontWeight: FontWeight.w500,
-                          ),
+                      // Quick Access Section
+                      Text(
+                        'Acesso rápido',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'Josefin Sans',
+                          fontWeight: FontWeight.w500,
                         ),
+                      ),
 
-                        const SizedBox(height: 20),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            children: [
-                              RecentSearchChip(
-                                text: 'Eletricista',
-                                onRemove: () {},
-                              ),
-                              const SizedBox(width: 8),
-                              RecentSearchChip(
-                                text: 'Encanador',
-                                onRemove: () {},
-                              ),
-                              const SizedBox(width: 8),
-                              RecentSearchChip(
-                                text: 'Eletricista',
-                                onRemove: () {},
-                              ),
-                              const SizedBox(width: 8),
-                              RecentSearchChip(
-                                text: 'Eletricista',
-                                onRemove: () {},
-                                showRemoveIcon: false,
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Text(
-                          'Categorias em destaque',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Josefin Sans',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Column(
-                          children: [
-                            GestureDetector(
-                              onTap: () {
+                      const SizedBox(height: 20),
+                      // Quick Access Images
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Vender.svg",
+                              title: 'Vender',
+                              onTap: () async {
                                 String? token = StorageDesign.readItem(
                                   StorageDesign.token,
                                 );
@@ -177,242 +452,44 @@ class HomeScreen extends StatelessWidget {
                                   // User NOT logged in → go to Login
                                   Get.toNamed(AppRoutes.login);
                                 } else {
-                                  Get.toNamed(
-                                    AppRoutes.materiaisServiceProvider,
-                                  );
+                                  // User IS logged in → go to Vender page
+                                  Get.toNamed(AppRoutes.vender);
                                 }
                               },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                                width: 400,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFF9761E,
-                                  ).withValues(alpha: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomImageView(
-                                        imagePath: "assets/images/s_home.svg",
-                                      ),
-                                      const SizedBox(width: 10),
-
-                                      Text(
-                                        "Loja/ Materials",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Josefin Sans',
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.7,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ),
-                            const SizedBox(height: 10),
-                            GestureDetector(
-                              onTap: () {
-                                // Get.toNamed(RouteNameV1.serviceScreen);
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(AppRoutes.serviceScreen);
+                          ),
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Meu_pedido.svg",
+                              title: 'Meu pedido',
+                              onTap: () async {
+                                String? token = StorageDesign.readItem(
+                                  StorageDesign.token,
+                                );
+                                if (token == null || token.isEmpty) {
+                                  Get.toNamed(AppRoutes.login);
+                                } else {
+                                  Get.toNamed(AppRoutes.myOrder);
+                                }
                               },
-                              child: AnimatedContainer(
-                                duration: const Duration(milliseconds: 300),
-                                curve: Curves.easeOut,
-                                width: 400,
-                                height: 50,
-                                decoration: BoxDecoration(
-                                  color: const Color(
-                                    0xFFF9761E,
-                                  ).withValues(alpha: 1),
-                                  borderRadius: BorderRadius.circular(20),
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(8.0),
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      CustomImageView(
-                                        imagePath:
-                                            "assets/images/s_service.svg",
-                                      ),
-                                      const SizedBox(width: 10),
-
-                                      Text(
-                                        "Serviços",
-                                        style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 20,
-                                          fontFamily: 'Josefin Sans',
-                                          fontWeight: FontWeight.bold,
-                                          height: 1.7,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
                             ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: const Color(0xFF16577F),
                           ),
-                          padding: const EdgeInsets.fromLTRB(19, 8, 19, 0),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                flex: 62,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      'PROMOÇÕES',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 24,
-                                        fontFamily: 'Josefin Sans',
-                                        fontWeight: FontWeight.w700,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 5),
-                                    Text(
-                                      'Há um desconto de 60% em alguns prestadores de serviço.',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontFamily: 'Josefin Sans',
-                                        fontWeight: FontWeight.w400,
-                                        height: 1.7,
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        color: Colors.white,
-                                      ),
-                                      padding: const EdgeInsets.fromLTRB(
-                                        39,
-                                        9,
-                                        39,
-                                        18,
-                                      ),
-                                      child: Text(
-                                        'Ver',
-                                        style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 16,
-                                          fontFamily: 'Josefin Sans',
-                                          fontWeight: FontWeight.w400,
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(height: 20),
-                                  ],
-                                ),
-                              ),
-                              const SizedBox(width: 20),
-                              Expanded(
-                                flex: 38,
-                                child: CustomImageView(
-                                  imagePath:
-                                      "assets/images/service_provider.png",
-                                  width: 137,
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
-                            ],
+                          const SizedBox(width: 20),
+                          Expanded(
+                            child: QuickAccessCard(
+                              imageUrl: "assets/images/Favorito.svg",
+                              title: 'Favorito',
+                            ),
                           ),
-                        ),
-
-                        const SizedBox(height: 20),
-
-                        // Quick Access Section
-                        Text(
-                          'Acesso rápido',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'Josefin Sans',
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-
-                        const SizedBox(height: 20),
-                        // Quick Access Images
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: QuickAccessCard(
-                                imageUrl: "assets/images/Vender.svg",
-                                title: 'Vender',
-                                onTap: () async {
-                                  String? token = StorageDesign.readItem(
-                                    StorageDesign.token,
-                                  );
-
-                                  if (token == null || token.isEmpty) {
-                                    // User NOT logged in → go to Login
-                                    Get.toNamed(AppRoutes.login);
-                                  } else {
-                                    // User IS logged in → go to Vender page
-                                    Get.toNamed(AppRoutes.vender);
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: QuickAccessCard(
-                                imageUrl: "assets/images/Meu_pedido.svg",
-                                title: 'Meu pedido',
-                                onTap: () async {
-                                  String? token = StorageDesign.readItem(
-                                    StorageDesign.token,
-                                  );
-                                  if (token == null || token.isEmpty) {
-                                    Get.toNamed(AppRoutes.login);
-                                  } else {
-                                    Get.toNamed(AppRoutes.myOrder);
-                                  }
-                                },
-                              ),
-                            ),
-                            const SizedBox(width: 20),
-                            Expanded(
-                              child: QuickAccessCard(
-                                imageUrl: "assets/images/Favorito.svg",
-                                title: 'Favorito',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -486,11 +563,13 @@ class SearchBarWidget extends StatelessWidget {
 class SearchBarWidgetMain extends StatelessWidget {
   final String hintText;
   final ValueChanged<String>? onChanged;
+  final bool autofocus;
 
   const SearchBarWidgetMain({
     super.key,
     required this.hintText,
     this.onChanged,
+    this.autofocus = false,
   });
 
   @override
@@ -508,8 +587,10 @@ class SearchBarWidgetMain extends StatelessWidget {
           const SizedBox(width: 10),
           Expanded(
             child: TextField(
+              autofocus: autofocus,
               decoration: InputDecoration(
                 hintText: hintText,
+
                 hintStyle: const TextStyle(
                   color: Color(0xFF7F7F7F),
                   fontSize: 16,

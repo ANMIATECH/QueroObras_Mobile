@@ -10,46 +10,44 @@ class ServiceProviderReview extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ProfileController(initialUserId: userId)); // GetX controller
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: GestureDetector(
-            onTap: () => Navigator.of(context).pop(),
-            child: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
-          ),
-          title: const Text(
-            'Avaliações',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 0.75,
-            ),
-          ),
-          centerTitle: false,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: GestureDetector(
+          onTap: () => Navigator.of(context).pop(),
+          child: const Icon(Icons.arrow_back_ios, color: Colors.black, size: 20),
         ),
-        body: Obx(() {
-          if (controller.ratingsList.isEmpty) {
-            return const Center(child: Text("Nenhuma avaliação disponível"));
-          }
-          return ListView.builder(
-            itemCount: controller.ratingsList.length,
-            itemBuilder: (context, index) {
-              final rating = controller.ratingsList[index];
-              return ReviewCard(
-                customerName: rating.rater?.name ?? "",
-                avatarUrl: rating.rater?.profile?.avatar ?? "",
-                rating: int.tryParse(rating.stars ?? "0") ?? 0,
-                reviewText: rating.comment ?? "",
-              );
-            },
-          );
-        })
-        ,
+        title: const Text(
+          'Avaliações',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 0.75,
+          ),
+        ),
+        centerTitle: false,
       ),
+      body: Obx(() {
+        if (controller.ratingsList.isEmpty) {
+          return const Center(child: Text("Nenhuma avaliação disponível"));
+        }
+        return ListView.builder(
+          itemCount: controller.ratingsList.length,
+          itemBuilder: (context, index) {
+            final rating = controller.ratingsList[index];
+            return ReviewCard(
+              customerName: rating.rater?.name ?? "",
+              avatarUrl: rating.rater?.profile?.avatar ?? "",
+              rating: int.tryParse(rating.stars ?? "0") ?? 0,
+              reviewText: rating.comment ?? "",
+            );
+          },
+        );
+      })
+      ,
     );
   }
 }

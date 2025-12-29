@@ -553,44 +553,42 @@ class OptionsListSheet extends StatelessWidget {
         color: CustomColor.white,
         borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
       ),
-      child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Padding(
-              padding: EdgeInsets.all(16),
-              child: Text(
-                'Select an Option',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                  color: CustomColor.black,
-                ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(16),
+            child: Text(
+              'Select an Option',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 20,
+                color: CustomColor.black,
               ),
             ),
-            const Divider(height: 1, color: CustomColor.inputBorder),
-            ConstrainedBox(
-              constraints: BoxConstraints(
-                maxHeight: MediaQuery.of(context).size.height * 0.5,
-              ),
-              child: ListView(
-                shrinkWrap: true,
-                children: options.map((option) {
-                  return ListTile(
-                    title: Text(
-                      option,
-                      style: const TextStyle(color: CustomColor.black),
-                    ),
-                    onTap: () {
-                      Navigator.pop(context);
-                      onSelect(option);
-                    },
-                  );
-                }).toList(),
-              ),
+          ),
+          const Divider(height: 1, color: CustomColor.inputBorder),
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxHeight: MediaQuery.of(context).size.height * 0.5,
             ),
-          ],
-        ),
+            child: ListView(
+              shrinkWrap: true,
+              children: options.map((option) {
+                return ListTile(
+                  title: Text(
+                    option,
+                    style: const TextStyle(color: CustomColor.black),
+                  ),
+                  onTap: () {
+                    Navigator.pop(context);
+                    onSelect(option);
+                  },
+                );
+              }).toList(),
+            ),
+          ),
+        ],
       ),
     );
   }

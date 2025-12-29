@@ -25,38 +25,36 @@ class ChangePasswordWord extends StatelessWidget {
       body: GestureDetector(
         // Tap outside TextField to close keyboard
         onTap: () => FocusScope.of(context).unfocus(),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                verticalSpace(48), // Adjust as needed
-                _buildLogo(),
-                verticalSpace(32),
-                _buildTitle(context),
-                _buildTitleSub(context),
-                verticalSpace(24),
-                _buildEmailInput(context, lController),
-                verticalSpace(16),
-                _buildPasswordInput(context, lController),
-
-                verticalSpace(32),
-                Obx(
-                  () => CustomButton(
-                    text: CustomText.update,
-                    isLoading: lController.isResetPasswordLoading.value,
-                    onPressed: () async {
-                      await lController.resetPassword(
-                        email: email,
-                        otp: otp,
-                        context: context,
-                      );
-                    },
-                  ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              verticalSpace(48), // Adjust as needed
+              _buildLogo(),
+              verticalSpace(32),
+              _buildTitle(context),
+              _buildTitleSub(context),
+              verticalSpace(24),
+              _buildEmailInput(context, lController),
+              verticalSpace(16),
+              _buildPasswordInput(context, lController),
+        
+              verticalSpace(32),
+              Obx(
+                () => CustomButton(
+                  text: CustomText.update,
+                  isLoading: lController.isResetPasswordLoading.value,
+                  onPressed: () async {
+                    await lController.resetPassword(
+                      email: email,
+                      otp: otp,
+                      context: context,
+                    );
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

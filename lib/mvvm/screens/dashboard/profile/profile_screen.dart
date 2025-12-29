@@ -10,33 +10,31 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(maxWidth: 440),
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      const ProfileHeader(),
-                      const SizedBox(height: 21),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Column(
-                          children: [
-                            const ProfileMenuSection(),
-                            const SizedBox(height: 87),
-                          ],
-                        ),
+      body: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(maxWidth: 440),
+        child: Column(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    const ProfileHeader(),
+                    const SizedBox(height: 21),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        children: [
+                          const ProfileMenuSection(),
+                          const SizedBox(height: 87),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -53,96 +51,99 @@ class ProfileHeader extends StatelessWidget {
     final screenWidth = MediaQuery.of(context).size.width;
     final maxWidth = screenWidth > 440 ? 440.0 : screenWidth;
 
-    return Obx(() {
-      if (controller.isLoading.value) {
-        return const SizedBox(
-          height: 284,
-          child: Center(child: CircularProgressIndicator()),
-        );
-      }
+    return FutureBuilder(
+      future: Future.wait([controller.getUserP(), controller.getUser()]),
+      builder: (context, asyncSnapshot) {
+        return Obx(() {
+          if (controller.isLoading.value) {
+            return const SizedBox(
+              height: 284,
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-      return Container(
-        width: maxWidth,
-        padding: const EdgeInsets.only( bottom: 16),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Column(
-          children: [
-            // Orange curved background
-            Container(
-              width: maxWidth,
-              height: 150,
-              decoration: const BoxDecoration(
-                color: Color(0xFFF9761E),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(150),
-                  bottomRight: Radius.circular(150),
-                ),
-              ),
-            ),
-
-            // Profile Image
-            Transform.translate(
-              offset: const Offset(0, -50),
-              child: Container(
-                width: 105,
-                height: 105,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: Colors.white, width: 6),
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(100),
-                  child: CustomImageView(
-                    imagePath: controller.userAvatar.value.isNotEmpty
-                        ? controller.userAvatar.value
-                        : 'assets/images/profile_dummy.png',
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ),
-
-            // User Info
-            Transform.translate(
-              offset: const Offset(0, -40),
-              child: Column(
-                children: [
-                  Text(
-                    controller.userName.value,
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 20,
-                      fontWeight: FontWeight.w500,
+          return Container(
+            width: maxWidth,
+            padding: const EdgeInsets.only(bottom: 16),
+            decoration: const BoxDecoration(color: Colors.white),
+            child: Column(
+              children: [
+                // Orange curved background
+                Container(
+                  width: maxWidth,
+                  height: 150,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFF9761E),
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(150),
+                      bottomRight: Radius.circular(150),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Category: ${controller.userCategoryName.value}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF787878),
-                      fontSize: 14,
+                ),
+
+                // Profile Image
+                Transform.translate(
+                  offset: const Offset(0, -50),
+                  child: Container(
+                    width: 105,
+                    height: 105,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(100),
+                      border: Border.all(color: Colors.white, width: 6),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CustomImageView(
+                        imagePath: controller.userAvatar.value.isNotEmpty
+                            ? controller.userAvatar.value
+                            : 'assets/images/profile_dummy.png',
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'User ID: ${controller.userId.value} | ${controller.userAddress.value}',
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      color: Color(0xFF787878),
-                      fontSize: 14,
-                    ),
+                ),
+
+                // User Info
+                Transform.translate(
+                  offset: const Offset(0, -40),
+                  child: Column(
+                    children: [
+                      Text(
+                        controller.userName.value,
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 20,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'Category: ${controller.userCategoryName.value}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF787878),
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        'User ID: ${controller.userId.value} | ${controller.userAddress.value}',
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(
+                          color: Color(0xFF787878),
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
-    });
+          );
+        });
+      },
+    );
   }
 }
 
@@ -198,7 +199,7 @@ class ProfileMenuSection extends StatelessWidget {
                   title: 'Editar Perfil',
                   hasArrow: true,
                   onTap: () {
-                    Get.toNamed(AppRoutes.profileEdit, );
+                    Get.toNamed(AppRoutes.profileEdit);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -209,7 +210,7 @@ class ProfileMenuSection extends StatelessWidget {
                   hasArrow: true,
                   isExpanded: true,
                   onTap: () {
-                    Get.toNamed(AppRoutes.availability, );
+                    Get.toNamed(AppRoutes.availability);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -218,7 +219,7 @@ class ProfileMenuSection extends StatelessWidget {
                   title: 'Avaliações',
                   hasArrow: true,
                   onTap: () {
-                    Get.toNamed(AppRoutes.profileReview, );
+                    Get.toNamed(AppRoutes.profileReview);
                   },
                 ),
                 const SizedBox(height: 10),
@@ -256,7 +257,6 @@ class ProfileMenuSection extends StatelessWidget {
                 ProfileMenuItemWidget(
                   onTap: () {
                     showLogoutDialog(controller);
-
                   },
                   icon: Icons.logout,
                   title: 'Sair',

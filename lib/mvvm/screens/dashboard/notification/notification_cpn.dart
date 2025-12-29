@@ -11,171 +11,273 @@ class NotificationCpnScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-              future: controller.loadNoficationCpn(isInitial: true),
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
-                    controller.notificaitoncpnfCpn.value.data == null) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(),
-                    ),
-                  );
-                }
-                return Container(
-                  constraints: const BoxConstraints(maxWidth: 480),
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      // Header Section
-                      Container(
-                        width: double.infinity,
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        margin: const EdgeInsets.only(top: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.arrow_back_outlined),
-                            ),
-                            const SizedBox(width: 33),
-                            Expanded(
-                              child: Container(
-                                height: 34,
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  'Notification',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                    fontFamily: 'Josefin Sans',
-                                    height: 1.0,
-                                  ),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+        ),
+        child: SingleChildScrollView(
+          child: FutureBuilder(
+            future: controller.loadNoficationCpn(isInitial: true),
+            builder: (context, asyncSnapshot) {
+              if (asyncSnapshot.connectionState == ConnectionState.waiting &&
+                  controller.notificaitoncpnfCpn.value.data == null) {
+                return Center(
+                  child: Padding(
+                    padding: EdgeInsets.all(12.0),
+                    child: CircularProgressIndicator(),
+                  ),
+                );
+              }
+              return Container(
+                constraints: const BoxConstraints(maxWidth: 480),
+                width: double.infinity,
+                child: Column(
+                  children: [
+                    // Header Section
+                    Container(
+                      width: double.infinity,
+                      constraints: const BoxConstraints(maxWidth: 400),
+                      margin: const EdgeInsets.only(top: 5),
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
+                            icon: Icon(Icons.arrow_back_outlined),
+                          ),
+                          const SizedBox(width: 33),
+                          Expanded(
+                            child: Container(
+                              height: 34,
+                              alignment: Alignment.centerLeft,
+                              child: const Text(
+                                'Notificações',
+                                style: TextStyle(
+                                  fontSize: 32,
+                                  fontWeight: FontWeight.w700,
+                                  color: Colors.black,
+                                  fontFamily: 'Josefin Sans',
+                                  height: 1.0,
                                 ),
                               ),
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
+                    ),
 
-                      // Notifications Section
-                      NotificationListener<ScrollNotification>(
-                        onNotification: (ScrollNotification scrollInfo) {
-                          // Check if the user is scrolling near the bottom
-                          if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                              !controller.isPaginatingCpn.value &&
-                              controller.hasMoreDataCpn.value) {
-                            // 👈 IMPORTANT: Only load more pages if NOT searching
-                            controller.loadNextPageCpn();
-                          }
-                          return true;
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 400),
-                          margin: const EdgeInsets.only(top: 44),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: List.generate(
-                              controller
-                                      .notificaitoncpn
-                                      .value
-                                      .data
-                                      ?.data
-                                      ?.length ??
-                                  0,
-                              (index) {
-                                var dd = controller
+                    // Notifications Section
+                    NotificationListener<ScrollNotification>(
+                      onNotification: (ScrollNotification scrollInfo) {
+                        // Check if the user is scrolling near the bottom
+                        if (scrollInfo.metrics.pixels >=
+                                scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                            !controller.isPaginatingCpn.value &&
+                            controller.hasMoreDataCpn.value) {
+                          // 👈 IMPORTANT: Only load more pages if NOT searching
+                          controller.loadNextPageCpn();
+                        }
+                        return true;
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        constraints: const BoxConstraints(maxWidth: 400),
+                        margin: const EdgeInsets.only(top: 44),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          children: List.generate(
+                            controller
                                     .notificaitoncpn
                                     .value
                                     .data
-                                    ?.data?[index];
-                                return Column(
-                                  children: [
-                                    // Service Provider Notification
-                                    NotificationCard(
-                                      title: 'Service Provider',
-                                      description:
-                                          'The service provider ${dd?.provider?.name} [specialisation] accept your request and the price is \$${dd?.replies?.first.amount}.',
-                                      actions: [
-                                        dd?.status == "5"
-                                            ? Container()
-                                            : Row(
-                                                children: [
-                                                  NotificationButton(
-                                                    text: 'Cancel',
-                                                    backgroundColor:
-                                                        const Color(0xFFD10000),
-                                                    onPressed: () {
-                                                      controller.rejectRequest(
-                                                        id: dd?.slug ?? "",
-                                                      );
-                                                    },
+                                    ?.data
+                                    ?.length ??
+                                0,
+                            (index) {
+                              var dd = controller
+                                  .notificaitoncpn
+                                  .value
+                                  .data
+                                  ?.data?[index];
+                              return Column(
+                                children: [
+                                  // Service Provider Notification
+                                  NotificationCard(
+                                    title: 'Service Provider',
+                                    description:
+                                        'The service provider ${dd?.provider?.name} [specialisation] accept your request and the price is \$${dd?.replies?.first.amount}.',
+                                    actions: [
+                                      dd?.status == "5"
+                                          ? Container()
+                                          : Row(
+                                              children: [
+                                                NotificationButton(
+                                                  text: 'Cancel',
+                                                  backgroundColor: const Color(
+                                                    0xFFD10000,
                                                   ),
-                                                  const SizedBox(width: 10),
+                                                  onPressed: () {
+                                                    controller.rejectRequest(
+                                                      id: dd?.slug ?? "",
+                                                    );
+                                                  },
+                                                ),
+                                                const SizedBox(width: 10),
 
-                                                  NotificationButton(
-                                                    text: dd?.status == "4"
-                                                        ? "Concluído"
-                                                        : 'Pay',
-                                                    backgroundColor:
-                                                        const Color(0xFF16577F),
-                                                    onPressed: () {
-                                                      dd?.status == "4"
-                                                          ? controller
-                                                                .completeRequestClient(
-                                                                  id: "${dd?.slug}",
-                                                                )
-                                                          : Get.to(
-                                                              () => WebViewScreen(
-                                                                url:
-                                                                    "${dd?.replies?.first.paymentLink}",
-                                                              ),
-                                                            );
-                                                    },
+                                                NotificationButton(
+                                                  text: dd?.status == "4"
+                                                      ? "Concluído"
+                                                      : 'Pay',
+                                                  backgroundColor: const Color(
+                                                    0xFF16577F,
                                                   ),
-                                                ],
-                                              ),
-                                      ],
-                                    ),
+                                                  onPressed: () {
+                                                    dd?.status == "4"
+                                                        ? controller
+                                                              .completeRequestClient(
+                                                                id: "${dd?.slug}",
+                                                              )
+                                                        : showLogoutDialog(dd);
+                                                  },
+                                                ),
+                                              ],
+                                            ),
+                                    ],
+                                  ),
 
-                                    const SizedBox(height: 15),
+                                  const SizedBox(height: 15),
 
-                                    // // System Update Notification
-                                    // if (userStatus != "cnpj")
-                                    //   const NotificationCard(
-                                    //     title: '[!] New Update',
-                                    //     description:
-                                    //         'Check the new update that we share in your system.',
-                                    //   ),
-                                  ],
-                                );
-                              },
-                            ),
+                                  // // System Update Notification
+                                  // if (userStatus != "cnpj")
+                                  //   const NotificationCard(
+                                  //     title: '[!] New Update',
+                                  //     description:
+                                  //         'Check the new update that we share in your system.',
+                                  //   ),
+                                ],
+                              );
+                            },
                           ),
                         ),
                       ),
+                    ),
 
-                      // Bottom padding
-                      const SizedBox(height: 472),
-                    ],
+                    // Bottom padding
+                    const SizedBox(height: 472),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+
+  void showLogoutDialog(DatumCpn? dd) {
+    Get.dialog(
+      Dialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+        ), // Softer corners
+        backgroundColor: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Info Icon (Circular Border)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.black54, width: 2),
+                ),
+                child: const Icon(
+                  Icons.info_outline,
+                  size: 40,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 24),
+
+              // Text Message
+              const Text(
+                "Ao clicar em 'Aceitar', você será redirecionado para o nosso parceiro de pagamento seguro, Mercado Pago, para concluir sua transação.",
+                // Replace with your logout text:
+                // "Ao clicar em 'Sair', sua sessão será encerrada e você precisará fazer login novamente.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF555555), // Muted dark grey
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 32),
+
+              // Primary Action Button (Accept/Sair)
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: () {
+                    Get.back();
+                    Get.to(
+                      () => WebViewScreen(
+                        url: "${dd?.replies?.first.paymentLink}",
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        CustomColor.primary, // The specific orange in the image
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
                   ),
-                );
-              },
-            ),
+                  child: const Text(
+                    "Aceitar",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+
+              // Secondary Action Button (Cancel)
+              SizedBox(
+                width: double.infinity,
+                height: 55,
+                child: ElevatedButton(
+                  onPressed: () => Get.back(),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(
+                      0xFFE0E0E0,
+                    ), // Light grey background
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    "Cancelar",
+                    style: TextStyle(
+                      color: Color(0xFF4A6572), // Muted blue-grey text
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),

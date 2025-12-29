@@ -11,11 +11,14 @@ class ProductDetailsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getCart();
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      getCart();
+      getAllOrders(isInitial: true);
+      getAllOrdersRequest(isInitial: true);
+      _startPolling();
+    }
+
     getAllProduct(isInitial: true);
-    getAllOrders(isInitial: true);
-    getAllOrdersRequest(isInitial: true);
-    _startPolling();
   }
 
   void incrementQuantity(num maxAllowedQuantity) {
@@ -114,83 +117,86 @@ class ProductDetailsController extends GetxController {
   final RxBool isPaginatingOrderRequest = false.obs;
   final RxInt itemsPerPageOrder = 10.obs;
   final RxInt itemsPerPageOrderRequest = 10.obs;
-Future getAllProduct({bool isInitial = false}) async {
-  if (!hasMoreData.value && !isInitial) return;
+  Future getAllProduct({bool isInitial = false}) async {
+    if (!hasMoreData.value && !isInitial) return;
 
-  if (isInitial) {
-    isLoading.value = true;
-    currentPage.value = 1;
-    masterItemList.clear(); // Fresh start
-    hasMoreData.value = true;
-  } else {
-    isPaginating.value = true;
-  }
+    if (isInitial) {
+      isLoading.value = true;
+      currentPage.value = 1;
+      masterItemList.clear(); // Fresh start
+      hasMoreData.value = true;
+    } else {
+      isPaginating.value = true;
+    }
 
-  try {
-    final Map<String, String> params = {
-      'page': currentPage.value.toString(),
-      'per_page': itemsPerPage.value.toString(),
-    };
+    try {
+      final Map<String, String> params = {
+        'page': currentPage.value.toString(),
+        'per_page': itemsPerPage.value.toString(),
+      };
 
-    var response = await _apiManager.read(ApiUrl.getProduct, true, params);
+      var response = await _apiManager.read(ApiUrl.getProduct, false, params);
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      product.value = ItemForCurrentUser.fromJson(data);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        product.value = ItemForCurrentUser.fromJson(data);
 
-      final List<Item> fetchedItems = product.value.items ?? [];
-      final int totalPages = product.value.pagination?.lastPage ?? 1;
+        final List<Item> fetchedItems = product.value.items ?? [];
+        final int totalPages = product.value.pagination?.lastPage ?? 1;
 
-      if (fetchedItems.isNotEmpty) {
-        // 1. De-duplication Logic using a Map (Key is ID)
-        // This ensures if an ID already exists, it gets overwritten/ignored rather than duplicated
-        final Map<int, Item> itemMap = {
-          for (var item in masterItemList) item.id!: item,
-        };
+        if (fetchedItems.isNotEmpty) {
+          // 1. De-duplication Logic using a Map (Key is ID)
+          // This ensures if an ID already exists, it gets overwritten/ignored rather than duplicated
+          final Map<int, Item> itemMap = {
+            for (var item in masterItemList) item.id!: item,
+          };
 
-        for (var newItem in fetchedItems) {
-          itemMap[newItem.id!] = newItem;
+          for (var newItem in fetchedItems) {
+            itemMap[newItem.id!] = newItem;
+          }
+
+          // 2. Convert back to list
+          List<Item> uniqueList = itemMap.values.toList();
+
+          // 3. Sorting Logic: Newest or most recently updated first
+          uniqueList.sort((a, b) {
+            final dateA = a.updatedAt ?? DateTime(0);
+            final dateB = b.updatedAt ?? DateTime(0);
+            return dateB.compareTo(dateA); // Descending order
+          });
+
+          // 4. Update the observable list
+          masterItemList.assignAll(uniqueList);
+
+          currentPage.value++;
         }
 
-        // 2. Convert back to list
-        List<Item> uniqueList = itemMap.values.toList();
-
-        // 3. Sorting Logic: Newest or most recently updated first
-        uniqueList.sort((a, b) {
-          final dateA = a.updatedAt ?? DateTime(0);
-          final dateB = b.updatedAt ?? DateTime(0);
-          return dateB.compareTo(dateA); // Descending order
-        });
-
-        // 4. Update the observable list
-        masterItemList.assignAll(uniqueList);
-
-        currentPage.value++;
-      }
-
-      // Check if we reached the end
-      if (currentPage.value > totalPages) {
+        // Check if we reached the end
+        if (currentPage.value > totalPages) {
+          hasMoreData.value = false;
+        }
+      } else {
+        CustomLoading.showNotification(
+          message: 'Falha ao carregar os itens',
+          messageType: MessageType.error,
+        );
         hasMoreData.value = false;
       }
-    } else {
+    } catch (e) {
       CustomLoading.showNotification(
-        message: 'Falha ao carregar os itens',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
-      hasMoreData.value = false;
+    } finally {
+      isLoading.value = false;
+      isPaginating.value = false;
     }
-  } catch (e) {
-    CustomLoading.showNotification(
-      message: 'Erro de rede: $e',
-      messageType: MessageType.error,
-    );
-  } finally {
-    isLoading.value = false;
-    isPaginating.value = false;
   }
-}
 
   Future getAllOrders({bool isInitial = false}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     if (!hasMoreOrder.value && !isInitial) {
       return; // Stop if no more data is available
     }
@@ -257,6 +263,9 @@ Future getAllProduct({bool isInitial = false}) async {
   }
 
   Future getAllOrdersRequest({bool isInitial = false}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     if (!hasMoreOrderRequest.value && !isInitial) {
       return; // Stop if no more data is available
     }
@@ -345,6 +354,9 @@ Future getAllProduct({bool isInitial = false}) async {
   }
 
   Future<void> addToCart({required String itemSlug}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var data = {'item_slug': itemSlug, 'quantity': "${quantity.value}"};
       isLoading.value = true;
@@ -354,7 +366,7 @@ Future getAllProduct({bool isInitial = false}) async {
       if (response.statusCode == 200) {
         await getCart();
         CustomLoading.showNotification(
-          message: 'Produto adicionado ao carrinho',
+          message: 'item adicionado ao carrinho',
           messageType: MessageType.success,
         );
       } else {
@@ -375,6 +387,9 @@ Future getAllProduct({bool isInitial = false}) async {
 
   var loadStatusBtn = false.obs;
   Future<void> updateOrderStatus({required String itemSlug}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var data = {'status': selectedLevelUpdateProduct.value};
       loadStatusBtn.value = true;
@@ -411,6 +426,9 @@ Future getAllProduct({bool isInitial = false}) async {
 
   Future<void> checkoutChart() async {
     try {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+        return;
+      }
       isLoading.value = true;
       var response = await _apiManager.post(ApiUrl.cartCheckout, {}, true);
       isLoading.value = false;
@@ -436,6 +454,9 @@ Future getAllProduct({bool isInitial = false}) async {
   }
 
   Future<void> removeFromCart({required String itemSlug}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var response = await _apiManager.delete("${ApiUrl.cart}/$itemSlug", true);
 
@@ -462,6 +483,10 @@ Future getAllProduct({bool isInitial = false}) async {
   var cart = CartModel().obs;
 
   Future<void> getCart() async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
+
     try {
       var response = await _apiManager.read(ApiUrl.cart, true);
 
@@ -495,6 +520,9 @@ Future getAllProduct({bool isInitial = false}) async {
   }
 
   Future<void> getAllChat() async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var response = await _apiManager.read(ApiUrl.getAllChat, true);
 
@@ -567,6 +595,9 @@ Future getAllProduct({bool isInitial = false}) async {
 
   // --- Sending Logic ---
   Future<void> sendChatMessage(String chatId, {String? message}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     if (message == null && selectedImages.isEmpty) return;
     final chatController = Get.find<ChatController>();
 
@@ -612,10 +643,14 @@ Future getAllProduct({bool isInitial = false}) async {
     required String userId,
     required String message,
   }) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       Map<String, dynamic> body = {"receiver_id": userId, "message": message};
       var response = await _apiManager.post(ApiUrl.sendChat, body, true);
       jsonDecode(response.body);
+      await getAllChat();
 
       if (response.statusCode != 201) {
         CustomLoading.showNotification(
@@ -659,6 +694,9 @@ class ChatController extends GetxController {
   }
 
   Future<void> getAllChatOneOnOne(String id, {bool showLoading = true}) async {
+    if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     if (showLoading) isLoading.value = true;
     try {
       var response = await _apiManager.read(

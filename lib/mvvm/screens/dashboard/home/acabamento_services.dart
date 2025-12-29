@@ -5,133 +5,131 @@ class ServiceProvidersScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.white,
-        appBar: AppBar(
-          title:  Text(
-            'Acabamento',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 1,
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        title:  Text(
+          'Acabamento',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
           ),
         ),
-        body: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          child: Column(
-            children: [
-              // Main Content
-              Expanded(
-                child: Container(
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: Column(
-                    children: [
-                      // Search bar
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(217),
-                          color: const Color(0xFFEEEEEE),
-                        ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-                        child: Row(
-                          children: [
-                            GestureDetector(
-                              onTap:(){
-                                Navigator.pop(context);
-                              },
-                              child: const Icon(
-                                Icons.search_outlined,
-                                color: Color(0xFF7F7F7F),
-                              ),
+      ),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+        ),
+        child: Column(
+          children: [
+            // Main Content
+            Expanded(
+              child: Container(
+                constraints: const BoxConstraints(maxWidth: 400),
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
+                  children: [
+                    // Search bar
+                    Container(
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(217),
+                        color: const Color(0xFFEEEEEE),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                      child: Row(
+                        children: [
+                          GestureDetector(
+                            onTap:(){
+                              Navigator.pop(context);
+                            },
+                            child: const Icon(
+                              Icons.search_outlined,
+                              color: Color(0xFF7F7F7F),
                             ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: TextField(
-                                decoration: const InputDecoration(
-                                  hintText: 'Acabamento',
-                                  hintStyle: TextStyle(
-                                    color: Color(0xFF7F7F7F),
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w400,
-                                    fontFamily: 'Josefin Sans',
-                                    height: 1.5,
-                                  ),
-                                  border: InputBorder.none,
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
+                          ),
+                          const SizedBox(width: 10),
+                          Expanded(
+                            child: TextField(
+                              decoration: const InputDecoration(
+                                hintText: 'Acabamento',
+                                hintStyle: TextStyle(
+                                  color: Color(0xFF7F7F7F),
                                   fontSize: 16,
                                   fontWeight: FontWeight.w400,
                                   fontFamily: 'Josefin Sans',
+                                  height: 1.5,
                                 ),
-                                onChanged: (value) {
-                                },
+                                border: InputBorder.none,
                               ),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Josefin Sans',
+                              ),
+                              onChanged: (value) {
+                              },
                             ),
-                          ],
-                        ),
-                      ),
-
-
-                      const SizedBox(height: 26),
-      
-                      // Filter buttons
-                      Row(
-                        children: const [
-                          FilterButtonA(
-                            text: 'ocalização',
-                            iconUrl: 'assets/images/location.svg',
-                            width: 110,
-                          ),
-                          SizedBox(width: 7),
-                          FilterButtonA(
-                            text: 'Avaliação',
-                            iconUrl: 'assets/images/bstar.svg',
-                            width: 110,
                           ),
                         ],
                       ),
-      
-                      const SizedBox(height: 20),
-      
-                      // Provider list
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: 8,
-                          itemBuilder: (context, index) {
-                            return GestureDetector(
-                              onTap: (){
-                                // Get.toNamed(RouteNameV1.serviceRequestScreen);
-
-                              },
-                              child: ProviderCardA(
-                                provider: ServiceProviderA(
-                                  name: 'David',
-                                  role: 'Eletricista',
-                                  distance: '1 km de você',
-                                  hourlyRate: 'R\$ 50/h',
-                                  imageUrl: 'assets/images/user.png',
-                                ),
-                              ),
-                            );
-                          },
+                    ),
+    
+    
+                    const SizedBox(height: 26),
+    
+                    // Filter buttons
+                    Row(
+                      children: const [
+                        FilterButtonA(
+                          text: 'ocalização',
+                          iconUrl: 'assets/images/location.svg',
+                          width: 110,
                         ),
+                        SizedBox(width: 7),
+                        FilterButtonA(
+                          text: 'Avaliação',
+                          iconUrl: 'assets/images/bstar.svg',
+                          width: 110,
+                        ),
+                      ],
+                    ),
+    
+                    const SizedBox(height: 20),
+    
+                    // Provider list
+                    Expanded(
+                      child: ListView.builder(
+                        itemCount: 8,
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: (){
+                              // Get.toNamed(RouteNameV1.serviceRequestScreen);
+    
+                            },
+                            child: ProviderCardA(
+                              provider: ServiceProviderA(
+                                name: 'David',
+                                role: 'Eletricista',
+                                distance: '1 km de você',
+                                hourlyRate: 'R\$ 50/h',
+                                imageUrl: 'assets/images/user.png',
+                              ),
+                            ),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

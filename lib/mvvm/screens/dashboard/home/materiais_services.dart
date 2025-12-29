@@ -2,186 +2,185 @@ import '../../../const/export.dart';
 
 class MaterialShopScreen extends StatelessWidget {
   const MaterialShopScreen({
-    super.key, required this.appbarName,
-    this.showAppBar = true,   // 👈 default: AppBar is visible
-
+    super.key,
+    required this.appbarName,
+    this.showAppBar = true, // 👈 default: AppBar is visible
   });
-final String appbarName;
+  final String appbarName;
 
   final bool showAppBar;
   @override
   Widget build(BuildContext context) {
     final pController = Get.find<ProductDetailsController>();
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: showAppBar,
-          title: Text(
-            appbarName,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 1,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        automaticallyImplyLeading: showAppBar,
+        title: Text(
+          appbarName,
+          style: const TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
           ),
-          backgroundColor: Colors.white,
-          elevation: 0,
         ),
         backgroundColor: Colors.white,
-        body: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            // The main column holds the fixed header elements and the expanded, scrollable grid.
-            children: [
-              // 🔍 Search Bar (Fixed at the top)
-              SearchBarWidgetMain(
-                hintText: "O que você está procurando?",
-                onChanged: pController.updateSearchTerm,
-              ),
-              const SizedBox(height: 20),
-
-              // Title (Fixed)
-              const Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Produto Disponível',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Josefin Sans',
-                  ),
+        elevation: 0,
+      ),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          // The main column holds the fixed header elements and the expanded, scrollable grid.
+          children: [
+            // 🔍 Search Bar (Fixed at the top)
+            SearchBarWidgetMain(
+              hintText: "O que você está procurando?",
+              onChanged: pController.updateSearchTerm,
+              autofocus: true,
+            ),
+            const SizedBox(height: 20),
+    
+            // Title (Fixed)
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                'Produto Disponível',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Josefin Sans',
                 ),
               ),
-              const SizedBox(height: 10),
-
-              // 🛍 Scrollable product grid
-              // Key Fix: Expanded allows the GridView to take all available space,
-              // and since it is a scrollable widget itself, it will handle the scrolling.
-              // We remove SingleChildScrollView and shrinkWrap: true.
-              FutureBuilder(
-                future: Future.wait([pController.getAllProduct()]),
-                builder: (context, asyncSnapshot) {
-                  if (asyncSnapshot.connectionState ==
-                          ConnectionState.waiting &&
-                      pController.product.value.items == null) {
-                    return Center(
-                      child: Padding(
-                        padding: EdgeInsets.all(12.0),
-                        child: CircularProgressIndicator(),
-                      ),
-                    );
-                  }
-                  return Expanded(
-                    child: Obx(() {
-                      // Use the filtered list count for checks and building.
-
-                      // Show initial loading screen (based on master list status)
-                      if (pController.isLoading.value &&
-                          pController.masterItemList.isEmpty) {
-                        return const Center(child: CircularProgressIndicator());
-                      }
-                      final displayList = pController
-                          .filteredItemList; // Correct list to display
-                      // Show "No results" if the filtered list is empty after initial load
-                      if (!pController.isLoading.value && displayList.isEmpty) {
-                        return Center(
-                          child: Text(
-                            pController.searchTerm.isEmpty
-                                ? 'No products available.'
-                                : 'No products found matching "${pController.searchTerm.value}".',
-                          ),
-                        );
-                      }
-                      // Use the filtered list count for checks and building.
-
-                      // ... (Loading and No Results checks are correct)
-
-                      return RefreshIndicator(
-                        onRefresh: () =>
-                            pController.getAllProduct(isInitial: true),
-                        child: NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            // Check if the user is scrolling near the bottom
-                            if (scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                                !pController.isPaginating.value &&
-                                pController.hasMoreData.value &&
-                                pController.searchTerm.isEmpty) {
-                              // 👈 IMPORTANT: Only load more pages if NOT searching
-                              pController.loadNextPage();
-                            }
-                            return true;
-                          },
-                          child: GridView.builder(
-                            // 1. FIX: Use displayList.length for the item count
-                            itemCount:
-                                displayList
-                                    .length + // <-- CHANGED from pController.itemList.length
-                                (pController.hasMoreData.value &&
-                                        pController.searchTerm.isEmpty
-                                    ? 1
-                                    : 0),
-                            gridDelegate:
-                                const SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 3,
-                                  crossAxisSpacing: 8,
-                                  mainAxisSpacing: 8,
-                                  childAspectRatio: 0.7,
-                                ),
-                            itemBuilder: (context, index) {
-                              // 2. FIX: Check index against displayList.length
-                              if (index < displayList.length) {
-                                // <-- CHANGED from pController.itemList.length
-                                var dd = displayList[index];
-                                return ProductCardM(
-                                  // ... (ProductCardM content)
-                                  title: '${dd.name}',
-                                  subtitle: '${dd.type}',
-                                  price: '\$ ${dd.price}',
-                                  imageUrl: "${dd.files.first.path}",
-                                  onTap: () {
-                                    // Navigate to product detail
-                                    Get.to(() => ProductDetailsScreen(dd: dd));
-                                  },
-                                );
-                              } else {
-                                // This is the last item: show the pagination loader or an empty space
-                                // The Obx logic here is mostly fine, but let's clean up the unused itemList references.
-                                return Obx(
-                                  () => pController.isPaginating.value
-                                      ? const Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: CircularProgressIndicator(),
-                                          ),
-                                        )
-                                      : displayList
-                                                .isNotEmpty && // <-- Use displayList
-                                            !pController.hasMoreData.value
-                                      ? const Center(
-                                          child: Padding(
-                                            padding: EdgeInsets.all(12.0),
-                                            child: Text(
-                                              "You've reached the end of the list.",
-                                            ),
-                                          ),
-                                        )
-                                      : const SizedBox.shrink(),
-                                );
-                              }
-                            },
-                          ),
+            ),
+            const SizedBox(height: 10),
+    
+            // 🛍 Scrollable product grid
+            // Key Fix: Expanded allows the GridView to take all available space,
+            // and since it is a scrollable widget itself, it will handle the scrolling.
+            // We remove SingleChildScrollView and shrinkWrap: true.
+            FutureBuilder(
+              future: Future.wait([pController.getAllProduct()]),
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState ==
+                        ConnectionState.waiting &&
+                    pController.product.value.items == null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return Expanded(
+                  child: Obx(() {
+                    // Use the filtered list count for checks and building.
+    
+                    // Show initial loading screen (based on master list status)
+                    if (pController.isLoading.value &&
+                        pController.masterItemList.isEmpty) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    final displayList = pController
+                        .filteredItemList; // Correct list to display
+                    // Show "No results" if the filtered list is empty after initial load
+                    if (!pController.isLoading.value && displayList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          pController.searchTerm.isEmpty
+                              ? 'No products available.'
+                              : 'No products found matching "${pController.searchTerm.value}".',
                         ),
                       );
-                    }),
-                  );
-                },
-              ),
-            ],
-          ),
+                    }
+                    // Use the filtered list count for checks and building.
+    
+                    // ... (Loading and No Results checks are correct)
+    
+                    return RefreshIndicator(
+                      onRefresh: () =>
+                          pController.getAllProduct(isInitial: true),
+                      child: NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          // Check if the user is scrolling near the bottom
+                          if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                              !pController.isPaginating.value &&
+                              pController.hasMoreData.value &&
+                              pController.searchTerm.isEmpty) {
+                            // 👈 IMPORTANT: Only load more pages if NOT searching
+                            pController.loadNextPage();
+                          }
+                          return true;
+                        },
+                        child: GridView.builder(
+                          // 1. FIX: Use displayList.length for the item count
+                          itemCount:
+                              displayList
+                                  .length + // <-- CHANGED from pController.itemList.length
+                              (pController.hasMoreData.value &&
+                                      pController.searchTerm.isEmpty
+                                  ? 1
+                                  : 0),
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 3,
+                                crossAxisSpacing: 8,
+                                mainAxisSpacing: 8,
+                                childAspectRatio: 0.7,
+                              ),
+                          itemBuilder: (context, index) {
+                            // 2. FIX: Check index against displayList.length
+                            if (index < displayList.length) {
+                              // <-- CHANGED from pController.itemList.length
+                              var dd = displayList[index];
+                              return ProductCardM(
+                                // ... (ProductCardM content)
+                                title: '${dd.name}',
+                                subtitle: '${dd.type}',
+                                price: '\$ ${dd.price}',
+                                imageUrl: "${dd.files.first.path}",
+                                onTap: () {
+                                  // Navigate to product detail
+                                  Get.to(() => ProductDetailsScreen(dd: dd));
+                                },
+                              );
+                            } else {
+                              // This is the last item: show the pagination loader or an empty space
+                              // The Obx logic here is mostly fine, but let's clean up the unused itemList references.
+                              return Obx(
+                                () => pController.isPaginating.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: CircularProgressIndicator(),
+                                        ),
+                                      )
+                                    : displayList
+                                              .isNotEmpty && // <-- Use displayList
+                                          !pController.hasMoreData.value
+                                    ? const Center(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(12.0),
+                                          child: Text(
+                                            "You've reached the end of the list.",
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox.shrink(),
+                              );
+                            }
+                          },
+                        ),
+                      ),
+                    );
+                  }),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

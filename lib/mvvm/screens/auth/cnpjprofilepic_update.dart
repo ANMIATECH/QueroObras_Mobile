@@ -19,140 +19,138 @@ class CNPJProfileUploadScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Center(
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(30),
-            ),
-            child: Column(
-              children: [
-                const SizedBox(height: 40),
-
-                // ✔ Profile Picture Picker
-                GestureDetector(
-                  onTap: () => controller.pickProfileImage(),
-                  child: Obx(() {
-                    return Center(
-                      child: Container(
-                        width: 200,
-                        height: 200,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF16577F),
-                          shape: BoxShape.circle,
-                          image: controller.profileImage.value != null
-                              ? DecorationImage(
-                            image:
-                            FileImage(controller.profileImage.value!),
-                            fit: BoxFit.cover,
-                          )
-                              : null,
-                        ),
-                        child: controller.profileImage.value == null
-                            ? const Center(
-                          child: Icon(
-                            Icons.camera_alt,
-                            size: 74,
-                            color: Colors.white,
-                          ),
-                        )
-                            : null,
-                      ),
-                    );
-                  }),
-                ),
-
-                const SizedBox(height: 20),
-
-                const Text(
-                  'Envie sua foto de perfil',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w700,
-                    fontFamily: 'Josefin Sans',
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-
-                const SizedBox(height: 40),
-
-                // ✔ Document Upload
-                GestureDetector(
-                  onTap: () => controller.pickCnpjDocumentImage(),
-                  child: Obx(() {
-                    return Container(
-                      width: double.infinity,
-                      height: 171,
-                      margin: const EdgeInsets.symmetric(horizontal: 20),
+      body: Center(
+        child: Container(
+          width: double.infinity,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 40),
+      
+              // ✔ Profile Picture Picker
+              GestureDetector(
+                onTap: () => controller.pickProfileImage(),
+                child: Obx(() {
+                  return Center(
+                    child: Container(
+                      width: 200,
+                      height: 200,
                       decoration: BoxDecoration(
                         color: const Color(0xFF16577F),
-                        borderRadius: BorderRadius.circular(10),
-                        image: controller.cnpjDocumentImage.value != null
+                        shape: BoxShape.circle,
+                        image: controller.profileImage.value != null
                             ? DecorationImage(
-                          image: FileImage(
-                              controller.cnpjDocumentImage.value!),
+                          image:
+                          FileImage(controller.profileImage.value!),
                           fit: BoxFit.cover,
                         )
                             : null,
                       ),
-                      child: controller.cnpjDocumentImage.value == null
-                          ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CustomPaint(
-                                painter: UploadIconPainter(),
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            const Text(
-                              'Envie o documento do CNPJ',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                fontWeight: FontWeight.w700,
-                                fontFamily: 'Josefin Sans',
-                              ),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
+                      child: controller.profileImage.value == null
+                          ? const Center(
+                        child: Icon(
+                          Icons.camera_alt,
+                          size: 74,
+                          color: Colors.white,
                         ),
                       )
                           : null,
-                    );
-                  }),
+                    ),
+                  );
+                }),
+              ),
+      
+              const SizedBox(height: 20),
+      
+              const Text(
+                'Envie sua foto de perfil',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  fontFamily: 'Josefin Sans',
                 ),
-
-                const Spacer(),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 30),
-                  child: CustomButton(
-                    text: 'Continuar',
-                    isLoading: controller.isLoading.value,
-                    onPressed: () async {
-                      if (controller.profileImage.value == null ||
-                          controller.cnpjDocumentImage.value == null) {
-                        Get.snackbar(
-                          "Erro",
-                          "Por favor, envie a foto de perfil e o documento",
-                        );
-                        return;
-                      }
-
-                      await controller.uploadProfilePicNDocCnpj(context);
-                    },
-                  ),
+                textAlign: TextAlign.center,
+              ),
+      
+              const SizedBox(height: 40),
+      
+              // ✔ Document Upload
+              GestureDetector(
+                onTap: () => controller.pickCnpjDocumentImage(),
+                child: Obx(() {
+                  return Container(
+                    width: double.infinity,
+                    height: 171,
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFF16577F),
+                      borderRadius: BorderRadius.circular(10),
+                      image: controller.cnpjDocumentImage.value != null
+                          ? DecorationImage(
+                        image: FileImage(
+                            controller.cnpjDocumentImage.value!),
+                        fit: BoxFit.cover,
+                      )
+                          : null,
+                    ),
+                    child: controller.cnpjDocumentImage.value == null
+                        ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            width: 24,
+                            height: 24,
+                            child: CustomPaint(
+                              painter: UploadIconPainter(),
+                            ),
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Envie o documento do CNPJ',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'Josefin Sans',
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    )
+                        : null,
+                  );
+                }),
+              ),
+      
+              const Spacer(),
+      
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 20, vertical: 30),
+                child: CustomButton(
+                  text: 'Continuar',
+                  isLoading: controller.isLoading.value,
+                  onPressed: () async {
+                    if (controller.profileImage.value == null ||
+                        controller.cnpjDocumentImage.value == null) {
+                      Get.snackbar(
+                        "Erro",
+                        "Por favor, envie a foto de perfil e o documento",
+                      );
+                      return;
+                    }
+      
+                    await controller.uploadProfilePicNDocCnpj(context);
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

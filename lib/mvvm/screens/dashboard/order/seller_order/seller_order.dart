@@ -29,10 +29,37 @@ class SellerOrder extends StatelessWidget {
         child: FutureBuilder(
           future: controller.getAllOrdersRequest(),
           builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
             return Obx(() {
-              if (!controller.isLoadingOrderRequest.value &&
-                  controller.productOrderRequest.value.data?.items == null) {
-                return Center(child: Text("You haven't placed an order yet"));
+              final items =
+                  controller.productOrderRequest.value.data?.items ?? [];
+              // 1. Check if loading finished and list is empty
+              if (!controller.isLoadingOrderRequest.value && items.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.shopping_bag_outlined,
+                        size: 64,
+                        color: Colors.grey,
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        "Você ainda não possui pedidos.",
+                        style: TextStyle(fontSize: 18, color: Colors.grey[600]),
+                      ),
+                      TextButton(
+                        onPressed: () =>
+                            controller.getAllOrdersRequest(isInitial: true),
+                        child: const Text("Tentar novamente"),
+                      ),
+                    ],
+                  ),
+                );
               }
               return RefreshIndicator(
                 onRefresh: () =>
@@ -62,31 +89,31 @@ class SellerOrder extends StatelessWidget {
                               shrinkWrap: true,
                               physics:
                                   const NeverScrollableScrollPhysics(), // if inside another scroll view
-                              itemCount: controller
-                                  .productOrderRequest
-                                  .value
-                                  .data
-                                  ?.items
-                                  ?.length,
+                              itemCount:
+                                  items.length +
+                                  (controller.isPaginatingOrderRequest.value
+                                      ? 1
+                                      : 0),
                               itemBuilder: (context, index) {
-                                var dd = controller
-                                    .productOrderRequest
-                                    .value
-                                    .data
-                                    ?.items?[index];
-
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: OrderItemCard(
-                                    name: "${dd?.item?.name}",
-                                    subtitle: "${dd?.item?.type}",
-                                    onTap: () {
-                                      Get.to(() => OrderTrackingScreen(dd: dd,userType: true,));
-                                    },
-                                    status: "${dd?.status}",
-                                    avatarUrl: "${dd?.item?.files?.first.path}",
-                                  ),
-                                );
+                                if (index < items.length) {
+                                  var dd = items[index];
+                                  return OrderItemCard(
+                                    name: "${dd.item?.name}",
+                                    subtitle: "${dd.item?.type}",
+                                    onTap: () => Get.to(
+                                      () => OrderTrackingScreen(
+                                        dd: dd,
+                                        userType: true,
+                                      ),
+                                    ),
+                                    status: "${dd.status}",
+                                    avatarUrl: "${dd.item?.files?.first.path}",
+                                  );
+                                } else {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
+                                }
                               },
                             ),
                           ],

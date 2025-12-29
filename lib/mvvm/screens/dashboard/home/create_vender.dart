@@ -7,268 +7,266 @@ class VendorFormScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-
-          title: const Text(
-            'Vender',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-            ),
+    
+        title: const Text(
+          'Vender',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
           ),
         ),
-
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Faça upload da foto do artigo.',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
+      ),
+    
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+    
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Faça upload da foto do artigo.',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
                         ),
-                        const SizedBox(height: 20),
-                        // 👈 START: DYNAMIC IMAGE ROW
-                        Obx(() {
-                          final images = controller.selectedImages;
-
-                          // Create a list of image containers
-                          List<Widget> imageWidgets = images
-                              .asMap()
-                              .entries
-                              .map((entry) {
-                                final index = entry.key;
-                                final file = entry.value;
-
-                                return SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                      right: index < controller.maxImages - 1
-                                          ? 10
-                                          : 0,
-                                    ),
-                                    child: _ImagePreviewContainer(
-                                      file: file,
-                                      onRemove: () =>
-                                          controller.removeImage(file),
-                                    ),
+                      ),
+                      const SizedBox(height: 20),
+                      // 👈 START: DYNAMIC IMAGE ROW
+                      Obx(() {
+                        final images = controller.selectedImages;
+    
+                        // Create a list of image containers
+                        List<Widget> imageWidgets = images
+                            .asMap()
+                            .entries
+                            .map((entry) {
+                              final index = entry.key;
+                              final file = entry.value;
+    
+                              return SizedBox(
+                                height: 60,
+                                width: 60,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: index < controller.maxImages - 1
+                                        ? 10
+                                        : 0,
                                   ),
-                                );
-                              })
-                              .toList();
-                          if (images.length < controller.maxImages) {
-                            imageWidgets.add(
+                                  child: _ImagePreviewContainer(
+                                    file: file,
+                                    onRemove: () =>
+                                        controller.removeImage(file),
+                                  ),
+                                ),
+                              );
+                            })
+                            .toList();
+                        if (images.length < controller.maxImages) {
+                          imageWidgets.add(
+                            SizedBox(
+                              height: 60,
+                              width: 60,
+                              child: _AddImageButton(
+                                onTap: controller.pickImages,
+                                // REMOVE THIS LINE: isFirst: images.isEmpty && images.length < 4,
+                              ),
+                            ),
+                          );
+                        }
+    
+                        // This uses SizedBox(width: 10) for gaps and an empty Expanded for the remaining slots
+                        while (imageWidgets.length < controller.maxImages) {
+                          imageWidgets.add(
+                            const SizedBox(
+                              height: 60,
+                              width: 60,
+                              child: SizedBox.shrink(),
+                            ),
+                          ); // Add the placeholder
+                        }
+    
+                        return Row(
+                          children: [
+                            // Re-evaluate imageWidgets list to ensure correct spacing
+                            ...imageWidgets.sublist(
+                              0,
+                              images.length,
+                            ), // Display selected images
+                            // Add the Add button if not full
+                            if (images.length < controller.maxImages)
                               SizedBox(
                                 height: 60,
                                 width: 60,
                                 child: _AddImageButton(
                                   onTap: controller.pickImages,
-                                  // REMOVE THIS LINE: isFirst: images.isEmpty && images.length < 4,
                                 ),
                               ),
-                            );
-                          }
-
-                          // This uses SizedBox(width: 10) for gaps and an empty Expanded for the remaining slots
-                          while (imageWidgets.length < controller.maxImages) {
-                            imageWidgets.add(
-                              const SizedBox(
-                                height: 60,
-                                width: 60,
-                                child: SizedBox.shrink(),
-                              ),
-                            ); // Add the placeholder
-                          }
-
-                          return Row(
-                            children: [
-                              // Re-evaluate imageWidgets list to ensure correct spacing
-                              ...imageWidgets.sublist(
-                                0,
-                                images.length,
-                              ), // Display selected images
-                              // Add the Add button if not full
-                              if (images.length < controller.maxImages)
-                                SizedBox(
-                                  height: 60,
-                                  width: 60,
-                                  child: _AddImageButton(
-                                    onTap: controller.pickImages,
-                                  ),
-                                ),
-                            ],
-                          );
-                        }),
-                        // 👈 END: DYNAMIC IMAGE ROW
-                        const SizedBox(height: 20),
-                        const Text(
-                          'Nome do artigo',
-                          style: TextStyle(
+                          ],
+                        );
+                      }),
+                      // 👈 END: DYNAMIC IMAGE ROW
+                      const SizedBox(height: 20),
+                      const Text(
+                        'Nome do artigo',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.nameController,
+                        hintText: 'Nome completo',
+                        iconUrl: "assets/images/tool.svg",
+                      ),
+                      const SizedBox(height: 20),
+    
+                      const Text(
+                        'Escolha o tipo do artigo: ferramenta ou material',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      CustomDropdownField(
+                        label: CustomText.registrationType,
+                        selectedValue: "Ferramentas",
+                        options: ["Ferramentas", "Materiais"],
+                        customIcon: const Icon(
+                          Icons.verified_user,
+                          color: CustomColor.hintText,
+                        ),
+    
+                        onChanged: (String newValue) {
+                          // sync both selectedUserStatus & selectedDocumentType
+                          controller.selectedType.value = newValue;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+    
+                      const Text(
+                        'Quantidade',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.quantityController,
+                        hintText: 'Quantos itens você possui',
+                        iconUrl: "assets/images/price.svg",
+                        iconWidth: 14,
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+    
+                      const Text(
+                        'Preço',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.priceController,
+                        hintText: 'Digite o preço',
+                        iconUrl: "assets/images/price.svg",
+                        iconWidth: 14,
+                        keyboardType: TextInputType.number,
+                      ),
+                      const SizedBox(height: 20),
+    
+                      const Text(
+                        'Descrição',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
+                        ),
+                      ),
+                      const SizedBox(height: 20),
+                      Container(
+                        height: 97,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                          color: const Color(0xFFF6F3F3),
+                          border: Border.all(
+                            color: const Color(0x0D000000),
+                            width: 1,
+                          ),
+                        ),
+                        child: TextFormField(
+                          controller: controller.descriptionController,
+                          maxLines: null,
+                          expands: true,
+                          textAlignVertical: TextAlignVertical.top,
+                          style: const TextStyle(
                             fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w600,
                             color: Colors.black,
                           ),
-                        ),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.nameController,
-                          hintText: 'Nome completo',
-                          iconUrl: "assets/images/tool.svg",
-                        ),
-                        const SizedBox(height: 20),
-
-                        const Text(
-                          'Escolha o tipo do artigo: ferramenta ou material',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomDropdownField(
-                          label: CustomText.registrationType,
-                          selectedValue: "Ferramentas",
-                          options: ["Ferramentas", "Materiais"],
-                          customIcon: const Icon(
-                            Icons.verified_user,
-                            color: CustomColor.hintText,
-                          ),
-
-                          onChanged: (String newValue) {
-                            // sync both selectedUserStatus & selectedDocumentType
-                            controller.selectedType.value = newValue;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        const Text(
-                          'Quantidade',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.quantityController,
-                          hintText: 'Quantos itens você possui',
-                          iconUrl: "assets/images/price.svg",
-                          iconWidth: 14,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 20),
-
-                        const Text(
-                          'Preço',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.priceController,
-                          hintText: 'Digite o preço',
-                          iconUrl: "assets/images/price.svg",
-                          iconWidth: 14,
-                          keyboardType: TextInputType.number,
-                        ),
-                        const SizedBox(height: 20),
-
-                        const Text(
-                          'Descrição',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
-                        ),
-                        const SizedBox(height: 20),
-                        Container(
-                          height: 97,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(4),
-                            color: const Color(0xFFF6F3F3),
-                            border: Border.all(
-                              color: const Color(0x0D000000),
-                              width: 1,
-                            ),
-                          ),
-                          child: TextFormField(
-                            controller: controller.descriptionController,
-                            maxLines: null,
-                            expands: true,
-                            textAlignVertical: TextAlignVertical.top,
-                            style: const TextStyle(
+                          decoration: const InputDecoration(
+                            hintText: 'Digite a descrição',
+                            hintStyle: TextStyle(
                               fontFamily: 'Josefin Sans',
                               fontSize: 15,
                               fontWeight: FontWeight.w600,
-                              color: Colors.black,
+                              color: Color(0xFFB1B1B1),
                             ),
-                            decoration: const InputDecoration(
-                              hintText: 'Digite a descrição',
-                              hintStyle: TextStyle(
-                                fontFamily: 'Josefin Sans',
-                                fontSize: 15,
-                                fontWeight: FontWeight.w600,
-                                color: Color(0xFFB1B1B1),
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: EdgeInsets.all(15),
-                            ),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(15),
                           ),
                         ),
-                        const SizedBox(height: 20),
-                        Obx(
-                          () => CustomButton(
-                            text: CustomText.publish,
-                            isLoading: controller.isCreateItemLoading.value,
-                            onPressed: () async {
-                              controller.publishItem(context);
-                            },
-                          ),
+                      ),
+                      const SizedBox(height: 20),
+                      Obx(
+                        () => CustomButton(
+                          text: CustomText.publish,
+                          isLoading: controller.isCreateItemLoading.value,
+                          onPressed: () async {
+                            controller.publishItem(context);
+                          },
                         ),
-
-                        const SizedBox(height: 41),
-                      ],
-                    ),
+                      ),
+    
+                      const SizedBox(height: 41),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

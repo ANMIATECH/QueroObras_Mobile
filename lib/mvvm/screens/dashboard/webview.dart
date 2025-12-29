@@ -20,24 +20,32 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
-    // 3. Initialize the controller in initState
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      // 4. Set the onProgress callback to update the state
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            // Update the state with the current loading progress
             if (mounted) {
               setState(() {
                 _loadingProgress = progress;
               });
             }
           },
-          // You can add other handlers here, like onPageFinished, onError, etc.
+          // 1. Logs every time a new page starts loading (useful for redirects)
+          onPageStarted: (String url) {
+            debugPrint('Page started loading: $url');
+          },
+          // 2. Logs when a page has finished loading
+          onPageFinished: (String url) {
+            debugPrint('Page finished loading: $url');
+          },
+          // 3. Optional: Intercept navigation attempts before they happen
+          onNavigationRequest: (NavigationRequest request) {
+            debugPrint('Allowing navigation to: ${request.url}');
+            return NavigationDecision.navigate;
+          },
         ),
       )
-      // 5. Load the initial request
       ..loadRequest(Uri.parse(widget.url));
   }
 

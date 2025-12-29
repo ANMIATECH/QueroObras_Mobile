@@ -76,7 +76,7 @@ class ChatScreen extends StatelessWidget {
                             onTap: () {
                               Get.to(
                                 () => OneOnOneChat(
-                                  id: '${ddd?.receiver?.profile?.id}',
+                                  id: '${ddd?.receiver?.id}',
                                   userName: '${ddd?.receiver?.name}',
                                 ),
                               );

@@ -134,152 +134,149 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
       ));
     }
 
-    return SafeArea(
-      bottom: true,
-      child: Scaffold(
-        appBar:  AppBar(
-          title: Text('Request an electricista'),
-        ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              SizedBox(
-                height: 400,
-                width: double.infinity,
-                child: userLocation == null
-                    ? const Center(child: CircularProgressIndicator())
-                    : GoogleMap(
-                  initialCameraPosition: CameraPosition(
-                    target: userLocation!,
-                    zoom: 14,
-                  ),
-                  markers: markers,
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: false,
-                  onMapCreated: (controller) => mapController = controller,
+    return Scaffold(
+      appBar:  AppBar(
+        title: Text('Request an electricista'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: 400,
+              width: double.infinity,
+              child: userLocation == null
+                  ? const Center(child: CircularProgressIndicator())
+                  : GoogleMap(
+                initialCameraPosition: CameraPosition(
+                  target: userLocation!,
+                  zoom: 14,
                 ),
+                markers: markers,
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                onMapCreated: (controller) => mapController = controller,
               ),
-              const SizedBox(height: 20),
-              // Provider info and actions
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: 220,
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFF4F3F3),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Row(
-                              children: [
-                                Container(
-                                  width: 64,
-                                  height: 64,
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(10),
-                                    child: CustomImageView(
-                                      imagePath: widget.imageUrl,
-                                      width: 64,
-                                      height: 64,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(width: 11),
-                                SizedBox(
-                                  width: 74,
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.providerName,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 20,
-                                          fontWeight: FontWeight.w700,
-                                          fontFamily: 'Josefin Sans',
-                                        ),
-                                      ),
-                                      const SizedBox(height: 5),
-                                      Text(
-                                        widget.serviceName,
-                                        style: const TextStyle(
-                                          color: Color(0xFF7E7878),
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w400,
-                                          fontFamily: 'Josefin Sans',
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+            ),
+            const SizedBox(height: 20),
+            // Provider info and actions
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: 220,
+                    child: Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFF4F3F3),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          const SizedBox(height: 10),
-                          Column(
+                          child: Row(
                             children: [
-                              Text(
-                                widget.amount,
-                                style: const TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.black,
-                                  fontFamily: 'Josefin Sans',
+                              Container(
+                                width: 64,
+                                height: 64,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                textAlign: TextAlign.center,
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: CustomImageView(
+                                    imagePath: widget.imageUrl,
+                                    width: 64,
+                                    height: 64,
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
                               ),
-                              Text(
-                                estimatedMinutes != null
-                                    ? (estimatedMinutes! >= 0
-                                    ? 'Estimated arrival: ${formatArrivalTime(estimatedMinutes!)}'
-                                    : 'Location permission denied')
-                                    : 'Calculating...',
-                                style: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  color: Color(0xFF979797),
-                                  fontFamily: 'Josefin Sans',
+                              const SizedBox(width: 11),
+                              SizedBox(
+                                width: 74,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.providerName,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'Josefin Sans',
+                                      ),
+                                    ),
+                                    const SizedBox(height: 5),
+                                    Text(
+                                      widget.serviceName,
+                                      style: const TextStyle(
+                                        color: Color(0xFF7E7878),
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.w400,
+                                        fontFamily: 'Josefin Sans',
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
-                        ],
-                      ),
+                        ),
+                        const SizedBox(height: 10),
+                        Column(
+                          children: [
+                            Text(
+                              widget.amount,
+                              style: const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: Colors.black,
+                                fontFamily: 'Josefin Sans',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              estimatedMinutes != null
+                                  ? (estimatedMinutes! >= 0
+                                  ? 'Estimated arrival: ${formatArrivalTime(estimatedMinutes!)}'
+                                  : 'Location permission denied')
+                                  : 'Calculating...',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                color: Color(0xFF979797),
+                                fontFamily: 'Josefin Sans',
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-                    ActionButton(
-                      text: 'Start chat',
-                      backgroundColor: const Color(0xFFF9761E),
-                      textColor: Colors.white,
-                      onPressed: () {
-                        Get.to(()=>RequestService(serviceProviderId: widget.serviceProviderId,));
-                        // Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
-
-                      },
-                    ),
-                    const SizedBox(height: 10),
-                    ActionButton(
-                      text: 'Cancel',
-                      backgroundColor: const Color(0xFFF4F3F3),
-                      textColor: Colors.black,
-                      onPressed: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
+                  ),
+                  const SizedBox(height: 20),
+                  ActionButton(
+                    text: 'Start chat',
+                    backgroundColor: const Color(0xFFF9761E),
+                    textColor: Colors.white,
+                    onPressed: () {
+                      Get.to(()=>RequestService(serviceProviderId: widget.serviceProviderId,));
+                      // Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
+    
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                  ActionButton(
+                    text: 'Cancel',
+                    backgroundColor: const Color(0xFFF4F3F3),
+                    textColor: Colors.black,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

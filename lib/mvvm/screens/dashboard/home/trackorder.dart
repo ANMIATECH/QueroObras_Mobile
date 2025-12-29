@@ -32,73 +32,71 @@ class OrderTrackingScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(30),
           color: Colors.white,
         ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // Order Details Content
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 40),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const SizedBox(height: 25),
-
-                      RichText(
-                        text: TextSpan(
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w500,
-                            fontFamily: 'Josefin Sans',
-                            height: 24 / 14,
-                          ),
-                          children: [
-                            TextSpan(text: 'Pedido nº ${dd?.order?.slug}\n'),
-                            TextSpan(
-                              text:
-                                  'Realizado em: ${dd?.order?.createdAt?.toYearMonthDay}\n',
-                            ),
-                            TextSpan(
-                              text:
-                                  'Nº de itens: ${dd?.order?.totalQuantity}\n',
-                            ),
-                            TextSpan(
-                              text: 'Total: R\$ ${dd?.order?.totalPrice}',
-                            ),
-                          ],
+        child: Column(
+          children: [
+            // Order Details Content
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const SizedBox(height: 25),
+        
+                    RichText(
+                      text: TextSpan(
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'Josefin Sans',
+                          height: 24 / 14,
                         ),
+                        children: [
+                          TextSpan(text: 'Pedido nº ${dd?.order?.slug}\n'),
+                          TextSpan(
+                            text:
+                                'Realizado em: ${dd?.order?.createdAt?.toYearMonthDay}\n',
+                          ),
+                          TextSpan(
+                            text:
+                                'Nº de itens: ${dd?.order?.totalQuantity}\n',
+                          ),
+                          TextSpan(
+                            text: 'Total: R\$ ${dd?.order?.totalPrice}',
+                          ),
+                        ],
                       ),
-
-                      const SizedBox(height: 15),
-
-                      // Order Item Card
-                      OrderItemCard(dd: dd, userType: userType),
-
-                      const SizedBox(height: 15),
-
-                      CustomButton(
-                        text: userType
-                            ? CustomText.updateOrder
-                            : CustomText.trackOrder,
-                        onPressed: () async {
-                          Get.to(
-                            () => SellerProgressTracking(
-                              dd: dd,
-                              userType: userType,
-                            ),
-                          );
-                        },
-                      ),
-
-                      const SizedBox(height: 20),
-                    ],
-                  ),
+                    ),
+        
+                    const SizedBox(height: 15),
+        
+                    // Order Item Card
+                    OrderItemCard(dd: dd, userType: userType),
+        
+                    const SizedBox(height: 15),
+        
+                    CustomButton(
+                      text: userType
+                          ? CustomText.updateOrder
+                          : CustomText.trackOrder,
+                      onPressed: () async {
+                        Get.to(
+                          () => SellerProgressTracking(
+                            dd: dd,
+                            userType: userType,
+                          ),
+                        );
+                      },
+                    ),
+        
+                    const SizedBox(height: 20),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

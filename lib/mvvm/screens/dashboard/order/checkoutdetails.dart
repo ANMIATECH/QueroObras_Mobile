@@ -8,33 +8,31 @@ class CheckoutNow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 11, 20, 32),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _buildHeader(),
-                      const SizedBox(height: 15),
-                      _buildProductSection(),
-                      const SizedBox(height: 20),
-                      _buildDescriptionSection(),
-                      const SizedBox(height: 20),
-                      _buildTotalExpenseSection(),
-                    ],
-                  ),
+      body: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
+        ),
+        constraints: const BoxConstraints(maxWidth: 480),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(20, 11, 20, 32),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    _buildHeader(),
+                    const SizedBox(height: 15),
+                    _buildProductSection(),
+                    const SizedBox(height: 20),
+                    _buildDescriptionSection(),
+                    const SizedBox(height: 20),
+                    _buildTotalExpenseSection(),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

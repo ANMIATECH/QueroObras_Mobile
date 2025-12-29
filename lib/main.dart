@@ -9,9 +9,8 @@ Future<void> main() async {
 );
 
   await StorageService.init(); // Initialize GetStorage
-  Get.put(LoginController());
   Get.put(ServiceController());
-  runApp(ProviderScope(child: const MyApp()));
+  runApp( const MyApp());
 } 
 
 class MyApp extends StatelessWidget {

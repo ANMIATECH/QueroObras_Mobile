@@ -17,9 +17,9 @@ class BottomNavScreen extends StatelessWidget {
   // Screens for navigation
   final List<Widget> screens = [
     const CnpjHomeScreen(),
-    // OrdersScreen(),
-    ChatScreen(),
-    OrdersScreen(),
+    // ChatScreen(),
+    // ChatScreen(),
+    MaterialShopScreen(appbarName: 'Buscar', showAppBar: false),
     ProfileScreen(),
   ];
 
@@ -34,11 +34,11 @@ class BottomNavScreen extends StatelessWidget {
     //   'inactiveIcon': CustomImage.orderInactive,
     //   'label': 'Order',
     // },
-    {
-      'activeIcon': CustomImage.chat,
-      'inactiveIcon': CustomImage.chat,
-      'label': '',
-    },
+    // {
+    //   'activeIcon': CustomImage.chat,
+    //   'inactiveIcon': CustomImage.chat,
+    //   'label': '',
+    // },
     {
       'activeIcon': CustomImage.searchActive,
       'inactiveIcon': CustomImage.searchInactive,
@@ -53,75 +53,71 @@ class BottomNavScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Obx(() {
-        return Scaffold(
-          body: IndexedStack(
-            index: controller.selectedIndex.value,
-            children: screens,
+    return Obx(() {
+      return Scaffold(
+        body: IndexedStack(
+          index: controller.selectedIndex.value,
+          children: screens,
+        ),
+        bottomNavigationBar: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            border: Border(top: BorderSide(color: Color(0xFFF4F3F3), width: 1)),
           ),
-          bottomNavigationBar: Container(
-            decoration: const BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                top: BorderSide(color: Color(0xFFF4F3F3), width: 1),
-              ),
-            ),
-            padding: const EdgeInsets.fromLTRB(30, 13, 30, 20),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List.generate(navItems.length, (index) {
-                final item = navItems[index];
+          padding: const EdgeInsets.fromLTRB(30, 13, 30, 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(navItems.length, (index) {
+              final item = navItems[index];
 
-                // ✅ Middle button (Chat button)
-                if (index == 1) {
-                  return GestureDetector(
-                    onTap: () => controller.changeIndex(1), // ✅ Go to ChatScreen
-                    child: SizedBox(
-                      width: 50,
-                      height: 50,
-                      child: CustomImageView(
-                        imagePath: item['activeIcon'],
-                        fit: BoxFit.contain,
+              // // ✅ Middle button (Chat button)
+              // if (index == 1) {
+              //   return GestureDetector(
+              //     onTap: () => controller.changeIndex(1), // ✅ Go to ChatScreen
+              //     child: SizedBox(
+              //       width: 50,
+              //       height: 50,
+              //       child: CustomImageView(
+              //         imagePath: item['activeIcon'],
+              //         fit: BoxFit.contain,
+              //       ),
+              //     ),
+              //   );
+              // }
+
+              // Other tabs
+              return GestureDetector(
+                onTap: () => controller.changeIndex(index),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CustomImageView(
+                      imagePath: controller.selectedIndex.value == index
+                          ? item['activeIcon']
+                          : item['inactiveIcon'],
+                      width: 24,
+                      height: 24,
+                      fit: BoxFit.contain,
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      item['label']!,
+                      style: TextStyle(
+                        color: controller.selectedIndex.value == index
+                            ? Colors.black
+                            : Colors.black54,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                        fontFamily: 'Josefin Sans',
                       ),
                     ),
-                  );
-                }
-
-                // Other tabs
-                return GestureDetector(
-                  onTap: () => controller.changeIndex(index),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      CustomImageView(
-                        imagePath: controller.selectedIndex.value == index
-                            ? item['activeIcon']
-                            : item['inactiveIcon'],
-                        width: 24,
-                        height: 24,
-                        fit: BoxFit.contain,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        item['label']!,
-                        style: TextStyle(
-                          color: controller.selectedIndex.value == index
-                              ? Colors.black
-                              : Colors.black54,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w400,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }),
-            ),
+                  ],
+                ),
+              );
+            }),
           ),
-        );
-      }),
-    );
+        ),
+      );
+    });
   }
 }

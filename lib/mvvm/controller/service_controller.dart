@@ -52,12 +52,17 @@ class ServiceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getPopularServiceProvider();
+    if (StorageDesign.validKey(
+      StorageDesign.token,
+    )) {
+          getPopularServiceProvider();
     getCurrentLocation();
     getConstructionServiceProvider();
     getAcabamentoServiceProvider();
     loadNofication(isInitial: true);
     loadNoficationCpn(isInitial: true);
+    }
+
   }
 
   @override

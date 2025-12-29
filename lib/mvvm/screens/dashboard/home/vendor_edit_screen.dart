@@ -17,173 +17,171 @@ class VendorEditScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
         backgroundColor: Colors.white,
-        appBar: AppBar(
-          backgroundColor: Colors.white,
-
-          title: Text(
-            // 👈 UPDATED TITLE
-            'Editar ${controller.nameControllerEdit.text}',
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-            ),
+    
+        title: Text(
+          // 👈 UPDATED TITLE
+          'Editar ${controller.nameControllerEdit.text}',
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
           ),
         ),
-
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(30),
-              color: Colors.white,
-            ),
-            child: Column(
-              children: [
-                Expanded(
-                  child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 24),
-                        const Text(
-                          'Upload the picture of the article.',
-                          style: TextStyle(
-                            fontFamily: 'Josefin Sans',
-                            fontSize: 16,
-                            fontWeight: FontWeight.w400,
-                            color: Colors.black,
-                          ),
+      ),
+    
+      body: GestureDetector(
+        onTap: () => FocusScope.of(context).unfocus(),
+    
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white,
+          ),
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 24),
+                      const Text(
+                        'Upload the picture of the article.',
+                        style: TextStyle(
+                          fontFamily: 'Josefin Sans',
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          color: Colors.black,
                         ),
-                        const SizedBox(height: 20),
-                        // 👈 START: DYNAMIC IMAGE ROW (Must handle both existing URLs and new Files)
-                        Obx(() {
-                          // Combine existing image URLs and new File objects for display
-                          final allImages = [
-                            ...controller.existingImageUrlsEdit ?? [],
-                            ...controller.selectedImages,
-                          ];
-                          const int maxItems = 5; // Assuming max 5 images
-                          const double spacing = 10;
-
-                          // Build the row children
-                          List<Widget> children = [];
-
-                          for (int i = 0; i < maxItems; i++) {
-                            // 👈 NEW: Use the helper function to determine and return the widget for slot 'i'
-                            children.add(
-                              _buildImageSlotWidget(
-                                i,
-                                controller,
-                                allImages,
-                                maxItems,
-                                spacing,
-                              ),
-                            );
+                      ),
+                      const SizedBox(height: 20),
+                      // 👈 START: DYNAMIC IMAGE ROW (Must handle both existing URLs and new Files)
+                      Obx(() {
+                        // Combine existing image URLs and new File objects for display
+                        final allImages = [
+                          ...controller.existingImageUrlsEdit ?? [],
+                          ...controller.selectedImages,
+                        ];
+                        const int maxItems = 5; // Assuming max 5 images
+                        const double spacing = 10;
+    
+                        // Build the row children
+                        List<Widget> children = [];
+    
+                        for (int i = 0; i < maxItems; i++) {
+                          // 👈 NEW: Use the helper function to determine and return the widget for slot 'i'
+                          children.add(
+                            _buildImageSlotWidget(
+                              i,
+                              controller,
+                              allImages,
+                              maxItems,
+                              spacing,
+                            ),
+                          );
+                        }
+    
+                        // The row children now contains 5 Expanded widgets (image, add button, or placeholder)
+                        // We need to insert the SizedBox spacing *between* these Expanded widgets.
+    
+                        List<Widget> rowChildren = [];
+                        for (int i = 0; i < children.length; i++) {
+                          rowChildren.add(children[i]);
+                          // Add spacing only if it's not the last item
+                          if (i < children.length - 1) {
+                            rowChildren.add(const SizedBox(width: spacing));
                           }
-
-                          // The row children now contains 5 Expanded widgets (image, add button, or placeholder)
-                          // We need to insert the SizedBox spacing *between* these Expanded widgets.
-
-                          List<Widget> rowChildren = [];
-                          for (int i = 0; i < children.length; i++) {
-                            rowChildren.add(children[i]);
-                            // Add spacing only if it's not the last item
-                            if (i < children.length - 1) {
-                              rowChildren.add(const SizedBox(width: spacing));
-                            }
-                          }
-
-                          return Row(children: rowChildren);
-                        }),
-
-                        const SizedBox(height: 20),
-                        const Text('Name of the article', style: TextStyle()),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.nameControllerEdit,
-                          hintText: 'Nome completo',
-                          iconUrl: "assets/images/tool.svg",
+                        }
+    
+                        return Row(children: rowChildren);
+                      }),
+    
+                      const SizedBox(height: 20),
+                      const Text('Name of the article', style: TextStyle()),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.nameControllerEdit,
+                        hintText: 'Nome completo',
+                        iconUrl: "assets/images/tool.svg",
+                      ),
+                      const SizedBox(height: 20),
+                      // ... (Other fields)
+                      const Text(
+                        'Choose the article either a tools or material',
+                        style: TextStyle(/* ... */),
+                      ),
+                      const SizedBox(height: 20),
+                      CustomDropdownField(
+                        // Note: You need to ensure CustomDropdownField uses the controller value
+                        label: CustomText.registrationType,
+                        selectedValue: controller
+                            .selectedTypeEdit
+                            .value, // 👈 Use the controller's observable value
+                        options: ["Ferramentas", "Materiais"],
+                        customIcon: const Icon(
+                          Icons.verified_user,
+                          color: CustomColor.hintText,
                         ),
-                        const SizedBox(height: 20),
-                        // ... (Other fields)
-                        const Text(
-                          'Choose the article either a tools or material',
-                          style: TextStyle(/* ... */),
-                        ),
-                        const SizedBox(height: 20),
-                        CustomDropdownField(
-                          // Note: You need to ensure CustomDropdownField uses the controller value
-                          label: CustomText.registrationType,
-                          selectedValue: controller
-                              .selectedTypeEdit
-                              .value, // 👈 Use the controller's observable value
-                          options: ["Ferramentas", "Materiais"],
-                          customIcon: const Icon(
-                            Icons.verified_user,
-                            color: CustomColor.hintText,
-                          ),
-                          onChanged: (String newValue) {
-                            controller.selectedType.value = newValue;
-                          },
-                        ),
-                        const SizedBox(height: 20),
-
-                        // ... Quantity, Price, Description fields ...
-                        const Text('Quantity', style: TextStyle(/* ... */)),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.quantityControllerEdit,
-                          hintText: 'How many items you have',
-                          iconUrl: "assets/images/price.svg",
-                          iconWidth: 14,
-                        ),
-                        const SizedBox(height: 20),
-                        const Text('Price', style: TextStyle(/* ... */)),
-                        const SizedBox(height: 20),
-                        FormInputField(
-                          controller: controller.priceControllerEdit,
+                        onChanged: (String newValue) {
+                          controller.selectedType.value = newValue;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+    
+                      // ... Quantity, Price, Description fields ...
+                      const Text('Quantity', style: TextStyle(/* ... */)),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.quantityControllerEdit,
+                        hintText: 'How many items you have',
+                        iconUrl: "assets/images/price.svg",
+                        iconWidth: 14,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Price', style: TextStyle(/* ... */)),
+                      const SizedBox(height: 20),
+                      FormInputField(
+                        controller: controller.priceControllerEdit,
+                        hintText: 'Enter price',
+                        iconUrl: "assets/images/price.svg",
+                        iconWidth: 14,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text('Description', style: TextStyle(/* ... */)),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        height: 97,
+                        child: FormInputField(
+                          controller: controller.descriptionControllerEdit,
                           hintText: 'Enter price',
                           iconUrl: "assets/images/price.svg",
                           iconWidth: 14,
                         ),
-                        const SizedBox(height: 20),
-                        const Text('Description', style: TextStyle(/* ... */)),
-                        const SizedBox(height: 20),
-                        SizedBox(
-                          height: 97,
-                          child: FormInputField(
-                            controller: controller.descriptionControllerEdit,
-                            hintText: 'Enter price',
-                            iconUrl: "assets/images/price.svg",
-                            iconWidth: 14,
-                          ),
+                      ),
+                      const SizedBox(height: 20),
+                      Obx(
+                        () => CustomButton(
+                          // 👈 UPDATED BUTTON TEXT
+                          text: CustomText.update,
+                          isLoading: controller.isCreateItemLoading.value,
+                          onPressed: () async {
+                            controller.updateItem(context, "${itemId.slug}");
+                          },
                         ),
-                        const SizedBox(height: 20),
-                        Obx(
-                          () => CustomButton(
-                            // 👈 UPDATED BUTTON TEXT
-                            text: CustomText.update,
-                            isLoading: controller.isCreateItemLoading.value,
-                            onPressed: () async {
-                              controller.updateItem(context, "${itemId.slug}");
-                            },
-                          ),
-                        ),
-
-                        const SizedBox(height: 41),
-                      ],
-                    ),
+                      ),
+    
+                      const SizedBox(height: 41),
+                    ],
                   ),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

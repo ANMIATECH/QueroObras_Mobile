@@ -10,214 +10,212 @@ class SearchScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-            child: Obx(() => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Logo
-                CustomImageView(
-                  imagePath: CustomImage.welcomeLogo,
-                  width: 53,
-                  height: 35,
-                ),
-                const SizedBox(height: 20),
-
-                // Search Bar + Menu Icon
-                Row(
-                  children: [
-                    Expanded(
-                      child: Container(
-                        height: 50,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(217),
-                          color: const Color(0xFFEEEEEE),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 19),
-                        child: Row(
-                          children: const [
-                            Icon(Icons.search_outlined),
-                            SizedBox(width: 19),
-                            Expanded(
-                              child: Text(
-                                'O que você está procurando?',
-                                style: TextStyle(
-                                  color: Color(0xFF7E7878),
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w400,
-                                  fontFamily: 'Josefin Sans',
-                                ),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+          child: Obx(() => Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Logo
+              CustomImageView(
+                imagePath: CustomImage.welcomeLogo,
+                width: 53,
+                height: 35,
+              ),
+              const SizedBox(height: 20),
+      
+              // Search Bar + Menu Icon
+              Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 50,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(217),
+                        color: const Color(0xFFEEEEEE),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 19),
+                      child: Row(
+                        children: const [
+                          Icon(Icons.search_outlined),
+                          SizedBox(width: 19),
+                          Expanded(
+                            child: Text(
+                              'O que você está procurando?',
+                              style: TextStyle(
+                                color: Color(0xFF7E7878),
+                                fontSize: 16,
+                                fontWeight: FontWeight.w400,
+                                fontFamily: 'Josefin Sans',
                               ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+      
+                  // Toggle Menu Button
+                  GestureDetector(
+                    onTap: controller.toggleFilters,
+                    child: Container(
+                      width: 50,
+                      height: 50,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFEEEEEE),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Center(
+                        child: CustomImageView(
+                          imagePath: controller.showFilters.value
+                              ? CustomImage.menuInactive
+                              : CustomImage.menuActive,
                         ),
                       ),
                     ),
-                    const SizedBox(width: 10),
-
-                    // Toggle Menu Button
-                    GestureDetector(
-                      onTap: controller.toggleFilters,
-                      child: Container(
-                        width: 50,
-                        height: 50,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFEEEEEE),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Center(
-                          child: CustomImageView(
-                            imagePath: controller.showFilters.value
-                                ? CustomImage.menuInactive
-                                : CustomImage.menuActive,
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+      
+              // Collapsible Section
+              if (controller.showFilters.value) ...[
+                const Text(
+                  'Search & filters',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Josefin Sans',
+                  ),
+                ),
+                const SizedBox(height: 20),
+      
+                // Search Input
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 13),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEEEEEE),
+                    borderRadius: BorderRadius.circular(217),
+                  ),
+                  child: Row(
+                    children: const [
+                      Expanded(
+                        child: Text(
+                          'Search for....',
+                          style: TextStyle(
+                            color: Color(0xFF7E7878),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w400,
+                            fontFamily: 'Josefin Sans',
                           ),
                         ),
                       ),
-                    ),
+                      Icon(Icons.arrow_forward_ios, size: 18),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 20),
+      
+                const Text(
+                  'Filters',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    fontFamily: 'Josefin Sans',
+                  ),
+                ),
+                const SizedBox(height: 15),
+      
+                Row(
+                  children: const [
+                    Expanded(child: FilterButton(text: 'Price', isLeft: true)),
+                    SizedBox(width: 10),
+                    Expanded(child: FilterButton(text: 'Location')),
                   ],
                 ),
-                const SizedBox(height: 25),
-
-                // Collapsible Section
-                if (controller.showFilters.value) ...[
-                  const Text(
-                    'Search & filters',
+                const SizedBox(height: 20),
+      
+                // Location Input
+                Container(
+                  height: 50,
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 17),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFEEEEEE),
+                    borderRadius: BorderRadius.circular(217),
+                  ),
+                  child: const Text(
+                    'Sao Paulo',
                     style: TextStyle(
-                      color: Colors.black,
+                      color: Color(0xFF7E7878),
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Josefin Sans',
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+      
+                // Search Button
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 13),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFFF9761E),
+                    borderRadius: BorderRadius.circular(217),
+                  ),
+                  child: const Text(
+                    'Search',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.w700,
                       fontFamily: 'Josefin Sans',
                     ),
                   ),
-                  const SizedBox(height: 20),
-
-                  // Search Input
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 13),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEEEEE),
-                      borderRadius: BorderRadius.circular(217),
-                    ),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: Text(
-                            'Search for....',
-                            style: TextStyle(
-                              color: Color(0xFF7E7878),
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                              fontFamily: 'Josefin Sans',
-                            ),
-                          ),
-                        ),
-                        Icon(Icons.arrow_forward_ios, size: 18),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  const Text(
-                    'Filters',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      fontFamily: 'Josefin Sans',
-                    ),
-                  ),
-                  const SizedBox(height: 15),
-
-                  Row(
-                    children: const [
-                      Expanded(child: FilterButton(text: 'Price', isLeft: true)),
-                      SizedBox(width: 10),
-                      Expanded(child: FilterButton(text: 'Location')),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Location Input
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 19, vertical: 17),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFEEEEEE),
-                      borderRadius: BorderRadius.circular(217),
-                    ),
-                    child: const Text(
-                      'Sao Paulo',
-                      style: TextStyle(
-                        color: Color(0xFF7E7878),
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Josefin Sans',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 20),
-
-                  // Search Button
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 13),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFF9761E),
-                      borderRadius: BorderRadius.circular(217),
-                    ),
-                    child: const Text(
-                      'Search',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: 'Josefin Sans',
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 25),
-                ],
-
-                // Items Section
-                const Text(
-                  'Items',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w400,
-                    fontFamily: 'Josefin Sans',
-                  ),
                 ),
-                const SizedBox(height: 20),
-
-                // GridView
-                GridView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 10,
-                    mainAxisSpacing: 10,
-                    childAspectRatio: 0.5,
-                  ),
-                  itemCount: 10,
-                  itemBuilder: (context, index) {
-                    return SearchProductCard(
-                      imageUrl: "assets/images/cement.png",
-                      title: "Título $index",
-                      subtitle: "Legenda $index",
-                      price: "\$${(index + 1) * 10}",
-                    );
-                  },
-                ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 25),
               ],
-            )),
-          ),
+      
+              // Items Section
+              const Text(
+                'Items',
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w400,
+                  fontFamily: 'Josefin Sans',
+                ),
+              ),
+              const SizedBox(height: 20),
+      
+              // GridView
+              GridView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 10,
+                  childAspectRatio: 0.5,
+                ),
+                itemCount: 10,
+                itemBuilder: (context, index) {
+                  return SearchProductCard(
+                    imageUrl: "assets/images/cement.png",
+                    title: "Título $index",
+                    subtitle: "Legenda $index",
+                    price: "\$${(index + 1) * 10}",
+                  );
+                },
+              ),
+              const SizedBox(height: 30),
+            ],
+          )),
         ),
       ),
     );

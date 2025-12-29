@@ -9,105 +9,103 @@ class ResetPasswordScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Scrollable content
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    verticalSpace(48), // Adjust as needed
-                    _buildLogo(),
-                    const SizedBox(height: 60),
-
-                    // Title
-                    const Text(
-                      CustomText.forgotPassword,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 24,
-                        fontFamily: 'Josefin Sans',
-                        fontWeight: FontWeight.w700,
-                      ),
+      body: Column(
+        children: [
+          // Scrollable content
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  verticalSpace(48), // Adjust as needed
+                  _buildLogo(),
+                  const SizedBox(height: 60),
+      
+                  // Title
+                  const Text(
+                    CustomText.forgotPassword,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 24,
+                      fontFamily: 'Josefin Sans',
+                      fontWeight: FontWeight.w700,
                     ),
-                    const SizedBox(height: 20),
-
-                    // Subtitle
-                    const Text(
-                      CustomText.forgotPasswordSub,
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontFamily: 'Josefin Sans',
-                        fontWeight: FontWeight.w400,
-                      ),
+                  ),
+                  const SizedBox(height: 20),
+      
+                  // Subtitle
+                  const Text(
+                    CustomText.forgotPasswordSub,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontFamily: 'Josefin Sans',
+                      fontWeight: FontWeight.w400,
                     ),
-                    const SizedBox(height: 60),
-
-                    // Email input section
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text(
-                          CustomText.emailAddress,
-                          style: TextStyle(
-                            color: Color(0xFF16577F),
-                            fontSize: 15,
-                            fontFamily: 'Josefin Sans',
-                            fontWeight: FontWeight.w700,
-                          ),
+                  ),
+                  const SizedBox(height: 60),
+      
+                  // Email input section
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const Text(
+                        CustomText.emailAddress,
+                        style: TextStyle(
+                          color: Color(0xFF16577F),
+                          fontSize: 15,
+                          fontFamily: 'Josefin Sans',
+                          fontWeight: FontWeight.w700,
                         ),
-                        const SizedBox(height: 14),
-                        CustomInputFieldLive(
-                          controller: controller.resetEmailController,
-                          hintText: CustomText.hintEmail,
-                          isPassword: false,
-                          prefixWidget: const Icon(
-                            Icons.email_outlined,
-                            color: CustomColor.hintText,
-                          ),
-                          keyboardType: TextInputType.emailAddress,
+                      ),
+                      const SizedBox(height: 14),
+                      CustomInputFieldLive(
+                        controller: controller.resetEmailController,
+                        hintText: CustomText.hintEmail,
+                        isPassword: false,
+                        prefixWidget: const Icon(
+                          Icons.email_outlined,
+                          color: CustomColor.hintText,
                         ),
-                      ],
-                    ),
-                  ],
-                ),
+                        keyboardType: TextInputType.emailAddress,
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ),
-
-            // Fixed bottom button
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Obx(() {
-                return CustomButton(
-                  text: CustomText.entrar,
-                  isLoading: controller.isLoading.value,
-                  onPressed: controller.isEmailFormValid.value
-                      ? () {
-                          FocusScope.of(context).unfocus();
-                          final email = controller.resetEmailController.text
-                              .trim();
-                          if (email.isNotEmpty) {
-                            controller.forgetPassword(context);
-                          } else {
-                            SnackbarUtil.showSnackbar(
-                              title: "E-mail inválido",
-                              message: "Por favor, insira o seu e-mail.",
-                              type: SnackbarType.error,
-                            );
-                          }
+          ),
+      
+          // Fixed bottom button
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Obx(() {
+              return CustomButton(
+                text: CustomText.entrar,
+                isLoading: controller.isLoading.value,
+                onPressed: controller.isEmailFormValid.value
+                    ? () {
+                        FocusScope.of(context).unfocus();
+                        final email = controller.resetEmailController.text
+                            .trim();
+                        if (email.isNotEmpty) {
+                          controller.forgetPassword(context);
+                        } else {
+                          SnackbarUtil.showSnackbar(
+                            title: "E-mail inválido",
+                            message: "Por favor, insira o seu e-mail.",
+                            type: SnackbarType.error,
+                          );
                         }
-                      : null,
-                );
-              }),
-            ),
-          ],
-        ),
+                      }
+                    : null,
+              );
+            }),
+          ),
+        ],
       ),
     );
   }

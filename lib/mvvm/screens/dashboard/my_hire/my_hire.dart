@@ -27,55 +27,53 @@ class MyHireScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text(
-            "Meu Hire",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 32,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
-              height: 1,
-            ),
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Meu Hire",
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+            fontFamily: 'Josefin Sans',
+            height: 1,
           ),
-          backgroundColor: Colors.white,
         ),
-        body: Container(
-          width: double.infinity,
-          constraints: const BoxConstraints(maxWidth: 480),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          padding: const EdgeInsets.all(16),
-          child: ListView.builder(
-            itemCount: hires.length,
-            itemBuilder: (context, index) {
-              final hire = hires[index];
-              return Column(
-                children: [
-                  ServiceProviderCard(
-                    name: hire['name']!,
-                    role: hire['role']!,
-                    distance: hire['distance']!,
-                    price: hire['price']!,
-                    status: hire['status']!,
-                    imageUrl: hire['imageUrl']!,
-                    onTap: () {
-                      print('${hire['name']} tapped!');
-                      Navigator.of(context).pushNamed(AppRoutes.myHireReview);
-
-                    },
-                  ),
-                  if (index != hires.length - 1) const SizedBox(height: 20),
-                ],
-              );
-            },
-          )
-          ,
+        backgroundColor: Colors.white,
+      ),
+      body: Container(
+        width: double.infinity,
+        constraints: const BoxConstraints(maxWidth: 480),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(30),
+          color: Colors.white,
         ),
+        padding: const EdgeInsets.all(16),
+        child: ListView.builder(
+          itemCount: hires.length,
+          itemBuilder: (context, index) {
+            final hire = hires[index];
+            return Column(
+              children: [
+                ServiceProviderCard(
+                  name: hire['name']!,
+                  role: hire['role']!,
+                  distance: hire['distance']!,
+                  price: hire['price']!,
+                  status: hire['status']!,
+                  imageUrl: hire['imageUrl']!,
+                  onTap: () {
+                    print('${hire['name']} tapped!');
+                    Navigator.of(context).pushNamed(AppRoutes.myHireReview);
+    
+                  },
+                ),
+                if (index != hires.length - 1) const SizedBox(height: 20),
+              ],
+            );
+          },
+        )
+        ,
       ),
     );
   }

@@ -84,7 +84,7 @@ class LoginController extends GetxController {
   void onInit() {
     super.onInit();
     startCountdown();
-    getServiceCategory();
+    // getServiceCategory();
 
     emailController.addListener(_validateForm);
     resetEmailController.addListener(_validateEmailForm);
@@ -92,22 +92,28 @@ class LoginController extends GetxController {
 
     passwordController.addListener(_validatePassword);
   }
-
-  void startCountdown() {
-    canResend.value = false;
-    remainingSeconds.value = 82; // reset timer to 1:22
-
+void startCountdown() {
+    // 1. Cancel any existing timer first to prevent duplicates
     _timer?.cancel();
+    
+    canResend.value = false;
+    remainingSeconds.value = 82; 
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      // 2. Check if the controller is still active before updating
+      if (isClosed) {
+        timer.cancel();
+        return;
+      }
+
       if (remainingSeconds.value > 0) {
         remainingSeconds.value--;
       } else {
-        timer.cancel();
         canResend.value = true;
+        timer.cancel();
       }
     });
   }
-
   @override
   void onClose() {
     fullNameController.dispose();
@@ -129,9 +135,9 @@ class LoginController extends GetxController {
     cpfController.dispose();
     cnpjController.dispose();
     serviceController.dispose();
-    super.onClose();
     _timer?.cancel();
-    super.onClose();
+    _timer = null;
+   
     for (var c in otpControllers) {
       c.dispose();
     }
@@ -621,6 +627,8 @@ class LoginController extends GetxController {
             .toLowerCase();
         if (userStatus != null) {
           StorageDesign.createItem("user_status", userStatus);
+                    StorageDesign.createItem(StorageDesign.userType, userStatus);
+
         }
 
         if (userStatus == "cpf") {
@@ -746,34 +754,39 @@ class LoginController extends GetxController {
       );
     }
   }
+Future<void> getServiceCategory() async {
+  try {
+    final response = await _apiManager.read(ApiUrl.serviceCategory, false);
 
-  Future<void> getServiceCategory() async {
-    try {
-      var response = await _apiManager.read(ApiUrl.serviceCategory, false);
+    final Map<String, dynamic> data = jsonDecode(response.body);
 
-      if (response.statusCode == 200) {
-        var data = jsonDecode(response.body);
-        var categories = data['categories'] as List<dynamic>? ?? [];
-
-        userRoleList.value = categories
-            .map((c) => CategoryModel.fromJson(c))
-            .toList();
-      } else {
-        var message = jsonDecode(response.body);
-        var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
-        CustomLoading.showNotification(
-          message: error,
-          messageType: MessageType.error,
-        );
-      }
-    } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+    if (response.statusCode == 200) {
+      // Use safe casting and provide empty list as fallback
+      final List<dynamic> categoriesJson = data['categories'] ?? [];
+      
+      userRoleList.value = categoriesJson
+          .map((c) => CategoryModel.fromJson(c))
+          .toList();
+          
+      print("Categories loaded successfully: ${userRoleList.length}");
+    } else {
+      // Handle known API error messages
+      String errorMessage = data["error"]?["message"] ?? "Failed to fetch categories";
+      _showError(errorMessage);
     }
+  } catch (e) {
+    // This will now catch the SocketException strings from your ApiManager
+    _showError(e.toString());
   }
+}
+
+// Helper to keep code DRY
+void _showError(String message) {
+  CustomLoading.showNotification(
+    message: message.replaceFirst("Exception: ", ""), // Clean up the "Exception: " prefix
+    messageType: MessageType.error,
+  );
+}
 
   Future uploadProfilePicNDoc() async {
     try {

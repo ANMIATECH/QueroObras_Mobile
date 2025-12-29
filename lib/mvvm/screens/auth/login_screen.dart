@@ -13,39 +13,37 @@ class LoginScreen extends StatelessWidget {
       body: GestureDetector(
         // Tap outside TextField to close keyboard
         onTap: () => FocusScope.of(context).unfocus(),
-        child: SafeArea(
-          child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                verticalSpace(48), // Adjust as needed
-                _buildLogo(),
-                verticalSpace(32),
-                _buildTitle(context),
-                verticalSpace(24),
-                _buildEmailInput(context, lController),
-                verticalSpace(16),
-                _buildPasswordInput(context, lController),
-                verticalSpace(8),
-                _buildRememberAndForgot(context),
-                verticalSpace(32),
-                Obx(
-                  () => CustomButton(
-                    text: CustomText.enter,
-                    isLoading: lController.isLoading.value,
-                    onPressed: () async {
-                      lController.login();
-                    },
-                  ),
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              verticalSpace(48), // Adjust as needed
+              _buildLogo(),
+              verticalSpace(32),
+              _buildTitle(context),
+              verticalSpace(24),
+              _buildEmailInput(context, lController),
+              verticalSpace(16),
+              _buildPasswordInput(context, lController),
+              verticalSpace(8),
+              _buildRememberAndForgot(context),
+              verticalSpace(32),
+              Obx(
+                () => CustomButton(
+                  text: CustomText.enter,
+                  isLoading: lController.isLoading.value,
+                  onPressed: () async {
+                    lController.login();
+                  },
                 ),
-
-                verticalSpace(24),
-
-                _buildSignUpLink(context),
-                verticalSpace(24),
-              ],
-            ),
+              ),
+        
+              verticalSpace(24),
+        
+              _buildSignUpLink(context),
+              verticalSpace(24),
+            ],
           ),
         ),
       ),

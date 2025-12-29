@@ -64,9 +64,11 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getServiceCategory() async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var response = await _apiManager.read(ApiUrl.serviceCategory, false);
-      print(StorageDesign.readItem(StorageDesign.token));
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         var categories = data['categories'] as List<dynamic>? ?? [];
@@ -90,6 +92,9 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getServiceCategory1() async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       var response = await _apiManager.read(ApiUrl.serviceCategory, false);
       if (response.statusCode == 200) {
@@ -114,6 +119,9 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getAvailability() async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       isLoading.value = true;
 
@@ -149,13 +157,14 @@ class ProfileController extends GetxController {
     }
   }
 
-  Future<void> getUser() async {
+  Future<void> getUser() async { 
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
-      isLoading.value = true;
 
       final response = await _apiManager.read(ApiUrl.user, true);
 
-      isLoading.value = false;
 
       if (response.statusCode == 200) {
         final json = jsonDecode(response.body);
@@ -176,7 +185,6 @@ class ProfileController extends GetxController {
         );
       }
     } catch (e) {
-      isLoading.value = false;
       CustomLoading.showNotification(
         message: e.toString(),
         messageType: MessageType.error,
@@ -185,8 +193,10 @@ class ProfileController extends GetxController {
   }
 
   Future<void> getUserP() async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
-      isLoading.value = true;
 
       final response = await _apiManager.read(ApiUrl.user, true);
 
@@ -208,18 +218,20 @@ class ProfileController extends GetxController {
           messageType: MessageType.error,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
 
       CustomLoading.showNotification(
         message: e.toString(),
         messageType: MessageType.error,
       );
     } finally {
-      isLoading.value = false;
     }
   }
 
   Future<void> getUserRating(int userId) async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       isLoading.value = true;
 
@@ -262,7 +274,7 @@ class ProfileController extends GetxController {
           messageType: MessageType.error,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading.value = false;
 
       CustomLoading.showNotification(
@@ -275,6 +287,9 @@ class ProfileController extends GetxController {
 
 
   Future<void> updateProfile() async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       isLoading.value = true;
 
@@ -290,7 +305,6 @@ class ProfileController extends GetxController {
       final message = jsonDecode(response.body);
 
       isLoading.value = false;
-      print(StorageDesign.readItem(StorageDesign.token));
 
       if (response.statusCode == 200) {
         emailController.clear();
@@ -310,7 +324,7 @@ Get.back();
           messageType: MessageType.error,
         );
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       isLoading.value = false;
 
 
@@ -322,6 +336,9 @@ Get.back();
   }
 
   Future<void> updateIsAvailability(bool value) async {
+      if (StorageDesign.validKey(StorageDesign.token) == false) {
+      return;
+    }
     try {
       isLoading.value = true;
 
