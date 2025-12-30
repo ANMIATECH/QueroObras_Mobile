@@ -66,7 +66,7 @@ class SellerProgressTracking extends StatelessWidget {
             children: [
               // Use proportional spacing
               SizedBox(height: screenWidth * 0.08),
-    
+
               // --- Main Content Container ---
               Container(
                 width: double.infinity,
@@ -120,7 +120,7 @@ class SellerProgressTracking extends StatelessWidget {
                                       fontWeight: FontWeight.w400,
                                       fontFamily: 'Josefin Sans',
                                       color: Colors.black,
-    
+
                                       height: 37 / 16,
                                     ),
                                     textAlign: TextAlign.center,
@@ -158,17 +158,15 @@ class SellerProgressTracking extends StatelessWidget {
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 12,
-                          ),
+                          const SizedBox(height: 12),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
-    
-              SizedBox(height: screenWidth * 0.1), 
+
+              SizedBox(height: screenWidth * 0.1),
               Obx(() {
                 return ProgressTracker(
                   currentStatus: controller.selectedLevelUpdateProduct.value,
@@ -176,8 +174,8 @@ class SellerProgressTracking extends StatelessWidget {
                   vendor: userType,
                 );
               }),
-    
-              SizedBox(height: screenWidth * 0.08), 
+
+              SizedBox(height: screenWidth * 0.08),
               userType
                   ? Obx(() {
                       return CustomButton(
@@ -189,9 +187,22 @@ class SellerProgressTracking extends StatelessWidget {
                         },
                       );
                     })
-                  : Container(),
-    
-              SizedBox(height: screenWidth * 0.1), 
+                  : Obx(() {
+                      return CustomButton(
+                        text: CustomText.cart,
+                        isLoading: controller.loadStatusBtn.value,
+                        onPressed: () async {
+                          Get.to(
+                            () => OneOnOneChat(
+                              id: '${dd?.item?.userId}',
+                              userName: '${dd?.item?.name}',
+                            ),
+                          );
+                        },
+                      );
+                    }),
+
+              SizedBox(height: screenWidth * 0.1),
             ],
           ),
         ),

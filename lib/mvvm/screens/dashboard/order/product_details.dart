@@ -244,29 +244,29 @@ class ProductDetailsScreen extends StatelessWidget {
                           child: Row(
                             children: [
                               // Chat Button
-                              GestureDetector(
-                                onTap: () {
-                                  Get.to(() =>  OneOnOneChat(id: '${dd.userId}', userName: '${dd.userId}',));
-                                },
-                                child: Container(
-                                  width: 45,
-                                  height: 49,
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF16577F),
-                                    borderRadius: BorderRadius.circular(70),
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: CustomImageView(
-                                      width: 24,
-                                      height: 24,
-                                      imagePath: "assets/images/message.svg",
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // GestureDetector(
+                              //   onTap: () {
+                              //     Get.to(() =>  OneOnOneChat(id: '${dd.userId}', userName: '${dd.userId}',));
+                              //   },
+                              //   child: Container(
+                              //     width: 45,
+                              //     height: 49,
+                              //     decoration: BoxDecoration(
+                              //       color: const Color(0xFF16577F),
+                              //       borderRadius: BorderRadius.circular(70),
+                              //     ),
+                              //     child: Padding(
+                              //       padding: const EdgeInsets.all(8.0),
+                              //       child: CustomImageView(
+                              //         width: 24,
+                              //         height: 24,
+                              //         imagePath: "assets/images/message.svg",
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
 
-                              const SizedBox(width: 8),
+                              // const SizedBox(width: 8),
 
                               // Add to Cart Button
                               Expanded(

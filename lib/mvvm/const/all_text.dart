@@ -28,6 +28,7 @@ class CustomText {
   static const String deslizeO = 'Deslize o botão para o lado direito';
   static const String entrar = 'Entrar';
   static final String checkOut = 'Finalizar compra de todos os itens: ';
+  static final String cart = 'Bater papo';
   static const String update = 'Atualizar';
 
   static const String updateStatus = 'Atualizar status';

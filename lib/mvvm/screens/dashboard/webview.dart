@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:queroobras_mobile/mvvm/screens/dashboard/order/sucess_screen.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+
+import '../../const/export.dart';
 
 class WebViewScreen extends StatefulWidget {
   // Use a more descriptive name, like WebViewScreen
@@ -20,6 +22,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void initState() {
     super.initState();
+    final String targetUrl = "https://queroobras.popopipo.com/api/order/";
+    final String targetUrlService = "https://queroobras.popopipo.com/api/service/";
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -39,9 +43,28 @@ class _WebViewScreenState extends State<WebViewScreen> {
           onPageFinished: (String url) {
             debugPrint('Page finished loading: $url');
           },
+
           // 3. Optional: Intercept navigation attempts before they happen
           onNavigationRequest: (NavigationRequest request) {
             debugPrint('Allowing navigation to: ${request.url}');
+            if (request.url.startsWith(targetUrl)) {
+            Get.off(() => const SuccessScreen());
+
+              // Example: Close the WebView if the payment status is reached
+              // Navigator.pop(context);
+
+              return NavigationDecision
+                  .prevent; // Prevent the webview from actually loading the API raw data
+            }
+            if (request.url.startsWith(targetUrlService)) {
+            Get.off(() => const SuccessScreen());
+
+              // Example: Close the WebView if the payment status is reached
+              // Navigator.pop(context);
+
+              return NavigationDecision
+                  .prevent; // Prevent the webview from actually loading the API raw data
+            }
             return NavigationDecision.navigate;
           },
         ),

@@ -43,7 +43,7 @@ class OrderTrackingScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const SizedBox(height: 25),
-        
+
                     RichText(
                       text: TextSpan(
                         style: TextStyle(
@@ -60,23 +60,20 @@ class OrderTrackingScreen extends StatelessWidget {
                                 'Realizado em: ${dd?.order?.createdAt?.toYearMonthDay}\n',
                           ),
                           TextSpan(
-                            text:
-                                'Nº de itens: ${dd?.order?.totalQuantity}\n',
+                            text: 'Nº de itens: ${dd?.order?.totalQuantity}\n',
                           ),
-                          TextSpan(
-                            text: 'Total: R\$ ${dd?.order?.totalPrice}',
-                          ),
+                          TextSpan(text: 'Total: R${dd?.order?.totalPrice}'),
                         ],
                       ),
                     ),
-        
+
                     const SizedBox(height: 15),
-        
+
                     // Order Item Card
                     OrderItemCard(dd: dd, userType: userType),
-        
+
                     const SizedBox(height: 15),
-        
+
                     CustomButton(
                       text: userType
                           ? CustomText.updateOrder
@@ -90,7 +87,7 @@ class OrderTrackingScreen extends StatelessWidget {
                         );
                       },
                     ),
-        
+
                     const SizedBox(height: 20),
                   ],
                 ),
@@ -210,7 +207,7 @@ class OrderItemCard extends StatelessWidget {
                     // Added a small vertical space before the price
                     const SizedBox(height: 5),
                     Text(
-                      '\$ ${dd?.item?.price}',
+                      'R${dd?.item?.price}',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,

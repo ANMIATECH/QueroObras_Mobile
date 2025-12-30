@@ -30,9 +30,8 @@ class NotificationCpnScreen extends StatelessWidget {
                     ),
                   );
                 }
-                final notifications = controller
-                    .notificaitoncpn.value.data?.data ??
-                    [];
+                final notifications =
+                    controller.notificaitoncpn.value.data?.data ?? [];
 
                 return Container(
                   constraints: const BoxConstraints(maxWidth: 480),
@@ -81,7 +80,10 @@ class NotificationCpnScreen extends StatelessWidget {
                           child: Center(
                             child: Column(
                               children: [
-                                CustomImageView(imagePath: "assets/images/new_notification.svg",),
+                                CustomImageView(
+                                  imagePath:
+                                      "assets/images/new_notification.svg",
+                                ),
                                 Text(
                                   'Ainda não há notificações',
                                   textAlign: TextAlign.center,
@@ -96,111 +98,136 @@ class NotificationCpnScreen extends StatelessWidget {
                           ),
                         )
                       else
-                      // Notifications Section
-                      NotificationListener<ScrollNotification>(
-                        onNotification: (ScrollNotification scrollInfo) {
-                          // Check if the user is scrolling near the bottom
-                          if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                              !controller.isPaginatingCpn.value &&
-                              controller.hasMoreDataCpn.value) {
-                            // 👈 IMPORTANT: Only load more pages if NOT searching
-                            controller.loadNextPageCpn();
-                          }
-                          return true;
-                        },
-                        child: Container(
-                          width: double.infinity,
-                          constraints: const BoxConstraints(maxWidth: 400),
-                          margin: const EdgeInsets.only(top: 44),
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Column(
-                            children: List.generate(
-                              controller
+                        // Notifications Section
+                        NotificationListener<ScrollNotification>(
+                          onNotification: (ScrollNotification scrollInfo) {
+                            // Check if the user is scrolling near the bottom
+                            if (scrollInfo.metrics.pixels >=
+                                    scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                                !controller.isPaginatingCpn.value &&
+                                controller.hasMoreDataCpn.value) {
+                              // 👈 IMPORTANT: Only load more pages if NOT searching
+                              controller.loadNextPageCpn();
+                            }
+                            return true;
+                          },
+                          child: Container(
+                            width: double.infinity,
+                            constraints: const BoxConstraints(maxWidth: 400),
+                            margin: const EdgeInsets.only(top: 44),
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: Column(
+                              children: List.generate(
+                                controller
+                                        .notificaitoncpn
+                                        .value
+                                        .data
+                                        ?.data
+                                        ?.length ??
+                                    0,
+                                (index) {
+                                  var dd = controller
                                       .notificaitoncpn
                                       .value
                                       .data
-                                      ?.data
-                                      ?.length ??
-                                  0,
-                              (index) {
-                                var dd = controller
-                                    .notificaitoncpn
-                                    .value
-                                    .data
-                                    ?.data?[index];
-                                return Column(
-                                  children: [
-                                    // Service Provider Notification
-                                    NotificationCard(
-                                      title: 'Service Provider',
-                                      description:
-                                          'The service provider ${dd?.provider?.name} [specialisation] accept your request and the price is \$${dd?.replies?.first.amount}.',
-                                      actions: [
-                                        dd?.status == "5"
-                                            ? Container()
-                                            : Row(
-                                                children: [
-                                                  NotificationButton(
-                                                    text: 'Cancel',
-                                                    backgroundColor:
-                                                        const Color(0xFFD10000),
-                                                    onPressed: () {
-                                                      controller.rejectRequest(
-                                                        id: dd?.slug ?? "",
-                                                      );
-                                                    },
-                                                  ),
-                                                  const SizedBox(width: 10),
+                                      ?.data?[index];
+                                  return Column(
+                                    children: [
+                                      // Service Provider Notification
+                                      NotificationCard(
+                                        title: 'Prestador de Serviço',
+                                        description:
+                                            'O prestador de serviço ${dd?.provider?.name} [especialização] aceitou sua solicitação e o preço é R\$${dd?.replies?.isEmpty ?? [].isEmpty ? "0" : dd?.replies?.first.amount}.',
+                                        actions: [
+                                          dd?.status == "5"
+                                              ? dd?.customerAccepted == "1"
+                                                    ? NotificationButton(
+                                                        text: 'Chat',
+                                                        backgroundColor:
+                                                            const Color(
+                                                              0xFFD10000,
+                                                            ),
+                                                        onPressed: () {
+                                                          Get.to(
+                                                            () => OneOnOneChat(
+                                                              id: '${dd?.provider?.id}',
+                                                              userName:
+                                                                  '${dd?.provider?.name}',
+                                                            ),
+                                                          );
+                                                        },
+                                                      )
+                                                    : Container()
+                                              : Row(
+                                                  children: [
+                                                    NotificationButton(
+                                                      text: 'Cancelar',
+                                                      backgroundColor:
+                                                          const Color(
+                                                            0xFFD10000,
+                                                          ),
+                                                      onPressed: () {
+                                                        controller
+                                                            .rejectRequest(
+                                                              id:
+                                                                  dd?.slug ??
+                                                                  "",
+                                                            );
+                                                      },
+                                                    ),
+                                                    const SizedBox(width: 10),
 
-                                                NotificationButton(
-                                                  text: dd?.status == "4"
-                                                      ? "Concluído"
-                                                      : 'Pay',
-                                                  backgroundColor: const Color(
-                                                    0xFF16577F,
-                                                  ),
-                                                  onPressed: () {
-                                                    dd?.status == "4"
-                                                        ? controller
-                                                              .completeRequestClient(
-                                                                id: "${dd?.slug}",
-                                                              )
-                                                        : showLogoutDialog(dd);
-                                                  },
+                                                    NotificationButton(
+                                                      text: dd?.status == "4"
+                                                          ? "Concluído"
+                                                          : 'Pagar',
+                                                      backgroundColor:
+                                                          const Color(
+                                                            0xFF16577F,
+                                                          ),
+                                                      onPressed: () {
+                                                        dd?.status == "4"
+                                                            ? controller
+                                                                  .completeRequestClient(
+                                                                    id: "${dd?.slug}",
+                                                                  )
+                                                            : showLogoutDialog(
+                                                                dd,
+                                                              );
+                                                      },
+                                                    ),
+                                                  ],
                                                 ),
-                                              ],
-                                            ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 15),
+
+                                      // // System Update Notification
+                                      // if (userStatus != "cnpj")
+                                      //   const NotificationCard(
+                                      //     title: '[!] New Update',
+                                      //     description:
+                                      //         'Check the new update that we share in your system.',
+                                      //   ),
                                     ],
-                                  ),
-
-                                  const SizedBox(height: 15),
-
-                                  // // System Update Notification
-                                  // if (userStatus != "cnpj")
-                                  //   const NotificationCard(
-                                  //     title: '[!] New Update',
-                                  //     description:
-                                  //         'Check the new update that we share in your system.',
-                                  //   ),
-                                ],
-                              );
-                            },
+                                  );
+                                },
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    ),
 
-                    // Bottom padding
-                    const SizedBox(height: 472),
-                  ],
-                ),
-              );
-            },
+                      // Bottom padding
+                      const SizedBox(height: 472),
+                    ],
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),
-    ));
+    );
   }
 
   void showLogoutDialog(DatumCpn? dd) {

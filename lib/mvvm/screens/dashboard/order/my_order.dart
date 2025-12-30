@@ -29,10 +29,13 @@ class MyOrder extends StatelessWidget {
         child: FutureBuilder(
           future: controller.getAllOrders(),
           builder: (context, asyncSnapshot) {
+            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
             return Obx(() {
               if (!controller.isLoading.value &&
                   controller.productOrder.value.data?.items == null) {
-                return Center(child: Text("You haven't placed an order yet"));
+                return Center(child: Text("Você ainda não fez um pedido."));
               }
               return RefreshIndicator(
                 onRefresh: () => controller.getAllOrders(isInitial: true),
@@ -52,7 +55,7 @@ class MyOrder extends StatelessWidget {
                     padding: const EdgeInsets.all(16.0),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-    
+
                       children: [
                         // Main Content
                         Column(
@@ -73,20 +76,17 @@ class MyOrder extends StatelessWidget {
                                     .value
                                     .data
                                     ?.items?[index];
-    
+
                                 return Padding(
                                   padding: const EdgeInsets.only(bottom: 12),
                                   child: OrderItemCard(
                                     name: "${dd?.item?.name}",
                                     subtitle: "${dd?.item?.type}",
                                     onTap: () {
-                                      Get.to(
-                                        () => OrderTrackingScreen(dd: dd),
-                                      );
+                                      Get.to(() => OrderTrackingScreen(dd: dd));
                                     },
                                     status: "${dd?.orderItem?.status}",
-                                    avatarUrl:
-                                        "${dd?.item?.files?.first.path}",
+                                    avatarUrl: "${dd?.item?.files?.first.path}",
                                   ),
                                 );
                               },
