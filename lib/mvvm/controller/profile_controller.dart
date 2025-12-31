@@ -393,6 +393,9 @@ Get.back();
   Future<void> updateDaysOfAvailabilityFromUI(List<AvailabilityUI> days) async {
     if (!StorageDesign.validKey(StorageDesign.token)) return;
 
+    final token = StorageDesign.readItem(StorageDesign.token);
+    print("🔐 AUTH TOKEN: $token");
+
     try {
       isLoading.value = true;
 

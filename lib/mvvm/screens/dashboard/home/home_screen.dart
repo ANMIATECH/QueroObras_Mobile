@@ -475,13 +475,13 @@ class HomeScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: QuickAccessCard(
-                              imageUrl: "assets/images/Favorito.svg",
-                              title: 'Favorito',
-                            ),
-                          ),
+                          // const SizedBox(width: 20),
+                          // Expanded(
+                          //   child: QuickAccessCard(
+                          //     imageUrl: "assets/images/Favorito.svg",
+                          //     title: 'Favorito',
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],

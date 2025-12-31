@@ -12,6 +12,8 @@ class AppRoutes {
   static const String onboarding = '/onboarding';
   static const String welcome = '/welcome';
   static const String login = '/login';
+  static const String ferramentasServiceProvider = '/ferramentasServiceProvider';
+  static const String acabamentoServiceProvider = '/acabamentoServiceProvider';
   static const String notificationcpnf = '/notificationcpnf';
   // static const String oneOnOneChat = '/oneOnOneChat';
   static const String serviceRequestScreen = '/serviceRequestScreen';
@@ -57,6 +59,8 @@ class AppRoutes {
     notificationcpnf: (context) => NotificationCpnfScreen(),
     bottomNavCpf: (context) => BottomNavScreen(),
     otpPin: (context) => OtpVerificationScreen(),
+    acabamentoServiceProvider: (context) => ServiceProvidersScreen(),
+    ferramentasServiceProvider: (context) => FerramentasServices(),
     changePasswordWord: (context) => ChangePasswordWord(),
     bottomNav: (context) => CpfBottomNavScreen(),
     materiaisServiceProvider: (context) =>

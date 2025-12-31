@@ -62,25 +62,32 @@ class CnpjHomeScreen extends StatelessWidget {
                                   ),
                                   const SizedBox(width: 19),
                                   Expanded(
-                                    child: TextField(
-                                      decoration: const InputDecoration(
-                                        hintText: 'O que você está procurando?',
-                                        hintStyle: TextStyle(
-                                          color: Color(0xFF7F7F7F),
+                                    child: GestureDetector(
+                                      onTap: () => Get.toNamed(
+                                        AppRoutes.materiaisServiceProvider,
+                                      ),
+                                      child: TextField(
+                                        enabled: false,
+                                        decoration: const InputDecoration(
+                                          hintText:
+                                          'O que você está procurando?',
+                                          hintStyle: TextStyle(
+                                            color: Color(0xFF7F7F7F),
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w400,
+                                            fontFamily: 'Josefin Sans',
+                                            height: 1.5,
+                                          ),
+                                          border: InputBorder.none,
+                                        ),
+                                        style: const TextStyle(
+                                          color: Colors.black,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w400,
                                           fontFamily: 'Josefin Sans',
-                                          height: 1.5,
                                         ),
-                                        border: InputBorder.none,
+                                        onChanged: (value) {},
                                       ),
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400,
-                                        fontFamily: 'Josefin Sans',
-                                      ),
-                                      onChanged: (value) {},
                                     ),
                                   ),
                                 ],
@@ -101,9 +108,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                 color: const Color(
                                   0xFFEEEEEE,
                                 ), // background color
-                                borderRadius: BorderRadius.circular(
-                                  999,
-                                ), // optional, if you want rounded corners
+                                borderRadius: BorderRadius.circular(999),
                               ),
                               child: Center(
                                 child: CustomImageView(
@@ -155,12 +160,12 @@ class CnpjHomeScreen extends StatelessWidget {
                                           future: controller.getCart(),
                                           builder: (context, asyncSnapshot) {
                                             if (asyncSnapshot.connectionState ==
-                                                    ConnectionState.waiting &&
+                                                ConnectionState.waiting &&
                                                 controller
-                                                        .cart
-                                                        .value
-                                                        .data
-                                                        ?.items ==
+                                                    .cart
+                                                    .value
+                                                    .data
+                                                    ?.items ==
                                                     null) {
                                               return SizedBox.shrink();
                                             }
@@ -274,31 +279,31 @@ class CnpjHomeScreen extends StatelessWidget {
                                     topRight: Radius.circular(11),
                                   ),
                                   onTap: () {
-                                    // Get.toNamed(RouteNameV1.ferramentasServiceProvider);
+                                    Get.toNamed(AppRoutes.ferramentasServiceProvider);
                                   },
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(height: 10),
-                          Row(
-                            children: [
-                              Expanded(
-                                child: buildCategoryCard(
-                                  "assets/images/Acabamento.svg",
-                                  'Acabamento',
-                                  BorderRadius.only(
-                                    bottomLeft: Radius.circular(11),
-                                  ),
-                                  onTap: () {
-                                    // Get.toNamed(RouteNameV1.acabamentoServiceProvider);
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(child: Container()),
-                            ],
-                          ),
+                          // const SizedBox(height: 10),
+                          // Row(
+                          //   children: [
+                          //     Expanded(
+                          //       child: buildCategoryCard(
+                          //         "assets/images/Acabamento.svg",
+                          //         'Acabamento',
+                          //         BorderRadius.only(
+                          //           bottomLeft: Radius.circular(11),
+                          //         ),
+                          //         onTap: () {
+                          //           Get.toNamed(AppRoutes.acabamentoServiceProvider);
+                          //         },
+                          //       ),
+                          //     ),
+                          //     const SizedBox(width: 10),
+                          //     Expanded(child: Container()),
+                          //   ],
+                          // ),
                         ],
                       ),
 
