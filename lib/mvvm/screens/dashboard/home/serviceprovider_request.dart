@@ -135,8 +135,8 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
     }
 
     return Scaffold(
-      appBar:  AppBar(
-        title: Text('Request an electricista'),
+      appBar: AppBar(
+        title: const Text('Solicitar um eletricista'),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -238,9 +238,9 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                             Text(
                               estimatedMinutes != null
                                   ? (estimatedMinutes! >= 0
-                                  ? 'Estimated arrival: ${formatArrivalTime(estimatedMinutes!)}'
-                                  : 'Location permission denied')
-                                  : 'Calculating...',
+                                  ? 'Chegada estimada: ${formatArrivalTime(estimatedMinutes!)}'
+                                  : 'Permissão de localização negada')
+                                  : 'Calculando...',
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w400,
@@ -255,7 +255,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   ),
                   const SizedBox(height: 20),
                   ActionButton(
-                    text: 'Start chat',
+                    text: 'Iniciar conversa',
                     backgroundColor: const Color(0xFFF9761E),
                     textColor: Colors.white,
                     onPressed: () {
@@ -266,7 +266,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   ),
                   const SizedBox(height: 10),
                   ActionButton(
-                    text: 'Cancel',
+                    text: 'Cancelar',
                     backgroundColor: const Color(0xFFF4F3F3),
                     textColor: Colors.black,
                     onPressed: () {

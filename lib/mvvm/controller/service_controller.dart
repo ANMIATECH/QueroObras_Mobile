@@ -610,6 +610,8 @@ class ServiceController extends GetxController {
           messageType: MessageType.success,
         );
         Get.back();
+        Get.back();
+        Get.back();
       } else {
         final responseBody = await response.stream.bytesToString();
         final message =

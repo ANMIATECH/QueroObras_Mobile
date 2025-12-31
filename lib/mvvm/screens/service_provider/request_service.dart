@@ -14,7 +14,7 @@ class RequestService extends StatelessWidget {
         backgroundColor: Colors.white,
     
         title: const Text(
-          'Request',
+          'Solicitação',
           style: TextStyle(
             color: Colors.black,
             fontSize: 32,
@@ -42,7 +42,7 @@ class RequestService extends StatelessWidget {
                     children: [
                       const SizedBox(height: 24),
                       const Text(
-                        'Upload the picture (optional)',
+                        'Enviar foto (opcional)',
                         style: TextStyle(
                           fontFamily: 'Josefin Sans',
                           fontSize: 16,
@@ -127,7 +127,7 @@ class RequestService extends StatelessWidget {
                       // 👈 END: DYNAMIC IMAGE ROW
                       const SizedBox(height: 20),
                       const Text(
-                        'Address',
+                        'Endereço',
                         style: TextStyle(
                           fontFamily: 'Josefin Sans',
                           fontSize: 16,
@@ -138,14 +138,14 @@ class RequestService extends StatelessWidget {
                       const SizedBox(height: 20),
                       FormInputField(
                         controller: controller.addressRequest,
-                        hintText: 'Address',
+                        hintText: 'Endereço',
                         iconUrl: "assets/images/tool.svg",
                       ),
     
                       const SizedBox(height: 20),
     
                       const Text(
-                        'What service do you want to make?',
+                        'Qual serviço você deseja realizar?',
                         style: TextStyle(
                           fontFamily: 'Josefin Sans',
                           fontSize: 16,
@@ -176,7 +176,7 @@ class RequestService extends StatelessWidget {
                             color: Colors.black,
                           ),
                           decoration: const InputDecoration(
-                            hintText: 'Write here',
+                            hintText: 'Escreva aqui',
                             hintStyle: TextStyle(
                               fontFamily: 'Josefin Sans',
                               fontSize: 15,

@@ -10,9 +10,10 @@ class CustomText {
   static const String deslize = 'Deslize o botão para baixo para continuar o processo.';
   static const String enter = 'Adicionar ao carrinho';
   static const String addToCart = 'Adicionar ao carrinho';
-  static const String publish = 'Publish';
-  static const String resetPassword = 'Reset Password';
-  static const String changeUrPassword = 'Change your password ';
+  static const String resetPassword = 'Redefinir senha';
+  static const String changeUrPassword = 'Alterar sua senha';
+  static const String publish = 'Publicar';
+
   static const String emailAddress = 'Endereço de e-mail';
   static const String password = 'Senha';
   static const String rememberMe = 'Lembrar de mim';

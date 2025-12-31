@@ -287,7 +287,7 @@ class HomeScreen extends StatelessWidget {
                                     const SizedBox(width: 10),
 
                                     Text(
-                                      "Loja/ Materials",
+                                      "Loja/ materiais",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 20,

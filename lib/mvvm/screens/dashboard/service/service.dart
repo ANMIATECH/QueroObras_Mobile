@@ -226,7 +226,7 @@ class ServicesScreen extends StatelessWidget {
                               ),
                               child: const Center(
                                 child: Text(
-                                  'Precisa de ajuda agora?\nSolicitar Agora',
+                                  'Precisa de ajuda',
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     fontSize: 12,
