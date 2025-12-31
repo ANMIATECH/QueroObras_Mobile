@@ -25,82 +25,67 @@ class MyOrder extends StatelessWidget {
         backgroundColor: Colors.white,
         elevation: 0,
       ),
-      body: SingleChildScrollView(
-        child: FutureBuilder(
-          future: controller.getAllOrders(),
-          builder: (context, asyncSnapshot) {
-            if (asyncSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            return Obx(() {
-              if (!controller.isLoading.value &&
-                  controller.productOrder.value.data?.items == null) {
-                return Center(child: Text("Você ainda não fez um pedido."));
-              }
-              return RefreshIndicator(
-                onRefresh: () => controller.getAllOrders(isInitial: true),
-                child: NotificationListener<ScrollNotification>(
-                  onNotification: (ScrollNotification scrollInfo) {
-                    // Check if the user is scrolling near the bottom
-                    if (scrollInfo.metrics.pixels >=
-                            scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                        !controller.isPaginatingOrder.value &&
-                        controller.hasMoreOrder.value) {
-                      // 👈 IMPORTANT: Only load more pages if NOT searching
-                      controller.loadNextPageOrder();
-                    }
-                    return true;
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      body: FutureBuilder(
+        future: controller.getAllOrders(),
+        builder: (context, asyncSnapshot) {
+          if (asyncSnapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-                      children: [
-                        // Main Content
-                        Column(
-                          children: [
-                            ListView.builder(
-                              shrinkWrap: true,
-                              physics:
-                                  const NeverScrollableScrollPhysics(), // if inside another scroll view
-                              itemCount: controller
-                                  .productOrder
-                                  .value
-                                  .data
-                                  ?.items
-                                  ?.length,
-                              itemBuilder: (context, index) {
-                                var dd = controller
-                                    .productOrder
-                                    .value
-                                    .data
-                                    ?.items?[index];
+          return Obx(() {
+            final items = controller.productOrder.value.data?.items;
 
-                                return Padding(
-                                  padding: const EdgeInsets.only(bottom: 12),
-                                  child: OrderItemCard(
-                                    name: "${dd?.item?.name}",
-                                    subtitle: "${dd?.item?.type}",
-                                    onTap: () {
-                                      Get.to(() => OrderTrackingScreen(dd: dd));
-                                    },
-                                    status: "${dd?.orderItem?.status}",
-                                    avatarUrl: "${dd?.item?.files?.first.path}",
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+            // ✅ PERFECTLY CENTERED EMPTY STATE
+            if (!controller.isLoading.value &&
+                (items == null || items.isEmpty)) {
+              return const Center(
+                child: Text(
+                  "Você ainda não fez um pedido.",
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.black54,
+                    fontFamily: 'Josefin Sans',
                   ),
                 ),
               );
-            });
-          },
-        ),
+            }
+
+            // ✅ LIST STATE (SCROLLABLE)
+            return RefreshIndicator(
+              onRefresh: () => controller.getAllOrders(isInitial: true),
+              child: NotificationListener<ScrollNotification>(
+                onNotification: (ScrollNotification scrollInfo) {
+                  if (scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                      !controller.isPaginatingOrder.value &&
+                      controller.hasMoreOrder.value) {
+                    controller.loadNextPageOrder();
+                  }
+                  return true;
+                },
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: items!.length,
+                  itemBuilder: (context, index) {
+                    final dd = items[index];
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 12),
+                      child: OrderItemCard(
+                        name: "${dd.item?.name}",
+                        subtitle: "${dd.item?.type}",
+                        status: "${dd.orderItem?.status}",
+                        avatarUrl: "${dd.item?.files?.first.path}",
+                        onTap: () {
+                          Get.to(() => OrderTrackingScreen(dd: dd));
+                        },
+                      ),
+                    );
+                  },
+                ),
+              ),
+            );
+          });
+        },
       ),
     );
   }

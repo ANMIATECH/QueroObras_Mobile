@@ -8,105 +8,115 @@ class OrdersScreen extends StatelessWidget {
     Get.lazyPut(() => ProductDetailsController());
 
     final controller = Get.find<ProductDetailsController>();
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(30),
-        ),
-        child: Column(
-          children: [
-            // Title Section
-            FutureBuilder(
-              future: controller.getCart(),
-              builder: (context, asyncSnapshot) {
-                return Container(
-                  width: double.infinity,
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  margin: const EdgeInsets.only(top: 15),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: const Text(
-                    'Pedidos',
-                    style: TextStyle(
-                      fontSize: 32,
-                      fontWeight: FontWeight.w700,
-                      color: Colors.black,
-                      fontFamily: 'Josefin Sans',
-                      height: 1.06,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+          ),
+          child: Column(
+            children: [
+              // Title Section
+              FutureBuilder(
+                future: controller.getCart(),
+                builder: (context, asyncSnapshot) {
+                  return Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    margin: const EdgeInsets.only(top: 15),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: const Text(
+                      'Pedidos',
+                      style: TextStyle(
+                        fontSize: 32,
+                        fontWeight: FontWeight.w700,
+                        color: Colors.black,
+                        fontFamily: 'Josefin Sans',
+                        height: 1.06,
+                      ),
                     ),
-                  ),
-                );
-              },
-            ),
-
-            // Orders List
-            Expanded(
-              child: Obx(() {
-                // Check loading state (assuming getCart() sets a loading flag)
-                if (controller.isLoading.value &&
-                    controller.cart.value.data == null) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                var dd = controller.cart.value.data?.items ?? [];
-
-                // Check for empty cart
-                if (dd.isEmpty) {
-                  return const Center(child: Text('Your cart is empty!'));
-                }
-                return Container(
-                  width: double.infinity,
-                  constraints: const BoxConstraints(maxWidth: 400),
-                  margin: const EdgeInsets.only(top: 16),
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView.builder(
-                    itemCount: dd.length, // dynamically create 5 items
-                    itemBuilder: (context, index) {
-                      var data = dd[index];
-                      return OrderItem(
-                        dd: data.item!,
-                        onTap: () => controller.removeFromCart(
-                          itemSlug: "${data.item?.slug}",
+                  );
+                },
+              ),
+      
+              // Orders List
+              Expanded(
+                child: Obx(() {
+                  // Loading
+                  if (controller.isLoading.value) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+      
+                  final items = controller.cart.value.data?.items ?? [];
+      
+                  // Empty cart
+                  if (items.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Seu carrinho está vazio',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w500,
+                          color: Colors.black54,
                         ),
-                        imageUrl: '${data.item?.files?.first.path}',
-                        title: '${data.item?.name} ',
-                        subtitle: '${data.item?.type}',
-                        price:
-                            'R${data.item?.price} (Q${data.item?.quantity})', // just to vary the price
-                      );
+                      ),
+                    );
+                  }
+      
+                  // Cart items
+                  return Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(maxWidth: 400),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    child: ListView.builder(
+                      itemCount: items.length,
+                      itemBuilder: (context, index) {
+                        final data = items[index];
+                        return OrderItem(
+                          dd: data.item!,
+                          onTap: () => controller.removeFromCart(
+                            itemSlug: "${data.item?.slug}",
+                          ),
+                          imageUrl: '${data.item?.files?.first.path}',
+                          title: '${data.item?.name}',
+                          subtitle: '${data.item?.type}',
+                          price: 'R\$${data.item?.price} (Q${data.item?.quantity})',
+                        );
+                      },
+                    ),
+                  );
+                }),
+              ),
+      
+              SizedBox(height: 16),
+              Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: Obx(() {
+                  return CustomButton(
+                    isLoading: controller.isLoading.value,
+                    text:
+                        "${CustomText.checkOut} R\$${controller.cart.value.data?.totalPrice}",
+                    onPressed: () {
+                      if (controller.cart.value.data?.items?.isEmpty == true) {
+                        CustomLoading.showNotification(
+                          message: 'Seu carrinho está vazio',
+                          messageType: MessageType.error,
+                        );
+                        return;
+                      }
+                      showLogoutDialog(controller);
+      
+                      // controller.checkoutChart();
                     },
-                  ),
-                );
-              }),
-            ),
-
-            SizedBox(height: 16),
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: Obx(() {
-                return CustomButton(
-                  isLoading: controller.isLoading.value,
-
-                  text:
-                      "${CustomText.checkOut} \$${controller.cart.value.data?.totalPrice}",
-
-                  onPressed: () {
-                    if (controller.cart.value.data?.items?.isEmpty == true) {
-                      CustomLoading.showNotification(
-                        message: 'Your cart is empty',
-                        messageType: MessageType.error,
-                      );
-                      return;
-                    }
-                    showLogoutDialog(controller);
-
-                    // controller.checkoutChart();
-                  },
-                );
-              }),
-            ),
-          ],
+                  );
+                }),
+              ),
+            ],
+          ),
         ),
       ),
     );

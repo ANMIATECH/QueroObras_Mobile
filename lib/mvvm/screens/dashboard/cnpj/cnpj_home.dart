@@ -408,7 +408,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                 if (token == null || token.isEmpty) {
                                   // Get.toNamed(RouteNameV1.login);
                                 } else {
-                                  // Get.toNamed(RouteNameV1.vender);
+                                  Get.toNamed(AppRoutes.vender);
                                 }
                               },
                             ),

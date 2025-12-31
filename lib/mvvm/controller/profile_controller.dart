@@ -47,6 +47,22 @@ class ProfileController extends GetxController {
     return category.name.obs;
   }
 
+  // Store all days with their toggle & time state
+  RxList<AvailabilityUI> days = <AvailabilityUI>[
+    AvailabilityUI(uiDay: 'SEGUNDA-FEIRA', apiDay: 'segunda'),
+    AvailabilityUI(uiDay: 'TERÇA-FEIRA', apiDay: 'terça'),
+    AvailabilityUI(uiDay: 'QUARTA-FEIRA', apiDay: 'quarta'),
+    AvailabilityUI(uiDay: 'QUINTA-FEIRA', apiDay: 'quinta'),
+    AvailabilityUI(uiDay: 'SEXTA-FEIRA', apiDay: 'sexta'),
+    AvailabilityUI(uiDay: 'SÁBADO', apiDay: 'sábado'),
+    AvailabilityUI(uiDay: 'DOMINGO', apiDay: 'domingo'),
+  ].obs;
+
+  // Optionally: method to load saved availability from API
+  void loadAvailability(List<AvailabilityUI> loadedDays) {
+    days.assignAll(loadedDays);
+  }
+
 
   @override
   void onInit() {
@@ -284,8 +300,6 @@ class ProfileController extends GetxController {
     }
   }
 
-
-
   Future<void> updateProfile() async {
       if (StorageDesign.validKey(StorageDesign.token) == false) {
       return;
@@ -375,7 +389,103 @@ Get.back();
       );
     }
   }
+
+  Future<void> updateDaysOfAvailabilityFromUI(List<AvailabilityUI> days) async {
+    if (!StorageDesign.validKey(StorageDesign.token)) return;
+
+    try {
+      isLoading.value = true;
+
+      // Helper function to validate start < end
+      bool isValidTime(String start, String end) {
+        if (start.isEmpty || end.isEmpty) return true; // skip if day is closed
+        final startParts = start.split(":").map(int.parse).toList();
+        final endParts = end.split(":").map(int.parse).toList();
+
+        final startMinutes = startParts[0] * 60 + startParts[1];
+        final endMinutes = endParts[0] * 60 + endParts[1];
+
+        return startMinutes < endMinutes;
+      }
+
+      // Build the array properly
+      final List<Map<String, dynamic>> daysArray = [];
+      for (var day in days) {
+        final startTime = day.startTime.value == null ? "" : _formatTime(day.startTime.value!);
+        final endTime = day.endTime.value == null ? "" : _formatTime(day.endTime.value!);
+
+        // Validate start and end times
+        if (!isValidTime(startTime, endTime)) {
+          isLoading.value = false;
+          CustomLoading.showNotification(
+            message: "O horário de início deve ser antes do horário de término para ${day.apiDay}",
+            messageType: MessageType.error,
+          );
+          return; // stop sending request if invalid
+        }
+
+        daysArray.add({
+          "day": day.apiDay,
+          "closed": day.isActive.value ? 0 : 1,
+          "start_time": startTime,
+          "end_time": endTime,
+        });
+      }
+
+      final body = {"days": daysArray};
+
+      final response = await _apiManager.post(
+        ApiUrl.updateAvailability,
+        body,
+        true,
+      );
+
+      isLoading.value = false;
+
+      final decoded = jsonDecode(response.body);
+
+      if (response.statusCode == 200) {
+        CustomLoading.showNotification(
+          message: "Disponibilidade atualizada com sucesso",
+          messageType: MessageType.success,
+        );
+        getAvailability(); // refresh
+      } else {
+        CustomLoading.showNotification(
+          message: decoded["error"]?["message"] ?? "Update failed",
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      isLoading.value = false;
+      CustomLoading.showNotification(
+        message: e.toString(),
+        messageType: MessageType.error,
+      );
+    }
+  }
+
 }
+
+class AvailabilityUI {
+  final String uiDay;     // MONDAY
+  final String apiDay;    // segunda
+  RxBool isActive = false.obs;
+  Rx<TimeOfDay?> startTime = Rx<TimeOfDay?>(null);
+  Rx<TimeOfDay?> endTime = Rx<TimeOfDay?>(null);
+
+  AvailabilityUI({
+    required this.uiDay,
+    required this.apiDay,
+  });
+}
+
+String _formatTime(TimeOfDay time) {
+  final h = time.hour.toString().padLeft(2, '0');
+  final m = time.minute.toString().padLeft(2, '0');
+  return '$h:$m';
+}
+
 
 class UserResponse {
   final int id;

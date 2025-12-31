@@ -68,7 +68,7 @@ class AppRoutes {
     profileEdit: (context) => ProfileEdit(),
     profileReview: (context) => ServiceProviderReview(),
     myHire: (context) => MyHireScreen(),
-    availability: (context) => ServiceProviderAvailability(),
+    availability: (context) => ServiceProviderAvailabilityScreen(),
     myHireReview: (context) => MyHireReview(),
     uploadSuccessScreen: (context) => UploadSuccessScreen(),
     checkout: (context) => OrdersScreen(),

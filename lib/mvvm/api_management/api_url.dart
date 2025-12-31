@@ -7,6 +7,7 @@ class ApiUrl {
   static String serviceCategory = "v1/categories";
   static String logout = "auth/login";
   static String signup = "v1/register";
+  static String updateAvailability = "v1/user/profile/availability";
   static String picNDoc = "v1/user/onboard";
   static String popularCategory = "v1/category/popular";
   static String acabamentoCategory = "v1/category/finishing-services";

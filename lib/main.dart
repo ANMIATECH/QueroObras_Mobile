@@ -1,4 +1,5 @@
 import 'package:queroobras_mobile/firebase_options.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import '../mvvm/const/export.dart';
 
@@ -50,7 +51,19 @@ class MyApp extends StatelessWidget {
             darkTheme: CAppTheme.darkMoodTheme,
             home: resolveHome(),
             routes: AppRoutes.routes,
-          ),
+
+            locale: const Locale('pt', 'BR'),
+            supportedLocales: const [
+              Locale('pt', 'BR'),
+              Locale('en', 'US'),
+            ],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+          )
+          ,
 
         );
       },

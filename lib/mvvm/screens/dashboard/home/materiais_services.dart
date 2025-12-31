@@ -140,7 +140,7 @@ class MaterialShopScreen extends StatelessWidget {
                                   // ... (ProductCardM content)
                                   title: '${dd.name}',
                                   subtitle: '${dd.type}',
-                                  price: '\R${dd.price}',
+                                  price: 'R\$${dd.price}',
                                   imageUrl: "${dd.files.first.path}",
                                   onTap: () {
                                     // Navigate to product detail

@@ -123,7 +123,7 @@ class ProductDetailsScreen extends StatelessWidget {
                                   ),
                                   SizedBox(height: 11),
                                   Text(
-                                    '\R${dd.price}',
+                                    'R\$${dd.price}',
                                     style: TextStyle(
                                       fontFamily: 'Josefin Sans',
                                       fontSize: 36,

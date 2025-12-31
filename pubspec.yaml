@@ -58,6 +58,7 @@ dependencies:
   firebase_core: ^4.3.0
   cloud_firestore: ^6.1.1
   localization: ^2.1.1
+  flutter_localization: ^0.3.3
 
 dev_dependencies:
   flutter_test:

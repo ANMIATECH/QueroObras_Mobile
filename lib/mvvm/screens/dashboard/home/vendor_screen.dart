@@ -156,7 +156,7 @@ class VenderScreen extends StatelessWidget {
                                     return ItemCard(
                                       title: dd.name ?? "",
                                       subtitle: dd.description ?? "",
-                                      price: '\$${dd.price ?? ""}',
+                                      price: 'R\$${dd.price ?? ""}',
                                       quantity: dd.quantity ?? "",
                                       imageUrl: "${dd.files?.first.path}",
                                       onTap: () {

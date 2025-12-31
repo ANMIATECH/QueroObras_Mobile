@@ -62,7 +62,7 @@ class OrderTrackingScreen extends StatelessWidget {
                           TextSpan(
                             text: 'Nº de itens: ${dd?.order?.totalQuantity}\n',
                           ),
-                          TextSpan(text: 'Total: R${dd?.order?.totalPrice}'),
+                          TextSpan(text: 'Total: R\$${dd?.order?.totalPrice}'),
                         ],
                       ),
                     ),
@@ -207,7 +207,7 @@ class OrderItemCard extends StatelessWidget {
                     // Added a small vertical space before the price
                     const SizedBox(height: 5),
                     Text(
-                      'R${dd?.item?.price}',
+                      'R\$${dd?.item?.price}',
                       style: const TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
