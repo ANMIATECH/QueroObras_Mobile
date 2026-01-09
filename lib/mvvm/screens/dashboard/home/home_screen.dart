@@ -63,9 +63,18 @@ class HomeScreen extends StatelessWidget {
                                   const SizedBox(width: 19),
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: () => Get.toNamed(
-                                        AppRoutes.materiaisServiceProvider,
-                                      ),
+                                      onTap: () {
+                                        String? token = StorageDesign.readItem(
+                                          StorageDesign.token,
+                                        );
+
+                                        if (token == null || token.isEmpty) {
+                                          // User NOT logged in → go to Login
+                                          Get.toNamed(AppRoutes.login);
+                                        } else {
+                                          Get.toNamed(AppRoutes.materiaisServiceProvider);
+                                        }
+                                        },
                                       child: TextField(
                                         enabled: false,
                                         decoration: const InputDecoration(
@@ -97,9 +106,17 @@ class HomeScreen extends StatelessWidget {
                           const SizedBox(width: 3),
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(AppRoutes.notificationCpnScreen);
+                              String? token = StorageDesign.readItem(
+                                StorageDesign.token,
+                              );
+
+                              if (token == null || token.isEmpty) {
+                                // User NOT logged in → go to Login
+                                Get.toNamed(AppRoutes.login);
+                              } else {
+                                Get.toNamed(AppRoutes.notificationCpnScreen);
+                              }
+
                             },
                             child: Container(
                               width: 50,
@@ -121,9 +138,17 @@ class HomeScreen extends StatelessWidget {
 
                           GestureDetector(
                             onTap: () {
-                              Navigator.of(
-                                context,
-                              ).pushNamed(AppRoutes.checkout);
+                              String? token = StorageDesign.readItem(
+                                StorageDesign.token,
+                              );
+
+                              if (token == null || token.isEmpty) {
+                                // User NOT logged in → go to Login
+                                Get.toNamed(AppRoutes.login);
+                              } else {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.checkout);                              }
                             },
                             child: Container(
                               width: 50,

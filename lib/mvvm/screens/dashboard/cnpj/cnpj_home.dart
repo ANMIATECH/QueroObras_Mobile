@@ -251,63 +251,63 @@ class CnpjHomeScreen extends StatelessWidget {
 
                       const SizedBox(height: 20),
 
-                      // Categories Grid
-                      Column(
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: buildCategoryCard(
-                                  "assets/images/materials.svg",
-                                  'Materiais',
-                                  BorderRadius.only(
-                                    topLeft: Radius.circular(11),
-                                  ),
-                                  onTap: () {
-                                    Get.toNamed(
-                                      AppRoutes.materiaisServiceProvider,
-                                    );
-                                  },
-                                ),
-                              ),
-                              const SizedBox(width: 10),
-                              Expanded(
-                                child: buildCategoryCard(
-                                  "assets/images/Ferramentas.svg",
-                                  'Ferramentas',
-                                  BorderRadius.only(
-                                    topRight: Radius.circular(11),
-                                  ),
-                                  onTap: () {
-                                    Get.toNamed(AppRoutes.ferramentasServiceProvider);
-                                  },
-                                ),
-                              ),
-                            ],
-                          ),
-                          // const SizedBox(height: 10),
-                          // Row(
-                          //   children: [
-                          //     Expanded(
-                          //       child: buildCategoryCard(
-                          //         "assets/images/Acabamento.svg",
-                          //         'Acabamento',
-                          //         BorderRadius.only(
-                          //           bottomLeft: Radius.circular(11),
-                          //         ),
-                          //         onTap: () {
-                          //           Get.toNamed(AppRoutes.acabamentoServiceProvider);
-                          //         },
-                          //       ),
-                          //     ),
-                          //     const SizedBox(width: 10),
-                          //     Expanded(child: Container()),
-                          //   ],
-                          // ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 20),
+                      // // Categories Grid
+                      // Column(
+                      //   children: [
+                      //     Row(
+                      //       children: [
+                      //         Expanded(
+                      //           child: buildCategoryCard(
+                      //             "assets/images/materials.svg",
+                      //             'Materiais',
+                      //             BorderRadius.only(
+                      //               topLeft: Radius.circular(11),
+                      //             ),
+                      //             onTap: () {
+                      //               Get.toNamed(
+                      //                 AppRoutes.materiaisServiceProvider,
+                      //               );
+                      //             },
+                      //           ),
+                      //         ),
+                      //         const SizedBox(width: 10),
+                      //         Expanded(
+                      //           child: buildCategoryCard(
+                      //             "assets/images/Ferramentas.svg",
+                      //             'Ferramentas',
+                      //             BorderRadius.only(
+                      //               topRight: Radius.circular(11),
+                      //             ),
+                      //             onTap: () {
+                      //               Get.toNamed(AppRoutes.ferramentasServiceProvider);
+                      //             },
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //     // const SizedBox(height: 10),
+                      //     // Row(
+                      //     //   children: [
+                      //     //     Expanded(
+                      //     //       child: buildCategoryCard(
+                      //     //         "assets/images/Acabamento.svg",
+                      //     //         'Acabamento',
+                      //     //         BorderRadius.only(
+                      //     //           bottomLeft: Radius.circular(11),
+                      //     //         ),
+                      //     //         onTap: () {
+                      //     //           Get.toNamed(AppRoutes.acabamentoServiceProvider);
+                      //     //         },
+                      //     //       ),
+                      //     //     ),
+                      //     //     const SizedBox(width: 10),
+                      //     //     Expanded(child: Container()),
+                      //     //   ],
+                      //     // ),
+                      //   ],
+                      // ),
+                      //
+                      // const SizedBox(height: 20),
 
                       // Promotions Section
                       Container(
@@ -435,13 +435,13 @@ class CnpjHomeScreen extends StatelessWidget {
                               },
                             ),
                           ),
-                          const SizedBox(width: 20),
-                          Expanded(
-                            child: QuickAccessCard(
-                              imageUrl: "assets/images/Favorito.svg",
-                              title: 'Favorito',
-                            ),
-                          ),
+                          // const SizedBox(width: 20),
+                          // Expanded(
+                          //   child: QuickAccessCard(
+                          //     imageUrl: "assets/images/Favorito.svg",
+                          //     title: 'Favorito',
+                          //   ),
+                          // ),
                         ],
                       ),
                     ],
