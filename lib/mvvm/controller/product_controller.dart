@@ -447,7 +447,7 @@ class ProductDetailsController extends GetxController {
       isLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     }
@@ -654,13 +654,13 @@ class ProductDetailsController extends GetxController {
 
       if (response.statusCode != 201) {
         CustomLoading.showNotification(
-          message: 'Failed to send message.',
+          message: 'Falha ao enviar a mensagem.',
           messageType: MessageType.error,
         );
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     }
@@ -750,7 +750,7 @@ class ChatController extends GetxController {
       }
     } else {
       CustomLoading.showNotification(
-        message: "You can upload a maximum of $maxImages images.",
+        message: "Você pode enviar no máximo $maxImages imagens.",
         messageType: MessageType.info,
       );
     }

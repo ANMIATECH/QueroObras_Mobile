@@ -20,8 +20,8 @@ class ApiManager implements ApiReuse {
   bool _isAuthValid(bool bearerToken, String token) {
     if (bearerToken && token.isEmpty) {
       Get.snackbar(
-        'Authentication Required',
-        "Please login to continue",
+        'Autenticação necessária',
+        "Por favor, faça login para continuar",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.orange,
         colorText: Colors.white,
@@ -122,7 +122,7 @@ class ApiManager implements ApiReuse {
       return await http
           .post(
             url,
-            headers: _buildHeaders(bearerToken, token),
+            headers: _buildHeaders(bearerToken, token,language: 'pt'),
             body: jsonEncode(body),
           )
           .timeout(const Duration(seconds: 15));
@@ -171,14 +171,14 @@ class ApiManager implements ApiReuse {
       final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
       final response = await http.get(
         url,
-        headers: _buildHeaders(bearerToken, token),
+        headers: _buildHeaders(bearerToken, token,language: 'pt'),
       );
 
       if (response.statusCode == 401 || response.statusCode == 400) {
         StorageDesign.deleteItem(StorageDesign.token);
         Get.snackbar(
-          'Logged Out',
-          "Session Expired",
+          'Sessão encerrada',
+          "Sessão expirada",
           snackPosition: SnackPosition.TOP,
           backgroundColor: Colors.red,
           colorText: Colors.white,
@@ -207,7 +207,7 @@ class ApiManager implements ApiReuse {
       } // STOP: Don't run HTTP
       return await http.put(
         Uri.parse('${ApiReuse.baseUrl}$endpoint'),
-        headers: _buildHeaders(bearerToken, token),
+        headers: _buildHeaders(bearerToken, token,language: 'pt'),
         body: jsonEncode(body),
       );
     } catch (e) {
@@ -232,7 +232,7 @@ class ApiManager implements ApiReuse {
       } // STOP: Don't run HTTP
       return await http.patch(
         Uri.parse('${ApiReuse.baseUrl}$endpoint'),
-        headers: _buildHeaders(bearerToken, token),
+        headers: _buildHeaders(bearerToken, token,language: 'pt'),
         body: jsonEncode(body),
       );
     } catch (e) {
@@ -252,7 +252,7 @@ class ApiManager implements ApiReuse {
       } // STOP: Don't run HTTP
       return await http.delete(
         Uri.parse('${ApiReuse.baseUrl}$endpoint'),
-        headers: _buildHeaders(bearerToken, token),
+        headers: _buildHeaders(bearerToken, token,language: 'pt'),
       );
     } catch (e) {
       return _handleError(e);
@@ -276,11 +276,11 @@ class ApiManager implements ApiReuse {
 
   dynamic _handleError(dynamic e) {
     if (e is SocketException) {
-      throw Exception("No Internet connection. Please check your network.");
+      throw Exception("Sem conexão com a Internet. Verifique sua rede.");
     } else if (e is TimeoutException) {
-      throw Exception("Request timed out. Try again later.");
+      throw Exception("A solicitação expirou. Tente novamente mais tarde.");
     } else if (e is HttpException) {
-      throw Exception("HTTP Error: ${e.message}");
+      throw Exception("Erro HTTP: ${e.message}");
     } else {
       // This catches the "Authentication Required" from _getValidatedToken
       throw Exception(e.toString().replaceAll("Exception: ", ""));

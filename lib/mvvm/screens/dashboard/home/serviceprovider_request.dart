@@ -255,7 +255,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                   ),
                   const SizedBox(height: 20),
                   ActionButton(
-                    text: 'Iniciar conversa',
+                    text: 'solicitar serviço',
                     backgroundColor: const Color(0xFFF9761E),
                     textColor: Colors.white,
                     onPressed: () {
