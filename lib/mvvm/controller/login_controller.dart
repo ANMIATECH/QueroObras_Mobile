@@ -323,7 +323,7 @@ void startCountdown() {
         }
 
       } else {
-        String errorMsg = "Login failed";
+        String errorMsg = "Falha no login";
 
         if (message.containsKey("error") &&
             message["error"].containsKey("message")) {
@@ -354,7 +354,7 @@ void startCountdown() {
     try {
       if (setComfirmPassword.text.trim() != setPassword.text.trim()) {
         CustomLoading.showNotification(
-          message: "Password and Comfirm Password did not match",
+          message: "Senha e Confirmação de Senha não coincidem",
           messageType: MessageType.error,
         );
         return;
@@ -378,13 +378,14 @@ void startCountdown() {
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
-          message: "Password changed successfully",
+          message: "Senha alterada com sucesso",
           messageType: MessageType.success,
         );
         Navigator.of(context).pushReplacementNamed(AppRoutes.login);
       } else {
         // Extract the error message from JSON
-        String errorMsg = "Login failed"; // default
+        String errorMsg = "Falha no login";
+
         if (message.containsKey("error") &&
             message["error"].containsKey("message")) {
           errorMsg = message["error"]["message"];
@@ -416,7 +417,7 @@ void startCountdown() {
 
       if (userEmail.isEmpty) {
         CustomLoading.showNotification(
-          message: "Please enter your email before proceeding.",
+          message: "Por favor, insira seu e-mail antes de continuar.",
           messageType: MessageType.error,
         );
         return;
@@ -436,7 +437,7 @@ void startCountdown() {
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
-          message: "A password reset OTP has been sent to $userEmail",
+          message: "Um código OTP para redefinição de senha foi enviado para $userEmail",
           messageType: MessageType.success,
         );
         Navigator.of(
@@ -447,7 +448,7 @@ void startCountdown() {
       } else {
         CustomLoading.showNotification(
           message:
-              "Server returned an invalid response (${response.statusCode})",
+          "Servidor retornou uma resposta inválida (${response.statusCode})",
           messageType: MessageType.error,
         );
       }
@@ -466,7 +467,7 @@ void startCountdown() {
 
       if (userEmail.isEmpty) {
         CustomLoading.showNotification(
-          message: "Please enter your email before proceeding.",
+          message: "Por favor, insira seu e-mail antes de continuar.",
           messageType: MessageType.error,
         );
         return;
@@ -491,14 +492,14 @@ void startCountdown() {
         if (email == null) resetEmailController.clear();
 
         CustomLoading.showNotification(
-          message: "A password reset OTP has been sent to $userEmail",
+          message: "Um código OTP para redefinição de senha foi enviado para $userEmail",
           messageType: MessageType.success,
         );
 
         // Get.toNamed(RouteNameV1.otpPin, arguments: userEmail);
       } else {
         // Handle backend validation errors
-        String errorMessage = "Failed to send OTP.";
+        String errorMessage = "Falha ao enviar o OTP.";
 
         if (decoded != null) {
           if (decoded["errors"] != null &&
@@ -531,7 +532,7 @@ void startCountdown() {
   }) async {
     if (otp.trim().isEmpty) {
       CustomLoading.showNotification(
-        message: "Please enter the OTP before proceeding.",
+        message: "Por favor, insira o OTP antes de continuar.",
         messageType: MessageType.error,
       );
       return;
@@ -548,7 +549,7 @@ void startCountdown() {
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
-          message: "OTP verification successful for $email",
+          message: "Verificação do OTP bem-sucedida para $email",
           messageType: MessageType.success,
         );
 
@@ -558,7 +559,7 @@ void startCountdown() {
         );
       } else {
         // Default message
-        String errorMessage = "OTP verification failed";
+        String errorMessage = "Falha na verificação do OTP";
 
         if (message["error"] != null) {
           if (message["error"]["details"] != null) {
@@ -589,7 +590,7 @@ void startCountdown() {
   Future verifyPasswordOtp(String otp, context, {required String email}) async {
     if (otp.trim().isEmpty) {
       CustomLoading.showNotification(
-        message: "Please enter the OTP before proceeding.",
+        message: "Por favor, insira o OTP antes de continuar.",
         messageType: MessageType.error,
       );
       return;
@@ -607,13 +608,14 @@ void startCountdown() {
         message = jsonDecode(response.body);
       } catch (e) {
         message = {
-          "error": {"message": "Invalid server response"},
+          "error": {"message": "Resposta inválida do servidor"},
         };
+
       }
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
-          message: "OTP verification successful for $email",
+          message: "Verificação do OTP bem-sucedida para $email",
           messageType: MessageType.success,
         );
 
@@ -768,10 +770,10 @@ Future<void> getServiceCategory() async {
           .map((c) => CategoryModel.fromJson(c))
           .toList();
           
-      print("Categories loaded successfully: ${userRoleList.length}");
+      // print("Categories loaded successfully: ${userRoleList.length}");
     } else {
       // Handle known API error messages
-      String errorMessage = data["error"]?["message"] ?? "Failed to fetch categories";
+      String errorMessage = data["error"]?["message"] ?? "Falha ao buscar categorias";
       _showError(errorMessage);
     }
   } catch (e) {
@@ -792,7 +794,7 @@ void _showError(String message) {
     try {
       if (cnpjDoc == null || driverLicense == null || avatar == null) {
         CustomLoading.showNotification(
-          message: "All documents are required",
+          message: "Todos os documentos são obrigatórios",
           messageType: MessageType.error,
         );
         return;
@@ -835,7 +837,7 @@ void _showError(String message) {
         message = jsonDecode(response.body);
       } catch (e) {
         CustomLoading.showNotification(
-          message: "Invalid JSON response",
+          message: "Resposta JSON inválida",
           messageType: MessageType.error,
         );
         return;
@@ -844,7 +846,7 @@ void _showError(String message) {
       // SUCCESS
       if (response.statusCode == 200 || response.statusCode == 201) {
         CustomLoading.showNotification(
-          message: "Documents uploaded successfully",
+          message: "Documentos enviados com sucesso",
           messageType: MessageType.error,
         );
 
@@ -852,7 +854,7 @@ void _showError(String message) {
       }
       // FAILED
       else {
-        String errorMsg = "Upload failed";
+        String errorMsg = "Falha ao enviar";
 
         if (message is Map &&
             message.containsKey("error") &&

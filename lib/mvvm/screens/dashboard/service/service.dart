@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../../../const/custom_image_view.dart';
+import '../../../const/export.dart';
 import '../../../controller/service_controller.dart';
 import '../home/home_screen.dart';
 import '../home/servicesproviders_bycategory.dart';
@@ -82,7 +83,7 @@ class ServicesScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: 3,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
                     childAspectRatio: 1,
@@ -90,17 +91,15 @@ class ServicesScreen extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final category = controller.categories[index];
 
-                    return InkWell(
+                    return ServiceCard(
+                      imageUrl: category['avatar'],
+                      title:  category["name"] ?? "Serviço",
                       onTap: () {
                         final slug = category['slug'];
 
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
                       },
-                      borderRadius: BorderRadius.circular(6),
-                      child: ServiceCard(
-                        imageUrl: category['avatar'],
-                        title:  category["name"] ?? "Serviço",
-                      ),
+
                     );
                   }, childCount: controller.categories.length),
                 ),
@@ -126,7 +125,7 @@ class ServicesScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 4,
+                    crossAxisCount: 3,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
                     childAspectRatio: 1,
@@ -134,20 +133,14 @@ class ServicesScreen extends StatelessWidget {
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final category = controller.cCategories[index];
 
-                    return InkWell(
+                    return ServiceCard(
+                      imageUrl: category['avatar'],
+                      title: category["name"] ?? "Serviço",
                       onTap: () {
                         final slug = category['slug'];
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
                       },
-                      borderRadius: BorderRadius.circular(6),
-                      child: Column(
-                        children: [
-                          ServiceCard(
-                            imageUrl: category['avatar'],
-                            title: category["name"] ?? "Serviço",
-                          ),
-                        ],
-                      ),
+
                     );
                   }, childCount: controller.cCategories.length),
                 ),
@@ -173,80 +166,39 @@ class ServicesScreen extends StatelessWidget {
                       ),
                     ),
 
-                    const SizedBox(height: 20),
 
-                    Obx(() {
-                      final list = controller.aCategories;
-
-                      if (list.length < 2) return const SizedBox();
-
-                      final firstCategory = list[0];
-                      final secondCategory = list[1];
-
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          // ITEM 1
-                          InkWell(
-                            onTap: () {
-                              Get.to(
-                                    () => ServicesProvidersByCategory(slug: firstCategory['slug']),
-                              );
-                            },
-                            child: ServiceCard(
-                              imageUrl: firstCategory['avatar'],
-                              title: firstCategory['name'] ?? "Serviço",
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          // ITEM 2
-                          InkWell(
-                            onTap: () {
-                              Get.to(
-                                    () => ServicesProvidersByCategory(slug: secondCategory['slug']),
-                              );
-                            },
-                            child: ServiceCard(
-                              imageUrl: secondCategory['avatar'],
-                              title: secondCategory['name'] ?? "Serviço",
-                            ),
-                          ),
-
-                          const SizedBox(width: 12),
-
-                          // ORANGE BOX
-                          Expanded(
-                            child: Container(
-                              height: 78.5,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(6),
-                                color: const Color(0xFFF9761E),
-                              ),
-                              child: const Center(
-                                child: Text(
-                                  'Precisa de ajuda',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontFamily: 'Josefin Sans',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    }),
-
-                    const SizedBox(height: 40),
                   ],
                 ),
               ),
             ),
+
+            Obx(
+                  () => SliverPadding(
+                padding: const EdgeInsets.all(20),
+                sliver: SliverGrid(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: 15,
+                    mainAxisSpacing: 15,
+                    childAspectRatio: 1,
+                  ),
+                  delegate: SliverChildBuilderDelegate((context, index) {
+                    final category = controller.aCategories[index];
+
+                    return ServiceCard(
+                      imageUrl: category['avatar'],
+                      title: category["name"] ?? "Serviço",
+                      onTap: () {
+                        final slug = category['slug'];
+                        Get.to(() => ServicesProvidersByCategory(slug: slug));
+                      },
+
+                    );
+                  }, childCount: controller.aCategories.length),
+                ),
+              ),
+            ),
+
           ],
         ),
       ),
@@ -257,6 +209,8 @@ class ServicesScreen extends StatelessWidget {
 class ServiceCard extends StatelessWidget {
   final String imageUrl;
   final String title;
+  final VoidCallback? onTap;
+  final bool isLarge;
   final double? width;
   final double? height;
   final EdgeInsets? padding;
@@ -271,47 +225,50 @@ class ServiceCard extends StatelessWidget {
     this.height,
     this.padding,
     this.textAlign = TextAlign.center,
-    this.multiLine = false,
+    this.multiLine = false, this.onTap,
+    this.isLarge = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final aspectRatio = height != null ? (width! / height!) : 1.156;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isSmallScreen = screenWidth <= 640;
 
-    return SizedBox(
-      width: width,
-      child: AspectRatio(
-        aspectRatio: aspectRatio,
-        child: Container(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(6)),
+    return  GestureDetector(
+      onTap: onTap,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(isLarge ? 13.468 : 9.223),
+        child: SizedBox(
+          width: isLarge ? 185 : 126,
+          height: isLarge ? 159 : (isSmallScreen ? 120 : 129),
           child: Stack(
             children: [
+              // Background image
               Positioned.fill(
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(6),
-                  child: CustomImageView(
-                    imagePath: imageUrl,
-                    fit: BoxFit.cover,
-                  ),
+                child: CustomImageView(imagePath:
+                  imageUrl,
+                  fit: BoxFit.cover,
+                  color: Colors.black.withValues(alpha: 0.3),
                 ),
               ),
-              Positioned.fill(
+              // Text overlay
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
                 child: Container(
-                  padding: padding ?? const EdgeInsets.only(top: 0, left: 4, right: 4, bottom: 0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        title,
-                        textAlign: textAlign,
-                        style: const TextStyle(
-                          fontSize: 12,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'Josefin Sans',
-                        ),
-                      ),
-                    ],
+                  height: isLarge ? 65 : 44,
+                  color: const Color(0xFF1E1E1E).withValues(alpha: 0.8),
+                  alignment: Alignment.center,
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Text(
+                    title,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.josefinSans(
+                      fontSize: isLarge ? 20 : 13,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
@@ -320,5 +277,9 @@ class ServiceCard extends StatelessWidget {
         ),
       ),
     );
+
   }
 }
+
+
+

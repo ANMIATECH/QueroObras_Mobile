@@ -35,7 +35,7 @@ class VendorFormController extends GetxController {
       }
     } else {
       CustomLoading.showNotification(
-        message: "You can upload a maximum of $maxImages images.",
+        message: "Você pode enviar no máximo $maxImages imagens.",
         messageType: MessageType.info,
       );
     }
@@ -172,7 +172,7 @@ class VendorFormController extends GetxController {
       } else {
         // Handle API errors (e.g., 404, 500)
         CustomLoading.showNotification(
-          message: 'Failed to load items.',
+          message: 'Falha ao carregar os itens.',
           messageType: MessageType.error,
         );
         hasMoreData.value =
@@ -180,7 +180,7 @@ class VendorFormController extends GetxController {
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -205,7 +205,7 @@ class VendorFormController extends GetxController {
         selectedType.isEmpty ||
         descriptionController.text.isEmpty) {
       CustomLoading.showNotification(
-        message: 'Please fill in all fields.',
+        message: 'Por favor, preencha todos os campos.',
         messageType: MessageType.error,
       );
       return;
@@ -213,7 +213,7 @@ class VendorFormController extends GetxController {
 
     if (selectedImages.isEmpty) {
       CustomLoading.showNotification(
-        message: 'Please upload at least one image.',
+        message: 'Por favor, envie pelo menos uma imagem.',
         messageType: MessageType.error,
       );
       return;
@@ -223,7 +223,7 @@ class VendorFormController extends GetxController {
     if (int.tryParse(quantityController.text) == null ||
         double.tryParse(priceController.text) == null) {
       CustomLoading.showNotification(
-        message: 'Quantity and Price must be valid numbers.',
+        message: 'Quantidade e preço devem ser números válidos.',
         messageType: MessageType.error,
       );
       return;
@@ -265,7 +265,7 @@ class VendorFormController extends GetxController {
         final responseBody = await response.stream.bytesToString();
         final message =
             jsonDecode(responseBody)['error']["message"] ??
-            'Failed to publish item.';
+                'Falha ao publicar o item.';
         CustomLoading.showNotification(
           message: message,
           messageType: MessageType.error,
@@ -284,7 +284,7 @@ class VendorFormController extends GetxController {
       isCreateItemLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'An unexpected error occurred: ${e.toString()}',
+        message: 'Ocorreu um erro inesperado: ${e.toString()}',
         messageType: MessageType.error,
       );
     }
@@ -316,7 +316,7 @@ class VendorFormController extends GetxController {
     if (data.isEmpty && selectedImages.isEmpty && imagesToDelete.isEmpty) {
       CustomLoading.showNotification(
         message:
-            'Please modify at least one field or image to update the item.',
+        "Por favor, modifique pelo menos um campo ou imagem para atualizar o item.",
         messageType: MessageType.error,
       );
       return;
@@ -350,7 +350,7 @@ class VendorFormController extends GetxController {
 
         // 3. Show success notification
         CustomLoading.showNotification(
-          message: 'Item updated successfully!',
+          message: 'Item atualizado com sucesso!',
           messageType: MessageType.success,
         );
 
@@ -361,7 +361,7 @@ class VendorFormController extends GetxController {
         final responseBody = await response.stream.bytesToString();
         final message =
             jsonDecode(responseBody)['error']["message"] ??
-            'Failed to publish item.';
+                "Falha ao publicar o item.";
         CustomLoading.showNotification(
           message: message,
           messageType: MessageType.error,
@@ -380,7 +380,7 @@ class VendorFormController extends GetxController {
       isCreateItemLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'An unexpected error occurred: ${e.toString()}',
+        message: 'Ocorreu um erro inesperado: ${e.toString()}',
         messageType: MessageType.error,
       );
     }

@@ -40,7 +40,7 @@ class AuthController extends GetxController {
     } catch (e) {
       SnackbarUtil.showSnackbar(
         title: "Error",
-        message: "Failed to pick file: $e",
+        message: "Falha ao selecionar o arquivo: $e",
         type: SnackbarType.error,
       );
     }
@@ -60,7 +60,7 @@ class AuthController extends GetxController {
     } catch (e) {
       SnackbarUtil.showSnackbar(
         title: "Error",
-        message: "Failed to pick file: $e",
+        message: "Falha ao selecionar o arquivo: $e",
         type: SnackbarType.error,
       );
     }
@@ -121,18 +121,18 @@ class AuthController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
+            message["error"]?["message"] ?? "Não foi possível buscar as categorias";
 
         SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+          title: "Falha na busca",
           message: error,
           type: SnackbarType.error,
         );
       }
     } catch (e) {
       SnackbarUtil.showSnackbar(
-        title: "Error",
-        message: e.toString(),
+        title: "Erro",
+        message: "Ocorreu um erro inesperado. Tente novamente.",
         type: SnackbarType.error,
       );
     }
@@ -155,18 +155,18 @@ class AuthController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
+            message["error"]?["message"] ?? "Falha ao buscar categorias";
 
         SnackbarUtil.showSnackbar(
-          title: "Fetch Failed",
+          title: "Falha na busca",
           message: error,
           type: SnackbarType.error,
         );
       }
     } catch (e) {
       SnackbarUtil.showSnackbar(
-        title: "Error",
-        message: e.toString(),
+        title: "Erro",
+        message: "Ocorreu um erro inesperado. Tente novamente.",
         type: SnackbarType.error,
       );
     }
@@ -176,7 +176,7 @@ class AuthController extends GetxController {
     try {
       if (profileImage.value == null || documentImage.value == null) {
         CustomLoading.showNotification(
-          message: "Both profile picture and document are required",
+          message: "A foto do perfil e o documento são obrigatórios",
           messageType: MessageType.error,
         );
         return;
@@ -217,7 +217,7 @@ class AuthController extends GetxController {
         message = jsonDecode(response.body);
       } catch (e) {
         CustomLoading.showNotification(
-          message: "Invalid JSON returned by server",
+          message: "JSON inválido retornado pelo servidor",
           messageType: MessageType.error,
         );
         return;
@@ -225,7 +225,7 @@ class AuthController extends GetxController {
 
       if (response.statusCode == 200 || response.statusCode == 201) {
         CustomLoading.showNotification(
-          message: "Documents uploaded successfully",
+          message: "Documentos enviados com sucesso",
           messageType: MessageType.success,
         );
         // Navigator.of(context).pushNamed(AppRoutes.cpfBottomNav);
@@ -234,7 +234,7 @@ class AuthController extends GetxController {
 
         // Get.offAllNamed(RouteNameV1.bottomNavCpf);
       } else {
-        String errorMsg = "Upload failed";
+        String errorMsg = "Falha no envio";
 
         if (message is Map &&
             message.containsKey("error") &&
@@ -261,8 +261,8 @@ class AuthController extends GetxController {
     try {
       if (profileImage.value == null || cnpjDocumentImage.value == null) {
         SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
-          message: "Both profile picture and CNPJ document are required",
+          title: "Falha no envio",
+          message: "Tanto a foto de perfil quanto o documento CNPJ são obrigatórios",
           type: SnackbarType.error,
         );
         return;
@@ -303,8 +303,8 @@ class AuthController extends GetxController {
         message = jsonDecode(response.body);
       } catch (e) {
         SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
-          message: "Invalid JSON returned by server",
+          title: "Falha no envio",
+          message: "JSON inválido retornado pelo servidor",
           type: SnackbarType.error,
         );
         return;
@@ -313,14 +313,14 @@ class AuthController extends GetxController {
       // SUCCESS
       if (response.statusCode == 200 || response.statusCode == 201) {
         SnackbarUtil.showSnackbar(
-          title: "Success",
-          message: "Documents uploaded successfully",
+          title: "Sucesso",
+          message: "Documentos enviados com sucesso",
           type: SnackbarType.success,
         );
 
         Get.offAllNamed(AppRoutes.cpnjBottomNav);
       } else {
-        String errorMsg = "Upload failed";
+        String errorMsg = "Falha no envio";
 
         if (message is Map &&
             message.containsKey("error") &&
@@ -329,7 +329,7 @@ class AuthController extends GetxController {
         }
 
         SnackbarUtil.showSnackbar(
-          title: "Upload Failed",
+          title: "Falha no envio",
           message: errorMsg,
           type: SnackbarType.error,
         );
@@ -338,7 +338,7 @@ class AuthController extends GetxController {
       isLoading.value = false;
 
       SnackbarUtil.showSnackbar(
-        title: "Upload Failed",
+        title: "Falha no envio",
         message: "$e",
         type: SnackbarType.error,
       );

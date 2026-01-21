@@ -105,7 +105,7 @@ class ServiceController extends GetxController {
   Future<void> approveRequest({required String id}) async {
     if (requestPricing.text.isEmpty) {
       CustomLoading.showNotification(
-        message: 'Kindly enter a price',
+        message: 'Por favor, insira um preço',
         messageType: MessageType.error,
       );
       return;
@@ -127,13 +127,13 @@ class ServiceController extends GetxController {
         requestPricing.clear();
         notePricing.clear();
         CustomLoading.showNotification(
-          message: 'Request price sent successful.',
+          message: 'Preço da solicitação enviado com sucesso.',
           messageType: MessageType.success,
         );
         Get.back();
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to Approve.',
+          message: 'Falha ao aprovar a solicitação.',
           messageType: MessageType.error,
         );
       }
@@ -141,7 +141,7 @@ class ServiceController extends GetxController {
       approveRequestIsLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -168,7 +168,7 @@ class ServiceController extends GetxController {
         Get.back();
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to Approve.',
+          message: 'Falha ao aprovar a solicitação.',
           messageType: MessageType.error,
         );
       }
@@ -176,7 +176,7 @@ class ServiceController extends GetxController {
       approveRequestIsLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -208,7 +208,7 @@ class ServiceController extends GetxController {
       }
     } catch (e) {
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {}
@@ -230,13 +230,13 @@ class ServiceController extends GetxController {
         requestPricing.clear();
         notePricing.clear();
         CustomLoading.showNotification(
-          message: 'Request price sent successful.',
+          message: 'Solicitação rejeitada com sucesso.',
           messageType: MessageType.success,
         );
         Get.back();
       } else {
         CustomLoading.showNotification(
-          message: 'Failed to Approve.',
+          message: 'Falha ao rejeitar a solicitação.',
           messageType: MessageType.error,
         );
       }
@@ -244,7 +244,7 @@ class ServiceController extends GetxController {
       approveRequestIsLoading.value = false;
 
       CustomLoading.showNotification(
-        message: 'Network error: $e',
+        message: 'Erro de rede: $e',
         messageType: MessageType.error,
       );
     } finally {
@@ -415,7 +415,7 @@ class ServiceController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
+            message["error"]?["message"] ?? "Falha ao buscar categorias";
 
         CustomLoading.showNotification(
           message: error,
@@ -440,7 +440,7 @@ class ServiceController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
+            message["error"]?["message"] ?? "Falha ao buscar categorias";
 
         CustomLoading.showNotification(
           message: error,
@@ -470,7 +470,7 @@ class ServiceController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         var error =
-            message["error"]?["message"] ?? "Failed to fetch categories";
+            message["error"]?["message"] ?? "Falha ao buscar categorias";
 
         CustomLoading.showNotification(
           message: error,
@@ -500,7 +500,7 @@ class ServiceController extends GetxController {
         categoryName.value = data["category"]?["name"] ?? "";
       } else {
         var message = jsonDecode(response.body);
-        var error = message["error"]?["message"] ?? "Failed to fetch providers";
+        var error = message["error"]?["message"] ?? "Falha ao buscar prestadores de serviço";
         CustomLoading.showNotification(
           message: error,
           messageType: MessageType.error,
@@ -551,7 +551,7 @@ class ServiceController extends GetxController {
       }
     } else {
       CustomLoading.showNotification(
-        message: "You can upload a maximum of $maxImages images.",
+        message: "Você pode enviar no máximo $maxImages imagens.",
         messageType: MessageType.info,
       );
     }

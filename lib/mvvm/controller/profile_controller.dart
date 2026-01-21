@@ -95,7 +95,7 @@ class ProfileController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         CustomLoading.showNotification(
-          message: message["error"]?["message"] ?? "Failed to fetch categories",
+          message: message["error"]?["message"] ?? "Falha ao buscar categorias",
           messageType: MessageType.error,
         );
       }
@@ -122,7 +122,8 @@ class ProfileController extends GetxController {
       } else {
         var message = jsonDecode(response.body);
         CustomLoading.showNotification(
-          message: message["error"]?["message"] ?? "Failed to fetch categories",
+          message: message["error"]?["message"] ?? "Falha ao buscar categorias",
+
           messageType: MessageType.error,
         );
       }
@@ -159,8 +160,7 @@ class ProfileController extends GetxController {
       } else {
         final message = jsonDecode(response.body);
         CustomLoading.showNotification(
-          message:
-          message["error"]?["message"] ?? "Failed to fetch availability",
+          message: message["error"]?["message"] ?? "Falha ao buscar disponibilidade",
           messageType: MessageType.error,
         );
       }
@@ -196,7 +196,7 @@ class ProfileController extends GetxController {
         await getUserRating(userId.value);
       } else {
         CustomLoading.showNotification(
-          message: "Failed to fetch user",
+          message: "Falha ao buscar usuário",
           messageType: MessageType.error,
         );
       }
@@ -230,7 +230,7 @@ class ProfileController extends GetxController {
       } else {
 
         CustomLoading.showNotification(
-          message: "Failed to fetch user",
+          message: "Falha ao buscar usuário",
           messageType: MessageType.error,
         );
       }
@@ -286,7 +286,7 @@ class ProfileController extends GetxController {
         }
       } else {
         CustomLoading.showNotification(
-          message: "Failed to fetch rating",
+          message: "Falha ao buscar avaliações",
           messageType: MessageType.error,
         );
       }
@@ -331,7 +331,7 @@ Get.back();
           messageType: MessageType.success,
         );
       } else {
-        final errorMessage = message["error"]?["message"] ?? "Update failed";
+        final errorMessage = message["error"]?["message"] ?? "Falha na atualização";
 
         CustomLoading.showNotification(
           message: errorMessage,
@@ -377,7 +377,7 @@ Get.back();
         );
       } else {
         CustomLoading.showNotification(
-          message: message["error"]?["message"] ?? "Update failed",
+          message: message["error"]?["message"] ?? "Falha na atualização",
           messageType: MessageType.error,
         );
       }
@@ -455,7 +455,7 @@ Get.back();
         getAvailability(); // refresh
       } else {
         CustomLoading.showNotification(
-          message: decoded["error"]?["message"] ?? "Update failed",
+          message: decoded["error"]?["message"] ?? "Falha na atualização",
           messageType: MessageType.error,
         );
       }
