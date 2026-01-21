@@ -541,25 +541,40 @@ class SearchBarWidget extends StatelessWidget {
                 const Icon(Icons.search_outlined, color: Color(0xFF7F7F7F)),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: TextField(
-                    decoration: const InputDecoration(
-                      hintText: 'O que você está procurando?',
-                      hintStyle: TextStyle(
-                        color: Color(0xFF7F7F7F),
+                  child: GestureDetector(
+                    onTap: () {
+                      String? token = StorageDesign.readItem(
+                        StorageDesign.token,
+                      );
+
+                      if (token == null || token.isEmpty) {
+                        // User NOT logged in → go to Login
+                        Get.toNamed(AppRoutes.login);
+                      } else {
+                        Get.toNamed(AppRoutes.materiaisServiceProvider);
+                      }
+                    },
+
+                    child: TextField(
+                      decoration: const InputDecoration(
+                        hintText: 'O que você está procurando?',
+                        hintStyle: TextStyle(
+                          color: Color(0xFF7F7F7F),
+                          fontSize: 16,
+                          fontWeight: FontWeight.w400,
+                          fontFamily: 'Josefin Sans',
+                          height: 1.5,
+                        ),
+                        border: InputBorder.none,
+                      ),
+                      style: const TextStyle(
+                        color: Colors.black,
                         fontSize: 16,
                         fontWeight: FontWeight.w400,
                         fontFamily: 'Josefin Sans',
-                        height: 1.5,
                       ),
-                      border: InputBorder.none,
+                      onChanged: (value) {},
                     ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w400,
-                      fontFamily: 'Josefin Sans',
-                    ),
-                    onChanged: (value) {},
                   ),
                 ),
               ],
@@ -567,17 +582,33 @@ class SearchBarWidget extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 3),
-        Container(
-          width: 50,
-          height: 50,
-          decoration: BoxDecoration(
-            color: const Color(0xFFEEEEEE), // background color
-            borderRadius: BorderRadius.circular(
-              999,
-            ), // optional, if you want rounded corners
-          ),
-          child: Center(
-            child: CustomImageView(imagePath: CustomImage.notification),
+        GestureDetector(
+          onTap: () {
+            String? token = StorageDesign.readItem(
+              StorageDesign.token,
+            );
+
+            if (token == null || token.isEmpty) {
+              // User NOT logged in → go to Login
+              Get.toNamed(AppRoutes.login);
+            } else {
+              Get.toNamed(AppRoutes.notificationCpnScreen);
+            }
+
+          },
+
+          child: Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: const Color(0xFFEEEEEE), // background color
+              borderRadius: BorderRadius.circular(
+                999,
+              ), // optional, if you want rounded corners
+            ),
+            child: Center(
+              child: CustomImageView(imagePath: CustomImage.notification),
+            ),
           ),
         ),
       ],

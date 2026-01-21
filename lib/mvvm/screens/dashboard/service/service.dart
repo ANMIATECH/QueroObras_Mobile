@@ -18,20 +18,32 @@ class ServicesScreen extends StatelessWidget {
     controller.getAcabamentoServiceProvider();
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Padding(
-          padding: EdgeInsets.symmetric(vertical: 10),
-          child: Text(
-            'Serviços',
-            style: TextStyle(
-              fontSize: 32,
-              color: Colors.black,
-              fontWeight: FontWeight.w700,
-              fontFamily: 'Josefin Sans',
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(130), // Adjust height for title + search bar
+        child: AppBar(
+          backgroundColor: const Color(0xFF16577F),
+          flexibleSpace: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Serviços',
+                    style: TextStyle(
+                      fontSize: 32,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w700,
+                      fontFamily: 'Josefin Sans',
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  SearchBarWidget(), // Your search bar here
+                ],
+              ),
             ),
           ),
         ),
-        backgroundColor: Colors.white,
       ),
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -42,8 +54,7 @@ class ServicesScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 20),
                 child: Column(
                   children: [
-                    SearchBarWidget(),
-                    SizedBox(height: 26),
+                    SizedBox(height: 10),
                     Row(
                       children: [
                         Expanded(child: FilterChipWidget(text: 'Localização')),
@@ -119,7 +130,6 @@ class ServicesScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             Obx(
               () => SliverPadding(
                 padding: const EdgeInsets.all(20),
@@ -146,7 +156,6 @@ class ServicesScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             SliverToBoxAdapter(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -171,7 +180,6 @@ class ServicesScreen extends StatelessWidget {
                 ),
               ),
             ),
-
             Obx(
                   () => SliverPadding(
                 padding: const EdgeInsets.all(20),
@@ -198,6 +206,75 @@ class ServicesScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0,vertical: 16),
+                child: SizedBox(
+                  width: double.infinity,
+                  child: Container(
+                    height: 77,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular( 6.483),
+                      gradient: const RadialGradient(
+                        center: Alignment(0.1784, 0.0052), // 58.92% 50.26% converted
+                        radius: 2.35, // 470.33% scaled down
+                        colors: [
+                          Color(0xFFF9761E), // #F9761E
+                          Color(0xFF7F320A), // #7F320A
+                        ],
+                        stops: [0.0, 1.0],
+                      ),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal:  13,
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Left side - Help text
+                        Text(
+                          'Precisa de ajuda agora?',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize:  12 ,
+                            height: 1.25,
+                            fontWeight: FontWeight.w500,
+                            fontFamily: 'Josefin Sans',
+                          ),
+                        ),
+
+                        // Right side - Action button
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal:8 ,
+                            vertical: 6,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: SizedBox(
+                            width: 90 ,
+                            height: 13,
+                            child: Center(
+                              child: Text(
+                                'Solicitar Agora',
+                                style: TextStyle(
+                                  color: const Color(0xFFF9761E),
+                                  fontSize: 10 ,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'Josefin Sans',
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            )
 
           ],
         ),
@@ -280,6 +357,4 @@ class ServiceCard extends StatelessWidget {
 
   }
 }
-
-
 
