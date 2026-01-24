@@ -212,37 +212,66 @@ class RegistrationScreen extends StatelessWidget {
                           const SizedBox(height: 14),
 
                           Obx(
-                            () => CustomDropdownField(
-                              label: CustomText.role,
-                              selectedValue:
-                                  controllers.selectedRoleStatus.value == 0
-                                  ? null
-                                  : controllers.userRoleList
-                                        .firstWhere(
-                                          (e) =>
-                                              e.id ==
-                                              controllers
-                                                  .selectedRoleStatus
-                                                  .value,
-                                          orElse: () =>
-                                              CategoryModel(id: 0, name: ""),
+                            () => GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (_) => MultiSelectDropdownField(
+                                    label: CustomText.role,
+                                    roles: controllers.userRoleList
+                                        .map(
+                                          (r) => Role(
+                                            id: r.id,
+                                            name: r.name,
+                                            isSelected: controllers
+                                                .selectedRolesNames
+                                                .contains(r.name),
+                                          ),
                                         )
-                                        .name,
-                              options: controllers.userRoleList
-                                  .map((item) => item.name)
-                                  .toList(),
-                              icon: Icons.verified_user,
-
-                              onChanged: (String selectedName) {
-                                final selected = controllers.userRoleList
-                                    .firstWhere(
-                                      (item) => item.name == selectedName,
-                                      orElse: () =>
-                                          CategoryModel(id: 0, name: ""),
-                                    );
-                                controllers.selectedRoleStatus.value =
-                                    selected.id;
+                                        .toList(),
+                                    onSelectionChanged: (selectedRoles) {
+                                      controllers.selectedRolesNames.value =
+                                          selectedRoles
+                                              .map((r) => r.name)
+                                              .toList();
+                                      controllers.selectedRoleStatusIds.value =
+                                          selectedRoles
+                                              .map((r) => r.id)
+                                              .toList();
+                                    },
+                                  ),
+                                );
                               },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.verified_user),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        controllers.selectedRolesNames.isEmpty
+                                            ? 'Selecionar Função'
+                                            : controllers.selectedRolesNames
+                                                  .join(', '),
+                                        style: TextStyle(
+                                          color: CustomColor.hintText,
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(Icons.arrow_drop_down),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 14),
@@ -556,40 +585,66 @@ class RegistrationScreen extends StatelessWidget {
                           const SizedBox(height: 14),
 
                           Obx(
-                            () => CustomDropdownField(
-                              label: CustomText.role,
-                              selectedValue:
-                                  controllers.selectedRoleStatus.value == 0
-                                  ? null
-                                  : controllers.userRoleList
-                                        .firstWhere(
-                                          (e) =>
-                                              e.id ==
-                                              controllers
-                                                  .selectedRoleStatus
-                                                  .value,
-                                          orElse: () =>
-                                              CategoryModel(id: 0, name: ""),
-                                        )
-                                        .name,
-                              options: controllers.userRoleList
-                                  .map((item) => item.name)
-                                  .toList(),
-                              customIcon: const Icon(
-                                Icons.verified_user,
-                                color: CustomColor.hintText,
-                              ),
-
-                              onChanged: (String selectedName) {
-                                final selected = controllers.userRoleList
-                                    .firstWhere(
-                                      (item) => item.name == selectedName,
-                                      orElse: () =>
-                                          CategoryModel(id: 0, name: ""),
-                                    );
-                                controllers.selectedRoleStatus.value =
-                                    selected.id;
+                                () => GestureDetector(
+                              onTap: () {
+                                showModalBottomSheet(
+                                  context: context,
+                                  isScrollControlled: true,
+                                  backgroundColor: Colors.transparent,
+                                  builder: (_) => MultiSelectDropdownField(
+                                    label: CustomText.role,
+                                    roles: controllers.userRoleList
+                                        .map(
+                                          (r) => Role(
+                                        id: r.id,
+                                        name: r.name,
+                                        isSelected: controllers
+                                            .selectedRolesNames
+                                            .contains(r.name),
+                                      ),
+                                    )
+                                        .toList(),
+                                    onSelectionChanged: (selectedRoles) {
+                                      controllers.selectedRolesNames.value =
+                                          selectedRoles
+                                              .map((r) => r.name)
+                                              .toList();
+                                      controllers.selectedRoleStatusIds.value =
+                                          selectedRoles
+                                              .map((r) => r.id)
+                                              .toList();
+                                    },
+                                  ),
+                                );
                               },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12,
+                                  vertical: 14,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(Icons.verified_user),
+                                    const SizedBox(width: 8),
+                                    Expanded(
+                                      child: Text(
+                                        controllers.selectedRolesNames.isEmpty
+                                            ? 'Selecionar Função'
+                                            : controllers.selectedRolesNames
+                                            .join(', '),
+                                        style: TextStyle(
+                                          color: CustomColor.hintText,
+                                        ),
+                                      ),
+                                    ),
+                                    const Icon(Icons.arrow_drop_down),
+                                  ],
+                                ),
+                              ),
                             ),
                           ),
                           const SizedBox(height: 14),

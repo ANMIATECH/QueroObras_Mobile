@@ -4,6 +4,7 @@ import '../../../const/export.dart';
 import '../../../controller/service_controller.dart';
 import '../home/home_screen.dart';
 import '../home/servicesproviders_bycategory.dart';
+import '../webview.dart';
 import 'service_card.dart';
 
 import 'package:get/get.dart';
@@ -19,23 +20,39 @@ class ServicesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(130), // Adjust height for title + search bar
+        preferredSize: const Size.fromHeight(130),
         child: AppBar(
           backgroundColor: const Color(0xFF16577F),
+          automaticallyImplyLeading: false, // Remove default back button
           flexibleSpace: SafeArea(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Serviços',
-                    style: TextStyle(
-                      fontSize: 32,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w700,
-                      fontFamily: 'Josefin Sans',
-                    ),
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                         Get.back();
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'Serviços',
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Josefin Sans',
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 10),
                   SearchBarWidget(), // Your search bar here
@@ -244,26 +261,35 @@ class ServicesScreen extends StatelessWidget {
                         ),
 
                         // Right side - Action button
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                            horizontal:8 ,
-                            vertical: 6,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(30),
-                          ),
-                          child: SizedBox(
-                            width: 90 ,
-                            height: 13,
-                            child: Center(
-                              child: Text(
-                                'Solicitar Agora',
-                                style: TextStyle(
-                                  color: const Color(0xFFF9761E),
-                                  fontSize: 10 ,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'Josefin Sans',
+                        GestureDetector(
+                          onTap: (){
+                            Get.to(
+                                    () => WebViewScreen(
+                                  url:
+                                  'https://tawk.to/chat/694ffc0b8a4fb0197ea55c11/1jdg713ib',
+                                ));
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal:8 ,
+                              vertical: 6,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(30),
+                            ),
+                            child: SizedBox(
+                              width: 90 ,
+                              height: 13,
+                              child: Center(
+                                child: Text(
+                                  'Solicitar Agora',
+                                  style: TextStyle(
+                                    color: const Color(0xFFF9761E),
+                                    fontSize: 10 ,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'Josefin Sans',
+                                  ),
                                 ),
                               ),
                             ),

@@ -64,7 +64,7 @@ class FerramentasServices extends StatelessWidget {
                           mainAxisSpacing: 10,
                           childAspectRatio: 0.8,
                         ),
-                        itemBuilder: (context, index) => ProductCardM(
+                        itemBuilder: (context, index) => ProductCardNew(
                           imageUrl:"assets/images/cement.png",
                           title: 'Título',
                           subtitle: 'Legenda',
@@ -95,7 +95,7 @@ class FerramentasServices extends StatelessWidget {
                           mainAxisSpacing: 10,
                           childAspectRatio: 0.8,
                         ),
-                        itemBuilder: (context, index) => ProductCardM(
+                        itemBuilder: (context, index) => ProductCardNew(
                           imageUrl: "assets/images/lawn_mower.png",
                           title: 'Título',
                           subtitle: 'Legenda',
@@ -126,7 +126,7 @@ class FerramentasServices extends StatelessWidget {
                           mainAxisSpacing: 10,
                           childAspectRatio: 0.8,
                         ),
-                        itemBuilder: (context, index) => ProductCardM(
+                        itemBuilder: (context, index) => ProductCardNew(
                           imageUrl: "assets/images/wooden_hammer.png",
                           title: 'Título',
                           subtitle: 'Legenda',

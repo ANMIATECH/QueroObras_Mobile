@@ -6,7 +6,6 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProductDetailsController());
-
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -23,7 +22,6 @@ class HomeScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            // Main Content
             Expanded(
               child: SingleChildScrollView(
                 child: Container(
@@ -42,7 +40,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      // Search Bar Section
                       Row(
                         children: [
                           Expanded(
@@ -135,13 +132,11 @@ class HomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 3),
-
                           GestureDetector(
                             onTap: () {
                               String? token = StorageDesign.readItem(
                                 StorageDesign.token,
                               );
-
                               if (token == null || token.isEmpty) {
                                 // User NOT logged in → go to Login
                                 Get.toNamed(AppRoutes.login);
@@ -161,7 +156,7 @@ class HomeScreen extends StatelessWidget {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   clipBehavior: Clip
-                                      .none, // Allows the badge to sit outside the icon bounds
+                                      .none,
                                   children: [
                                     const Icon(Icons.shopping_cart, size: 28),
                                     Positioned(
@@ -175,7 +170,7 @@ class HomeScreen extends StatelessWidget {
                                           border: Border.all(
                                             color: Colors.white,
                                             width: 2,
-                                          ), // Adds contrast
+                                          ),
                                         ),
                                         constraints: const BoxConstraints(
                                           minWidth: 18,
@@ -201,7 +196,7 @@ class HomeScreen extends StatelessWidget {
                                             }
                                             return Obx(() {
                                               return Text(
-                                                '${controller.cart.value.data?.items?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                                '${controller.cart.value.data?.items?.length ?? 0}',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 10,
@@ -221,7 +216,6 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ],
                       ),
-
                       // const SizedBox(height: 25),
 
                       // // Recent Search Section
@@ -281,9 +275,7 @@ class HomeScreen extends StatelessWidget {
                               String? token = StorageDesign.readItem(
                                 StorageDesign.token,
                               );
-
                               if (token == null || token.isEmpty) {
-                                // User NOT logged in → go to Login
                                 Get.toNamed(AppRoutes.login);
                               } else {
                                 Get.toNamed(AppRoutes.materiaisServiceProvider);
@@ -445,10 +437,7 @@ class HomeScreen extends StatelessWidget {
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 20),
-
-                      // Quick Access Section
                       Text(
                         'Acesso rápido',
                         style: TextStyle(
@@ -458,9 +447,7 @@ class HomeScreen extends StatelessWidget {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-
                       const SizedBox(height: 20),
-                      // Quick Access Images
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [
@@ -472,12 +459,9 @@ class HomeScreen extends StatelessWidget {
                                 String? token = StorageDesign.readItem(
                                   StorageDesign.token,
                                 );
-
                                 if (token == null || token.isEmpty) {
-                                  // User NOT logged in → go to Login
                                   Get.toNamed(AppRoutes.login);
                                 } else {
-                                  // User IS logged in → go to Vender page
                                   Get.toNamed(AppRoutes.vender);
                                 }
                               },

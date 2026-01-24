@@ -533,6 +533,310 @@ class CustomDropdownField extends StatelessWidget {
   }
 }
 
+class Role {
+  final int id;
+  final String name;
+  final bool isSelected;
+
+  const Role({
+    required this.id,
+    required this.name,
+    this.isSelected = false,
+  });
+
+  Role copyWith({int? id, String? name, bool? isSelected}) {
+    return Role(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      isSelected: isSelected ?? this.isSelected,
+    );
+  }
+}
+
+class RoleItem extends StatelessWidget {
+  final Role role;
+  final VoidCallback onTap;
+
+  const RoleItem({
+    super.key,
+    required this.role,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 10),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: role.isSelected ? const Color(0xFF16577F) : Colors.white,
+        border: Border.all(
+          color: const Color(0xFFF0F0F0),
+          width: 1,
+        ),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(10),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 17),
+            child: Row(
+              children: [
+                Container(
+                  width: 20,
+                  height: 20,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    color: role.isSelected ? const Color(0xFF1C81BF) : const Color(0xFFD9D9D9),
+                  ),
+                  child: role.isSelected
+                      ? const Icon(Icons.check, color: Colors.white, size: 14)
+                      : null,
+                ),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Text(
+                    role.name,
+                    style: TextStyle(
+                      fontFamily: 'Josefin Sans',
+                      fontSize: 15,
+                      fontWeight: FontWeight.w500,
+                      color: role.isSelected ? Colors.white : const Color(0xFF444444),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+class MultiSelectDropdownField extends StatefulWidget {
+  final String label;
+  final List<Role> roles;
+  final Function(List<Role>) onSelectionChanged;
+
+  const MultiSelectDropdownField({
+    super.key,
+    required this.label,
+    required this.roles,
+    required this.onSelectionChanged,
+  });
+
+  @override
+  State<MultiSelectDropdownField> createState() =>
+      _MultiSelectDropdownFieldState();
+}
+
+class _MultiSelectDropdownFieldState extends State<MultiSelectDropdownField> {
+  late List<Role> _roles;
+  String _searchQuery = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _roles = List.from(widget.roles);
+  }
+
+  List<Role> get _filteredRoles {
+    if (_searchQuery.isEmpty) return _roles;
+    return _roles
+        .where((r) => r.name.toLowerCase().contains(_searchQuery.toLowerCase()))
+        .toList();
+  }
+
+  void _toggleRole(int index) {
+    setState(() {
+      _roles[index] = _roles[index].copyWith(isSelected: !_roles[index].isSelected);
+    });
+  }
+
+  void _submitSelection() {
+    widget.onSelectionChanged(_roles.where((r) => r.isSelected).toList());
+    Navigator.pop(context);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedCount = _roles.where((r) => r.isSelected).length;
+
+    return SafeArea(
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(20),
+          color: Colors.white,
+        ),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.8),
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          children: [
+            // Drag handle
+            Container(
+              width: 49,
+              height: 8,
+              decoration: BoxDecoration(
+                color: const Color(0xFFD9D9D9),
+                borderRadius: BorderRadius.circular(40),
+              ),
+            ),
+            const SizedBox(height: 20),
+      
+            // Header
+            Text(
+              '${widget.label} ($selectedCount Selecionado)',
+              style: const TextStyle(
+                fontFamily: 'Josefin Sans',
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+                color: Colors.black,
+              ),
+            ),
+            const SizedBox(height: 20),
+      
+            // Search field
+            CustomSearchField(
+              hintText: 'Pesquisar ${widget.label}',
+              onChanged: (val) {
+                setState(() {
+                  _searchQuery = val;
+                });
+              },
+            ),
+            const SizedBox(height: 20),
+      
+            // List of roles
+            Expanded(
+              child: ListView(
+                children: _filteredRoles.asMap().entries.map((entry) {
+                  int index = entry.key;
+                  Role role = entry.value;
+                  return RoleItem(
+                    role: role,
+                    onTap: () => _toggleRole(_roles.indexOf(role)),
+                  );
+                }).toList(),
+              ),
+            ),
+      
+            // Submit button
+            CustomSubmitButton(
+              text: 'Selecionar ${widget.label}',
+              onPressed: _submitSelection,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+
+class CustomSubmitButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onPressed;
+
+  const CustomSubmitButton({
+    super.key,
+    required this.text,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(217),
+        color: const Color(0xFFF9761E),
+      ),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: onPressed,
+          borderRadius: BorderRadius.circular(217),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 70, vertical: 19),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontFamily: 'Josefin Sans',
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class CustomSearchField extends StatelessWidget {
+  final String hintText;
+  final Function(String)? onChanged;
+
+  const CustomSearchField({
+    super.key,
+    required this.hintText,
+    this.onChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+          color: const Color(0xFFF0F0F0),
+          width: 1,
+        ),
+      ),
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 16),
+      child: Row(
+        children: [
+          SizedBox(
+            width: 24,
+            height: 24,
+            child: Icon(Icons.search_outlined),
+          ),
+          const SizedBox(width: 11),
+          Expanded(
+            child: TextField(
+              onChanged: onChanged,
+              style: const TextStyle(
+                fontFamily: 'Josefin Sans',
+                fontSize: 15,
+                fontWeight: FontWeight.w700,
+                color: Color(0xFF444444),
+              ),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: const TextStyle(
+                  fontFamily: 'Josefin Sans',
+                  fontSize: 15,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xFF444444),
+                ),
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+
 /// --------------------------------------------------------------
 /// OPTIONS BOTTOM SHEET
 /// --------------------------------------------------------------

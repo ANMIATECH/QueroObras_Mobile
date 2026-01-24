@@ -362,7 +362,7 @@ class ProductDetailsController extends GetxController {
       isLoading.value = true;
       var response = await _apiManager.post(ApiUrl.addToCart, data, true);
       isLoading.value = false;
-
+      print(response.body);
       if (response.statusCode == 200) {
         await getCart();
         CustomLoading.showNotification(
@@ -374,6 +374,7 @@ class ProductDetailsController extends GetxController {
           message: 'Falha ao adicionar ao carrinho.',
           messageType: MessageType.error,
         );
+        print(response.body);
       }
     } catch (e) {
       isLoading.value = false;

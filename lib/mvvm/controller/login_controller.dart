@@ -32,6 +32,12 @@ class LoginController extends GetxController {
   final ValueNotifier<bool> rememberMeNotifier = ValueNotifier<bool>(false);
   final otpControllers = List.generate(6, (_) => TextEditingController());
   final focusNodes = List.generate(6, (_) => FocusNode());
+  var selectedRolesNames = <String>[].obs;
+
+  // For storing the IDs corresponding to the selected names
+  var selectedRoleStatusIds = <int>[].obs;
+
+
 
   var isLoading = false.obs;
 

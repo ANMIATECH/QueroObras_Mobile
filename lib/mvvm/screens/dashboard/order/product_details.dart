@@ -9,46 +9,57 @@ class ProductDetailsScreen extends StatelessWidget {
     final controller = Get.find<ProductDetailsController>();
 
     return Scaffold(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(80),
+        child: AppBar(
+          backgroundColor: const Color(0xFF16577F),
+          automaticallyImplyLeading: false, // Remove default back button
+          flexibleSpace: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: const Icon(
+                          Icons.arrow_back,
+                          color: Colors.white,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      Text(
+                        "Detalhes",
+                        style: TextStyle(
+                          fontSize: 32,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: 'Josefin Sans',
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
       backgroundColor: Colors.white,
       body: PopScope(
         onPopInvokedWithResult: (didPop, result) {
           controller.quantity.value = 1;
         },
         child: SafeArea(
-          child: Container(
+          child: SizedBox(
             width: double.infinity,
-            constraints: const BoxConstraints(maxWidth: 440),
             child: Column(
               children: [
-                // Header
-                Container(
-                  height: 24,
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  margin: const EdgeInsets.only(top: 8),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () => Get.back(),
-                        child: const Icon(
-                          Icons.arrow_back,
-                          size: 24,
-                          color: Colors.black,
-                        ),
-                      ),
-                      const SizedBox(width: 33),
-                      const Text(
-                        'Detalhes',
-                        style: TextStyle(
-                          fontFamily: 'Josefin Sans',
-                          fontSize: 24,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
                 // Main content
                 Expanded(
                   child: SingleChildScrollView(

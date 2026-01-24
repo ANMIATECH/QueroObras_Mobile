@@ -17,140 +17,142 @@ class ProfileUploadScreen extends StatelessWidget {
     // final screenWidth = MediaQuery.of(context).size.width;
     // final isSmallScreen = screenWidth <= 640;
 
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30),
-          ),
-          child: Column(
-            children: [
-              const SizedBox(height: 40),
-      
-              // ✔ Profile Picture Picker
-              GestureDetector(
-                onTap: () => controller.pickProfileImage(),
-                child: Obx(() {
-                  return Center(
-                    child: Container(
-                      width: 200,
-                      height: 200,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30),
+            ),
+            child: Column(
+              children: [
+                const SizedBox(height: 40),
+        
+                // ✔ Profile Picture Picker
+                GestureDetector(
+                  onTap: () => controller.pickProfileImage(),
+                  child: Obx(() {
+                    return Center(
+                      child: Container(
+                        width: 200,
+                        height: 200,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF16577F),
+                          shape: BoxShape.circle,
+                          image: controller.profileImage.value != null
+                              ? DecorationImage(
+                            image: FileImage(
+                                controller.profileImage.value!),
+                            fit: BoxFit.cover,
+                          )
+                              : null,
+                        ),
+                        child: controller.profileImage.value == null
+                            ? const Center(
+                          child: Icon(
+                            Icons.camera_alt,
+                            size: 74,
+                            color: Colors.white,
+                          ),
+                        )
+                            : null,
+                      ),
+                    );
+                  }),
+                ),
+        
+                const SizedBox(height: 20),
+        
+                const Text(
+                  'Envie sua foto de perfil',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w700,
+                    fontFamily: 'Josefin Sans',
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+        
+                const SizedBox(height: 40),
+        
+                // ✔ Document Upload
+                GestureDetector(
+                  onTap: () => controller.pickCpfDocumentImage(),
+                  child: Obx(() {
+                    return Container(
+                      width: double.infinity,
+                      height: 171,
+                      margin: const EdgeInsets.symmetric(horizontal: 20),
                       decoration: BoxDecoration(
                         color: const Color(0xFF16577F),
-                        shape: BoxShape.circle,
-                        image: controller.profileImage.value != null
+                        borderRadius: BorderRadius.circular(10),
+                        image: controller.documentImage.value != null
                             ? DecorationImage(
                           image: FileImage(
-                              controller.profileImage.value!),
+                              controller.documentImage.value!),
                           fit: BoxFit.cover,
                         )
                             : null,
                       ),
-                      child: controller.profileImage.value == null
-                          ? const Center(
-                        child: Icon(
-                          Icons.camera_alt,
-                          size: 74,
-                          color: Colors.white,
+                      child: controller.documentImage.value == null
+                          ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CustomPaint(
+                                painter: UploadIconPainter(),
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            const Text(
+                              'Envie RG ou CNH',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
                       )
                           : null,
-                    ),
-                  );
-                }),
-              ),
-      
-              const SizedBox(height: 20),
-      
-              const Text(
-                'Envie sua foto de perfil',
-                style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                  fontFamily: 'Josefin Sans',
+                    );
+                  }),
                 ),
-                textAlign: TextAlign.center,
-              ),
-      
-              const SizedBox(height: 40),
-      
-              // ✔ Document Upload
-              GestureDetector(
-                onTap: () => controller.pickCpfDocumentImage(),
-                child: Obx(() {
-                  return Container(
-                    width: double.infinity,
-                    height: 171,
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF16577F),
-                      borderRadius: BorderRadius.circular(10),
-                      image: controller.documentImage.value != null
-                          ? DecorationImage(
-                        image: FileImage(
-                            controller.documentImage.value!),
-                        fit: BoxFit.cover,
-                      )
-                          : null,
-                    ),
-                    child: controller.documentImage.value == null
-                        ? Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: CustomPaint(
-                              painter: UploadIconPainter(),
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          const Text(
-                            'Envie RG ou CNH',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ],
-                      ),
-                    )
-                        : null,
-                  );
-                }),
-              ),
-      
-              const Spacer(),
-      
-              Padding(
-                padding:
-                const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-                child: CustomButton(
-                  text: 'Continuar',
-                  isLoading: controller.isLoading.value,
-                  onPressed: () {
-                    if (controller.profileImage.value == null ||
-                        controller.documentImage.value == null) {
-                      Get.snackbar(
-                        "Erro",
-                        "Por favor, envie a foto de perfil e o documento",
-                      );
-                      return;
-                    }
-      
-                    controller.uploadProfilePicNDoc(context);
-                  },
+        
+                const Spacer(),
+        
+                Padding(
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+                  child: CustomButton(
+                    text: 'Continuar',
+                    isLoading: controller.isLoading.value,
+                    onPressed: () {
+                      if (controller.profileImage.value == null ||
+                          controller.documentImage.value == null) {
+                        Get.snackbar(
+                          "Erro",
+                          "Por favor, envie a foto de perfil e o documento",
+                        );
+                        return;
+                      }
+        
+                      controller.uploadProfilePicNDoc(context);
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

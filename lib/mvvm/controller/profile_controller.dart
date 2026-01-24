@@ -8,9 +8,13 @@ class ProfileController extends GetxController {
   final ApiManager _apiManager = ApiManager();
 
   var isLoading = false.obs;
+  var selectedRolesNames = <String>[].obs;
 
+  // For storing the IDs corresponding to the selected names
+  var selectedRoleStatusIds = <int>[].obs;
   /// Categories
   var userRoleList = <CategoryModel>[].obs;
+  var selectedRoleStatus = 0.obs; // RxInt
   var selectedRoleId = RxnInt();
   var selectedRoleName = RxnString();
 
