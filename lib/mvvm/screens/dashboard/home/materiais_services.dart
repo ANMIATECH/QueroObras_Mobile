@@ -101,10 +101,28 @@ class MaterialShopScreen extends StatelessWidget {
 
                   if (!pController.isLoading.value && displayList.isEmpty) {
                     return Center(
-                      child: Text(
-                        pController.searchTerm.isEmpty
-                            ? 'Nenhum produto disponível.'
-                            : 'Nenhum produto encontrado para "${pController.searchTerm.value}".',
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.inventory_2_outlined, // material / products icon
+                            size: 64,
+                            color: Colors.grey.shade400,
+                          ),
+                          const SizedBox(height: 12),
+                          Text(
+                            pController.searchTerm.isEmpty
+                                ? 'Nenhum material disponível.'
+                                : 'Nenhum material encontrado para "${pController.searchTerm.value}".',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade600,
+                              fontFamily: 'Josefin Sans',
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     );
                   }

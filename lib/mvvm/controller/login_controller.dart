@@ -440,6 +440,7 @@ void startCountdown() {
       isLoading.value = false;
       jsonDecode(response.body);
       isLoading.value = false;
+      print(response.body);
 
       if (response.statusCode == 200) {
         CustomLoading.showNotification(
@@ -457,6 +458,8 @@ void startCountdown() {
           "Servidor retornou uma resposta inválida (${response.statusCode})",
           messageType: MessageType.error,
         );
+        print(response.body);
+
       }
     } catch (e) {
       isLoading.value = false;

@@ -16,7 +16,8 @@ class ServicesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final ServiceController controller = Get.find<ServiceController>();
     controller.getConstructionServiceProvider();
-    controller.getAcabamentoServiceProvider();
+    controller.getConstructionServiceProvider();
+    controller.getPopularServiceProvider();
 
     return Scaffold(
       appBar: PreferredSize(
@@ -111,15 +112,16 @@ class ServicesScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(20),
                 sliver: SliverGrid(
                   gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
+                    crossAxisCount: 2,
                     crossAxisSpacing: 15,
                     mainAxisSpacing: 15,
                     childAspectRatio: 1,
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final category = controller.categories[index];
-
+                    print(controller.categories[index]);
                     return ServiceCard(
+                      isLarge: true,
                       imageUrl: category['avatar'],
                       title:  category["name"] ?? "Serviço",
                       onTap: () {

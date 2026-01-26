@@ -7,800 +7,802 @@ class RegistrationScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controllers = Get.put(LoginController());
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: CustomColor.background,
-      body: GestureDetector(
-        // Tap outside TextField to close keyboard
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: FutureBuilder(
-          future: controllers.getServiceCategory(),
-          builder: (context, asyncSnapshot) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 24.0),
-              child: Column(
-                children: [
-                  verticalSpace(48), // Adjust as needed
-                  _buildLogo(),
-                  verticalSpace(32),
-                  _buildTitle(context),
-                  verticalSpace(24),
-
-                  Obx(
-                    () => CustomDropdownField(
-                      label: CustomText.registrationType,
-                      selectedValue: controllers.selectedUserStatus.value,
-                      options: controllers.userStatusOptions,
-                      customIcon: const Icon(
-                        Icons.verified_user,
-                        color: CustomColor.hintText,
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: CustomColor.background,
+        body: GestureDetector(
+          // Tap outside TextField to close keyboard
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: FutureBuilder(
+            future: controllers.getServiceCategory(),
+            builder: (context, asyncSnapshot) {
+              return SingleChildScrollView(
+                padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                child: Column(
+                  children: [
+                    verticalSpace(48), // Adjust as needed
+                    _buildLogo(),
+                    verticalSpace(32),
+                    _buildTitle(context),
+                    verticalSpace(24),
+      
+                    Obx(
+                      () => CustomDropdownField(
+                        label: CustomText.registrationType,
+                        selectedValue: controllers.selectedUserStatus.value,
+                        options: controllers.userStatusOptions,
+                        customIcon: const Icon(
+                          Icons.verified_user,
+                          color: CustomColor.hintText,
+                        ),
+      
+                        onChanged: (String newValue) {
+                          controllers.setUserStatus(
+                            newValue,
+                          ); // sync both selectedUserStatus & selectedDocumentType
+                        },
                       ),
-
-                      onChanged: (String newValue) {
-                        controllers.setUserStatus(
-                          newValue,
-                        ); // sync both selectedUserStatus & selectedDocumentType
-                      },
                     ),
-                  ),
-                  const SizedBox(height: 14),
-
-                  Obx(() {
-                    final doc = controllers.selectedDocumentType.value;
-
-                    if (doc == CustomText.cnpj) {
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            CustomText.name,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                    const SizedBox(height: 14),
+      
+                    Obx(() {
+                      final doc = controllers.selectedDocumentType.value;
+      
+                      if (doc == CustomText.cnpj) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              CustomText.name,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.fullNameController,
-                            hintText: CustomText.fullName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.fullNameController,
+                              hintText: CustomText.fullName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.cooperateName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.cooperateName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.companyNameController,
-                            hintText: CustomText.cooperateName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.companyNameController,
+                              hintText: CustomText.cooperateName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.legalRepName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.legalRepName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.legalRepNameController,
-                            hintText: CustomText.hintLegalRep,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.legalRepNameController,
+                              hintText: CustomText.hintLegalRep,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.tradeName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.tradeName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.tradeNameController,
-                            hintText: CustomText.tradeName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.tradeNameController,
+                              hintText: CustomText.tradeName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.emailAddress,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.emailAddress,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.emailController,
-                            hintText: CustomText.hintEmail,
-                            prefixWidget: const Icon(
-                              Icons.email_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.emailController,
+                              hintText: CustomText.hintEmail,
+                              prefixWidget: const Icon(
+                                Icons.email_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.emailAddress,
                             ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.motherName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.motherName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.motherNameController,
-                            hintText: CustomText.motherName,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.motherNameController,
+                              hintText: CustomText.motherName,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.birthDate,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.birthDate,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.birthDateController,
-                            hintText: CustomText.hintBirthDate,
-                            prefixWidget: const Icon(
-                              Icons.calendar_today_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.birthDateController,
+                              hintText: CustomText.hintBirthDate,
+                              prefixWidget: const Icon(
+                                Icons.calendar_today_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.datetime,
                             ),
-                            keyboardType: TextInputType.datetime,
-                          ),
-                          const SizedBox(height: 14),
-
-                          Obx(
-                            () => GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (_) => MultiSelectDropdownField(
-                                    label: CustomText.role,
-                                    roles: controllers.userRoleList
-                                        .map(
-                                          (r) => Role(
-                                            id: r.id,
-                                            name: r.name,
-                                            isSelected: controllers
-                                                .selectedRolesNames
-                                                .contains(r.name),
+                            const SizedBox(height: 14),
+      
+                            Obx(
+                              () => GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => MultiSelectDropdownField(
+                                      label: CustomText.role,
+                                      roles: controllers.userRoleList
+                                          .map(
+                                            (r) => Role(
+                                              id: r.id,
+                                              name: r.name,
+                                              isSelected: controllers
+                                                  .selectedRolesNames
+                                                  .contains(r.name),
+                                            ),
+                                          )
+                                          .toList(),
+                                      onSelectionChanged: (selectedRoles) {
+                                        controllers.selectedRolesNames.value =
+                                            selectedRoles
+                                                .map((r) => r.name)
+                                                .toList();
+                                        controllers.selectedRoleStatusIds.value =
+                                            selectedRoles
+                                                .map((r) => r.id)
+                                                .toList();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 14,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.verified_user),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          controllers.selectedRolesNames.isEmpty
+                                              ? 'Selecionar Função'
+                                              : controllers.selectedRolesNames
+                                                    .join(', '),
+                                          style: TextStyle(
+                                            color: CustomColor.hintText,
                                           ),
-                                        )
-                                        .toList(),
-                                    onSelectionChanged: (selectedRoles) {
-                                      controllers.selectedRolesNames.value =
-                                          selectedRoles
-                                              .map((r) => r.name)
-                                              .toList();
-                                      controllers.selectedRoleStatusIds.value =
-                                          selectedRoles
-                                              .map((r) => r.id)
-                                              .toList();
-                                    },
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.verified_user),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        controllers.selectedRolesNames.isEmpty
-                                            ? 'Selecionar Função'
-                                            : controllers.selectedRolesNames
-                                                  .join(', '),
-                                        style: TextStyle(
-                                          color: CustomColor.hintText,
                                         ),
                                       ),
-                                    ),
-                                    const Icon(Icons.arrow_drop_down),
-                                  ],
+                                      const Icon(Icons.arrow_drop_down),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.cnpj,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.cnpj,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.cnpjController,
-                            hintText: CustomText.cnpj,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.cnpjController,
+                              hintText: CustomText.cnpj,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.text,
                             ),
-                            keyboardType: TextInputType.text,
-                          ),
-                          const SizedBox(height: 14),
-                          const Text(
-                            CustomText.cep,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+                            const Text(
+                              CustomText.cep,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.cepController,
-                            hintText: CustomText.cep,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.cepController,
+                              hintText: CustomText.cep,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.number,
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.stateRegistration,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.stateRegistration,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.stateRegistrationController,
-                            hintText: CustomText.stateRegistration,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.stateRegistrationController,
+                              hintText: CustomText.stateRegistration,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.address,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.address,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.addressController,
-                            hintText: CustomText.address,
-                            prefixWidget: const Icon(
-                              Icons.location_on_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.addressController,
+                              hintText: CustomText.address,
+                              prefixWidget: const Icon(
+                                Icons.location_on_outlined,
+                                color: CustomColor.hintText,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.houseNumber,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.houseNumber,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.phoneNumberController,
-                            hintText: CustomText.houseNumber,
-                            prefixWidget: const Icon(
-                              Icons.phone,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.phoneNumberController,
+                              hintText: CustomText.houseNumber,
+                              prefixWidget: const Icon(
+                                Icons.phone,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.number,
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.password,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.password,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.passwordController,
-                            hintText: CustomText.password,
-                            prefixWidget: const Icon(
-                              Icons.lock_outline,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.passwordController,
+                              hintText: CustomText.password,
+                              prefixWidget: const Icon(
+                                Icons.lock_outline,
+                                color: CustomColor.hintText,
+                              ),
+                              isPassword: true,
                             ),
-                            isPassword: true,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.confirmPassword,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.confirmPassword,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.confirmPasswordController,
-                            hintText: CustomText.confirmPassword,
-                            prefixWidget: const Icon(
-                              Icons.lock_outline,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.confirmPasswordController,
+                              hintText: CustomText.confirmPassword,
+                              prefixWidget: const Icon(
+                                Icons.lock_outline,
+                                color: CustomColor.hintText,
+                              ),
+                              isPassword: true,
                             ),
-                            isPassword: true,
-                          ),
-                        ],
-                      );
-                    } else if (doc == CustomText.cpf) {
-                      // =========================
-                      // CPF Fields
-                      // =========================
-                      return Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text(
-                            CustomText.name,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                          ],
+                        );
+                      } else if (doc == CustomText.cpf) {
+                        // =========================
+                        // CPF Fields
+                        // =========================
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text(
+                              CustomText.name,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.fullNameController,
-                            hintText: CustomText.fullName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.fullNameController,
+                              hintText: CustomText.fullName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.companyName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.companyName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.companyNameController,
-                            hintText: CustomText.companyName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.companyNameController,
+                              hintText: CustomText.companyName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.motherName,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.motherName,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.motherNameController,
-                            hintText: CustomText.motherName,
-                            prefixWidget: CustomImageView(
-                              imagePath: "assets/images/input_name.svg",
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.motherNameController,
+                              hintText: CustomText.motherName,
+                              prefixWidget: CustomImageView(
+                                imagePath: "assets/images/input_name.svg",
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.businessEmail,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.businessEmail,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.emailController,
-                            hintText: CustomText.hintEmail,
-                            prefixWidget: const Icon(
-                              Icons.email_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.emailController,
+                              hintText: CustomText.hintEmail,
+                              prefixWidget: const Icon(
+                                Icons.email_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.emailAddress,
                             ),
-                            keyboardType: TextInputType.emailAddress,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.address,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.address,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.addressController,
-                            hintText: CustomText.address,
-                            prefixWidget: const Icon(
-                              Icons.location_on_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.addressController,
+                              hintText: CustomText.address,
+                              prefixWidget: const Icon(
+                                Icons.location_on_outlined,
+                                color: CustomColor.hintText,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.birthDate,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.birthDate,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.birthDateController,
-                            hintText: CustomText.hintBirthDate,
-                            prefixWidget: const Icon(
-                              Icons.calendar_today_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.birthDateController,
+                              hintText: CustomText.hintBirthDate,
+                              prefixWidget: const Icon(
+                                Icons.calendar_today_outlined,
+                                color: CustomColor.hintText,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          Obx(
-                                () => GestureDetector(
-                              onTap: () {
-                                showModalBottomSheet(
-                                  context: context,
-                                  isScrollControlled: true,
-                                  backgroundColor: Colors.transparent,
-                                  builder: (_) => MultiSelectDropdownField(
-                                    label: CustomText.role,
-                                    roles: controllers.userRoleList
-                                        .map(
-                                          (r) => Role(
-                                        id: r.id,
-                                        name: r.name,
-                                        isSelected: controllers
-                                            .selectedRolesNames
-                                            .contains(r.name),
-                                      ),
-                                    )
-                                        .toList(),
-                                    onSelectionChanged: (selectedRoles) {
-                                      controllers.selectedRolesNames.value =
-                                          selectedRoles
-                                              .map((r) => r.name)
-                                              .toList();
-                                      controllers.selectedRoleStatusIds.value =
-                                          selectedRoles
-                                              .map((r) => r.id)
-                                              .toList();
-                                    },
+                            const SizedBox(height: 14),
+      
+                            Obx(
+                                  () => GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled: true,
+                                    backgroundColor: Colors.transparent,
+                                    builder: (_) => MultiSelectDropdownField(
+                                      label: CustomText.role,
+                                      roles: controllers.userRoleList
+                                          .map(
+                                            (r) => Role(
+                                          id: r.id,
+                                          name: r.name,
+                                          isSelected: controllers
+                                              .selectedRolesNames
+                                              .contains(r.name),
+                                        ),
+                                      )
+                                          .toList(),
+                                      onSelectionChanged: (selectedRoles) {
+                                        controllers.selectedRolesNames.value =
+                                            selectedRoles
+                                                .map((r) => r.name)
+                                                .toList();
+                                        controllers.selectedRoleStatusIds.value =
+                                            selectedRoles
+                                                .map((r) => r.id)
+                                                .toList();
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 14,
                                   ),
-                                );
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 14,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: Colors.grey[200],
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Row(
-                                  children: [
-                                    const Icon(Icons.verified_user),
-                                    const SizedBox(width: 8),
-                                    Expanded(
-                                      child: Text(
-                                        controllers.selectedRolesNames.isEmpty
-                                            ? 'Selecionar Função'
-                                            : controllers.selectedRolesNames
-                                            .join(', '),
-                                        style: TextStyle(
-                                          color: CustomColor.hintText,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey[200],
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.verified_user),
+                                      const SizedBox(width: 8),
+                                      Expanded(
+                                        child: Text(
+                                          controllers.selectedRolesNames.isEmpty
+                                              ? 'Selecionar Função'
+                                              : controllers.selectedRolesNames
+                                              .join(', '),
+                                          style: TextStyle(
+                                            color: CustomColor.hintText,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    const Icon(Icons.arrow_drop_down),
-                                  ],
+                                      const Icon(Icons.arrow_drop_down),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.cpf,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.cpf,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.cpfController,
-                            hintText: CustomText.cpf,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.cpfController,
+                              hintText: CustomText.cpf,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.number,
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.cep,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.cep,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.cepController,
-                            hintText: CustomText.cep,
-                            prefixWidget: const Icon(
-                              Icons.person_outline_outlined,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.cepController,
+                              hintText: CustomText.cep,
+                              prefixWidget: const Icon(
+                                Icons.person_outline_outlined,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.number,
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.houseNumber,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.houseNumber,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.phoneNumberController,
-                            hintText: CustomText.houseNumber,
-                            prefixWidget: const Icon(
-                              Icons.phone,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.phoneNumberController,
+                              hintText: CustomText.houseNumber,
+                              prefixWidget: const Icon(
+                                Icons.phone,
+                                color: CustomColor.hintText,
+                              ),
+                              keyboardType: TextInputType.number,
                             ),
-                            keyboardType: TextInputType.number,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.password,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.password,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            isPhoneNumber: false,
-                            obscureText: false,
-
-                            controller: controllers.passwordController,
-                            hintText: CustomText.password,
-                            prefixWidget: const Icon(
-                              Icons.lock_outline,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              isPhoneNumber: false,
+                              obscureText: false,
+      
+                              controller: controllers.passwordController,
+                              hintText: CustomText.password,
+                              prefixWidget: const Icon(
+                                Icons.lock_outline,
+                                color: CustomColor.hintText,
+                              ),
+                              isPassword: true,
                             ),
-                            isPassword: true,
-                          ),
-                          const SizedBox(height: 14),
-
-                          const Text(
-                            CustomText.confirmPassword,
-                            style: TextStyle(
-                              color: CustomColor.sprimary,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'Josefin Sans',
+                            const SizedBox(height: 14),
+      
+                            const Text(
+                              CustomText.confirmPassword,
+                              style: TextStyle(
+                                color: CustomColor.sprimary,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'Josefin Sans',
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 14),
-                          CustomInputFieldLive(
-                            controller: controllers.confirmPasswordController,
-                            isPhoneNumber: false,
-                            obscureText: false,
-                            hintText: CustomText.confirmPassword,
-                            prefixWidget: const Icon(
-                              Icons.lock_outline,
-                              color: CustomColor.hintText,
+                            const SizedBox(height: 14),
+                            CustomInputFieldLive(
+                              controller: controllers.confirmPasswordController,
+                              isPhoneNumber: false,
+                              obscureText: false,
+                              hintText: CustomText.confirmPassword,
+                              prefixWidget: const Icon(
+                                Icons.lock_outline,
+                                color: CustomColor.hintText,
+                              ),
+                              isPassword: true,
                             ),
-                            isPassword: true,
-                          ),
-                        ],
+                          ],
+                        );
+                      }
+      
+                      return const SizedBox.shrink();
+                    }),
+      
+                    const SizedBox(height: 34),
+                    Obx(() {
+                      return AgreeInputDesign(
+                        value: controllers.agree.value,
+                        onChanged: (v) => controllers.agree.value = v,
                       );
-                    }
-
-                    return const SizedBox.shrink();
-                  }),
-
-                  const SizedBox(height: 34),
-                  Obx(() {
-                    return AgreeInputDesign(
-                      value: controllers.agree.value,
-                      onChanged: (v) => controllers.agree.value = v,
-                    );
-                  }),
-                  const SizedBox(height: 34),
-                  Obx(
-                    () => CustomButton(
-                      text: CustomText.entrar,
-                      isLoading: controllers.isLoading.value,
-                      isActive: controllers
-                          .agree
-                          .value, // 🔥 button only active when checked
-                      onPressed: controllers.agree.value
-                          ? () async => await controllers.signUp()
-                          : null, // 🔒 prevents click
+                    }),
+                    const SizedBox(height: 34),
+                    Obx(
+                      () => CustomButton(
+                        text: CustomText.entrar,
+                        isLoading: controllers.isLoading.value,
+                        isActive: controllers
+                            .agree
+                            .value, // 🔥 button only active when checked
+                        onPressed: controllers.agree.value
+                            ? () async => await controllers.signUp()
+                            : null, // 🔒 prevents click
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(height: 20),
-                  _buildSignUpLink(context),
-                  const SizedBox(height: 40),
-                ],
-              ),
-            );
-          },
+      
+                    const SizedBox(height: 20),
+                    _buildSignUpLink(context),
+                    const SizedBox(height: 40),
+                  ],
+                ),
+              );
+            },
+          ),
         ),
       ),
     );

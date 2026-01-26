@@ -408,7 +408,7 @@ class ServiceController extends GetxController {
   Future<void> getPopularServiceProvider() async {
     try {
       var response = await _apiManager.read(ApiUrl.popularCategory, false);
-
+print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         categories.value = data["categories"] ?? [];
@@ -416,6 +416,7 @@ class ServiceController extends GetxController {
         var message = jsonDecode(response.body);
         var error =
             message["error"]?["message"] ?? "Falha ao buscar categorias";
+        print(response.body);
 
         CustomLoading.showNotification(
           message: error,

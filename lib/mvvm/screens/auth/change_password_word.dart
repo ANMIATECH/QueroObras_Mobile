@@ -19,42 +19,44 @@ class ChangePasswordWord extends StatelessWidget {
     final String email = data["email"] as String? ?? "";
     final String otp = data["otp"] as String? ?? "";
 
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      backgroundColor: CustomColor.background,
-      body: GestureDetector(
-        // Tap outside TextField to close keyboard
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              verticalSpace(48), // Adjust as needed
-              _buildLogo(),
-              verticalSpace(32),
-              _buildTitle(context),
-              _buildTitleSub(context),
-              verticalSpace(24),
-              _buildEmailInput(context, lController),
-              verticalSpace(16),
-              _buildPasswordInput(context, lController),
-        
-              verticalSpace(32),
-              Obx(
-                () => CustomButton(
-                  text: CustomText.update,
-                  isLoading: lController.isResetPasswordLoading.value,
-                  onPressed: () async {
-                    await lController.resetPassword(
-                      email: email,
-                      otp: otp,
-                      context: context,
-                    );
-                  },
+    return SafeArea(
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        backgroundColor: CustomColor.background,
+        body: GestureDetector(
+          // Tap outside TextField to close keyboard
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                verticalSpace(48), // Adjust as needed
+                _buildLogo(),
+                verticalSpace(32),
+                _buildTitle(context),
+                _buildTitleSub(context),
+                verticalSpace(24),
+                _buildEmailInput(context, lController),
+                verticalSpace(16),
+                _buildPasswordInput(context, lController),
+          
+                verticalSpace(32),
+                Obx(
+                  () => CustomButton(
+                    text: CustomText.update,
+                    isLoading: lController.isResetPasswordLoading.value,
+                    onPressed: () async {
+                      await lController.resetPassword(
+                        email: email,
+                        otp: otp,
+                        context: context,
+                      );
+                    },
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

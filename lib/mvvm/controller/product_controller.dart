@@ -117,6 +117,7 @@ class ProductDetailsController extends GetxController {
   final RxBool isPaginatingOrderRequest = false.obs;
   final RxInt itemsPerPageOrder = 10.obs;
   final RxInt itemsPerPageOrderRequest = 10.obs;
+
   Future getAllProduct({bool isInitial = false}) async {
     if (!hasMoreData.value && !isInitial) return;
 
@@ -136,7 +137,6 @@ class ProductDetailsController extends GetxController {
       };
 
       var response = await _apiManager.read(ApiUrl.getProduct, false, params);
-
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         product.value = ItemForCurrentUser.fromJson(data);
@@ -180,6 +180,7 @@ class ProductDetailsController extends GetxController {
           message: 'Falha ao carregar os itens',
           messageType: MessageType.error,
         );
+
         hasMoreData.value = false;
       }
     } catch (e) {
