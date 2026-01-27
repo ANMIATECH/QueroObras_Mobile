@@ -18,6 +18,7 @@ class ApiUrl {
   static String changePassword = "auth/verify/otp";
   static String forgetPassword = "auth/signup";
   static String getProduct = "v1/item/list";
+  static String getSingleProduct = "v1/item/";
   static String orders = "v1/orders/my";
   static String orderSeller = "v1/orders/seller";
   static String serviceRequestAssigned = "v1/service-requests/assigned";

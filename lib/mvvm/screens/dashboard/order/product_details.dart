@@ -239,51 +239,78 @@ class ProductDetailsScreen extends StatelessWidget {
                         //   ),
                         // ),
                         const SizedBox(height: 20),
-                        Container(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
-                          child: Row(
-                            children: [
-                              // Chat Button
-                              // GestureDetector(
-                              //   onTap: () {
-                              //     Get.to(() =>  OneOnOneChat(id: '${dd.userId}', userName: '${dd.userId}',));
-                              //   },
-                              //   child: Container(
-                              //     width: 45,
-                              //     height: 49,
-                              //     decoration: BoxDecoration(
-                              //       color: const Color(0xFF16577F),
-                              //       borderRadius: BorderRadius.circular(70),
-                              //     ),
-                              //     child: Padding(
-                              //       padding: const EdgeInsets.all(8.0),
-                              //       child: CustomImageView(
-                              //         width: 24,
-                              //         height: 24,
-                              //         imagePath: "assets/images/message.svg",
-                              //       ),
-                              //     ),
-                              //   ),
-                              // ),
-
-                              // const SizedBox(width: 8),
-
-                              // Add to Cart Button
-                              Expanded(
-                                child: Obx(
-                                  () => CustomButton(
-                                    text: CustomText.addToCart,
-                                    isLoading: controller.isLoading.value,
-                                    onPressed: () async {
-                                      controller.addToCart(
-                                        itemSlug: "${dd.slug}",
-                                      );
-                                    },
-                                  ),
-                                ),
-                              ),
-                            ],
+                        FutureBuilder(
+                          future: controller.getSingleProduct(
+                            itemSlug: "${dd.slug}",
                           ),
+                          builder: (context, asyncSnapshot) {
+                            if (asyncSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            return Container(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 16),
+                              child: Row(
+                                children: [
+                                  // Chat Button
+                                  controller.singleProduct.value.paymentStatus
+                                              .toString()
+                                              .toLowerCase() ==
+                                          "paid".toLowerCase()
+                                      ? GestureDetector(
+                                          onTap: () {
+                                            Get.to(
+                                              () => OneOnOneChat(
+                                                id: '${dd.userId}',
+                                                userName: '${dd.userId}',
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: 45,
+                                            height: 49,
+                                            decoration: BoxDecoration(
+                                              color: const Color(0xFF16577F),
+                                              borderRadius:
+                                                  BorderRadius.circular(70),
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(
+                                                8.0,
+                                              ),
+                                              child: CustomImageView(
+                                                width: 24,
+                                                height: 24,
+                                                imagePath:
+                                                    "assets/images/message.svg",
+                                              ),
+                                            ),
+                                          ),
+                                        )
+                                      : Container(),
+
+                                  const SizedBox(width: 8),
+
+                                  // Add to Cart Button
+                                  Expanded(
+                                    child: Obx(
+                                      () => CustomButton(
+                                        text: CustomText.addToCart,
+                                        isLoading: controller.isLoading.value,
+                                        onPressed: () async {
+                                          controller.addToCart(
+                                            itemSlug: "${dd.slug}",
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          },
                         ),
                       ],
                     ),
