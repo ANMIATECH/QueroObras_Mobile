@@ -23,7 +23,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
   void initState() {
     super.initState();
     final String targetUrl = "https://queroobras.popopipo.com/api/order/";
-    final String targetUrlService = "https://queroobras.popopipo.com/api/service/";
+    final String targetUrlService =
+        "https://queroobras.popopipo.com/api/service/";
+    final String paymentFailOne =
+        "https://queroobras.popopipo.com/api/order/payment/status/failed";
+    final String paymentFailTwo =
+        "https://queroobras.popopipo.com/api/service/payment/status/failed";
     _controller = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setNavigationDelegate(
@@ -47,8 +52,23 @@ class _WebViewScreenState extends State<WebViewScreen> {
           // 3. Optional: Intercept navigation attempts before they happen
           onNavigationRequest: (NavigationRequest request) {
             debugPrint('Allowing navigation to: ${request.url}');
+            if (request.url.startsWith(paymentFailTwo)) {
+              Get.back();
+              return NavigationDecision
+                  .prevent; // Prevent the webview from actually loading the API raw data
+            }
+            if (request.url.startsWith(paymentFailOne)) {
+              Get.back();
+              return NavigationDecision
+                  .prevent; // Prevent the webview from actually loading the API raw data
+            }
+            if (request.url.startsWith(paymentFailOne)) {
+              Get.back();
+              return NavigationDecision
+                  .prevent; // Prevent the webview from actually loading the API raw data
+            }
             if (request.url.startsWith(targetUrl)) {
-            Get.off(() => const SuccessScreen());
+              Get.off(() => const SuccessScreen());
 
               // Example: Close the WebView if the payment status is reached
               // Navigator.pop(context);
@@ -57,7 +77,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
                   .prevent; // Prevent the webview from actually loading the API raw data
             }
             if (request.url.startsWith(targetUrlService)) {
-            Get.off(() => const SuccessScreen());
+              Get.off(() => const SuccessScreen());
 
               // Example: Close the WebView if the payment status is reached
               // Navigator.pop(context);

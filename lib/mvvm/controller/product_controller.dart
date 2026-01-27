@@ -2,6 +2,7 @@ import 'package:queroobras_mobile/mvvm/const/export.dart';
 import 'package:queroobras_mobile/mvvm/model/chat_model.dart';
 import 'package:queroobras_mobile/mvvm/model/chat_one_on_one.dart';
 import 'package:queroobras_mobile/mvvm/model/pay_order.dart';
+import 'package:queroobras_mobile/mvvm/model/single_product.dart';
 import 'package:queroobras_mobile/mvvm/screens/dashboard/webview.dart';
 
 class ProductDetailsController extends GetxController {
@@ -92,6 +93,7 @@ class ProductDetailsController extends GetxController {
   final product = ItemForCurrentUser().obs;
   final productOrder = OrderPayed().obs;
   final productOrderRequest = OrderPayed().obs;
+  final singleProduct = SingleProduct().obs;
 
   final RxList<Item> itemList =
       <Item>[].obs; // To store the list of fetched items
@@ -380,6 +382,29 @@ class ProductDetailsController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
+      CustomLoading.showNotification(
+        message: 'Erro de rede: $e',
+        messageType: MessageType.error,
+      );
+    }
+  }
+
+  Future<void> getSingleProduct({required String itemSlug}) async {
+    try {
+      var response = await _apiManager.read(
+        "${ApiUrl.getSingleProduct}$itemSlug",
+        true,
+      );
+       if (response.statusCode == 200) {
+         var data = jsonDecode(response.body);
+         singleProduct.value = SingleProduct.fromJson(data);
+       } else {
+         CustomLoading.showNotification(
+           message: 'Falha ao adicionar ao carrinho.',
+           messageType: MessageType.error,
+         );
+       }
+    } catch (e) {
       CustomLoading.showNotification(
         message: 'Erro de rede: $e',
         messageType: MessageType.error,
