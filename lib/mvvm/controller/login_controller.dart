@@ -32,10 +32,10 @@ class LoginController extends GetxController {
   final ValueNotifier<bool> rememberMeNotifier = ValueNotifier<bool>(false);
   final otpControllers = List.generate(6, (_) => TextEditingController());
   final focusNodes = List.generate(6, (_) => FocusNode());
-  var selectedRolesNames = <String>[].obs;
 
   // For storing the IDs corresponding to the selected names
-  var selectedRoleStatusIds = <int>[].obs;
+  RxList<int> selectedRoleStatusIds = <int>[].obs;
+  RxList<String> selectedRolesNames = <String>[].obs;
 
 
 
@@ -720,8 +720,8 @@ void startCountdown() {
         (key, value) => value == null || value.toString().isEmpty,
       );
 
-      if (selectedRoleStatus.value != 0) {
-        body["category_id"] = selectedRoleStatus.value;
+      if (selectedRoleStatusIds.isNotEmpty) {
+        body["category_id"] = selectedRoleStatusIds.toList();
       }
 
       isLoading.value = true;
@@ -734,7 +734,23 @@ void startCountdown() {
         passwordController.clear();
         confirmPasswordController.clear();
         fullNameController.clear();
+        phoneNumberController.clear();
+        cpfController.clear();
+        cnpjController.clear();
+        tradeNameController.clear();
+        motherNameController.clear();
+        emailController.clear();
+        addressController.clear();
+        birthDateController.clear();
+        cepController.clear();
+        companyNameController.clear();
+        legalRepNameController.clear();
+        stateRegistrationController.clear();
 
+        selectedRoleStatusIds.clear();
+        selectedRolesNames.clear();
+
+        selectedDocumentType.value = "";
         CustomLoading.showNotification(
           message: "Por favor, verifique seu e-mail usando o OTP enviado.",
           messageType: MessageType.success,
@@ -748,6 +764,8 @@ void startCountdown() {
           if (details.isNotEmpty) {
             errorMessage = details.values.first[0].toString();
           }
+          debugPrint("📤 SIGNUP REQUEST BODY:");
+          debugPrint(jsonEncode(body));
         } else if (message["error"]?["message"] != null) {
           errorMessage = message["error"]["message"].toString();
         }
@@ -765,6 +783,7 @@ void startCountdown() {
       );
     }
   }
+
 Future<void> getServiceCategory() async {
   try {
     final response = await _apiManager.read(ApiUrl.serviceCategory, false);

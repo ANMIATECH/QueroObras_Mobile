@@ -138,7 +138,7 @@ class ProductDetailsController extends GetxController {
         'per_page': itemsPerPage.value.toString(),
       };
 
-      var response = await _apiManager.read(ApiUrl.getProduct, false, params);
+      var response = await _apiManager.read(ApiUrl.getProduct, true, params);
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         product.value = ItemForCurrentUser.fromJson(data);

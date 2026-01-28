@@ -302,7 +302,6 @@ class HomeScreen extends StatelessWidget {
                                       imagePath: "assets/images/s_home.svg",
                                     ),
                                     const SizedBox(width: 10),
-
                                     Text(
                                       "Loja/ materiais",
                                       style: TextStyle(
