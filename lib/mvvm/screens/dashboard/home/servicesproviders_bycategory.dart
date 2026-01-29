@@ -15,7 +15,7 @@ class ServicesProvidersByCategory extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         appBar: AppBar(
-          title:  Text(
+          title: Text(
             'Serviços',
             style: TextStyle(
               color: Colors.black,
@@ -47,11 +47,14 @@ class ServicesProvidersByCategory extends StatelessWidget {
                           borderRadius: BorderRadius.circular(217),
                           color: const Color(0xFFEEEEEE),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 16,
+                        ),
                         child: Row(
                           children: [
                             GestureDetector(
-                              onTap:(){
+                              onTap: () {
                                 Navigator.pop(context);
                               },
                               child: const Icon(
@@ -80,14 +83,15 @@ class ServicesProvidersByCategory extends StatelessWidget {
                                   fontFamily: 'Josefin Sans',
                                 ),
                                 onChanged: (value) {
-                                  controller.filterProviders(value); // 🔎 filter on typing
+                                  controller.filterProviders(
+                                    value,
+                                  ); // 🔎 filter on typing
                                 },
                               ),
                             ),
                           ],
                         ),
                       ),
-
 
                       const SizedBox(height: 26),
 
@@ -133,46 +137,78 @@ class ServicesProvidersByCategory extends StatelessWidget {
                             itemCount: controller.filteredProviders.length,
                             itemBuilder: (context, index) {
                               final provider = controller.filteredProviders[index];
-                              final double providerLat = double.tryParse(provider['profile']?['latitude'] ?? '0') ?? 0;
-                              final double providerLng = double.tryParse(provider['profile']?['longitude'] ?? '0') ?? 0;
+                              // // 🔍 DEBUG: Print raw provider data
+                              // debugPrint('========== PROVIDER [$index] ==========');
+                              // debugPrint(provider.toString());
+                              // // debugPrint('======================================');
+                              final double providerLat =
+                                  double.tryParse(
+                                    provider['profile']?['latitude'] ?? '0',
+                                  ) ??
+                                  0;
+                              final double providerLng =
+                                  double.tryParse(
+                                    provider['profile']?['longitude'] ?? '0',
+                                  ) ??
+                                  0;
 
-                              final double distanceKm = Geolocator.distanceBetween(
-                                controller.myLat.value,
-                                controller.myLng.value,
-                                providerLat,
-                                providerLng,
-                              ) / 1000;
-
-                              final String firstName = (provider['name'] ?? '').split(' ').first;
+                              final double distanceKm =
+                                  Geolocator.distanceBetween(
+                                    controller.myLat.value,
+                                    controller.myLng.value,
+                                    providerLat,
+                                    providerLng,
+                                  ) /
+                                  1000;
+                              final String firstName = (provider['name'] ?? '')
+                                  .split(' ')
+                                  .first;
                               final String role = controller.categoryName.value;
 
                               return GestureDetector(
                                 onTap: () {
-                                  String? token = StorageDesign.readItem(StorageDesign.token);
+                                  String? token = StorageDesign.readItem(
+                                    StorageDesign.token,
+                                  );
 
                                   if (token == null || token.isEmpty) {
                                     Get.toNamed(AppRoutes.login);
                                   } else {
+                                    final providerId = provider['id'];
+
                                     Get.to(() => ServiceRequestScreen(
                                       providerName: firstName,
                                       serviceName: role,
-                                      amount: provider['profile']?['hourly_rate']?.toString() ?? 'N/A',
-                                      imageUrl: provider['profile']?['avatar'] == null
+                                      amount: provider['hourly_rate']?.toString() ?? 'Preço sob consulta',
+                                      imageUrl:    provider['profile']?['avatar'] == null
                                           ? 'assets/images/profile_dummy.png'
                                           : "${provider['profile']['avatar']}",
-                                      providerLat: double.tryParse(provider['profile']?['latitude'] ?? '0') ?? 0,
-                                      providerLng: double.tryParse(provider['profile']?['longitude'] ?? '0') ?? 0,
-                                      serviceProviderId:provider['profile']?['id']?.toString() ?? 'N/A'
+                                      providerLat: double.tryParse(provider['latitude']?.toString() ?? '0') ?? 0,
+                                      providerLng: double.tryParse(provider['longitude']?.toString() ?? '0') ?? 0,
+                                      serviceProviderId: providerId.toString(), // ✅ REAL ID
                                     ));
+                                    // debugPrint('PROVIDER ID => ${provider['id']}');
+                                    // debugPrint('PROVIDER ID => ${provider}');
+                                    // debugPrint('PROFILE => ${provider['profile']}');
+                                    // debugPrint('PROFILE ID => ${provider['profile']?['id']}');
+                                    debugPrint('PROFILE LAT => ${provider['profile']?['latitude']}');
+                                    debugPrint('PROFILE LNG => ${provider['profile']?['longitude']}');
+                                    debugPrint('HOURLY RATE => ${provider['profile']?['hourly_rate']}');
+
                                   }
                                 },
                                 child: ProviderCardA(
                                   provider: ServiceProviderA(
                                     name: firstName,
                                     role: role,
-                                    distance: "${distanceKm.toStringAsFixed(1)} km de você",
-                                    hourlyRate: provider['profile']?['hourly_rate']?.toString() ?? '',
-                                    imageUrl: provider['profile']?['avatar'] == null
+                                    distance:
+                                        "${distanceKm.toStringAsFixed(1)} km de você",
+                                    hourlyRate:
+                                        provider['profile']?['hourly_rate']
+                                            ?.toString() ??
+                                        '',
+                                    imageUrl:
+                                        provider['profile']?['avatar'] == null
                                         ? 'assets/images/profile_dummy.png'
                                         : "${provider['profile']['avatar']}",
                                   ),
@@ -182,7 +218,6 @@ class ServicesProvidersByCategory extends StatelessWidget {
                           );
                         }),
                       ),
-
                     ],
                   ),
                 ),
@@ -194,5 +229,3 @@ class ServicesProvidersByCategory extends StatelessWidget {
     );
   }
 }
-
-

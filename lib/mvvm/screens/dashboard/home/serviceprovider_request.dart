@@ -136,7 +136,7 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Solicitar um eletricista'),
+        title: Text(widget.serviceName),
       ),
       body: SingleChildScrollView(
         child: Column(
@@ -183,14 +183,28 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: CustomImageView(
-                                    imagePath: widget.imageUrl,
+                                  child: widget.imageUrl.startsWith('http')
+                                      ? Image.network(
+                                    widget.imageUrl,
+                                    width: 64,
+                                    height: 64,
+                                    fit: BoxFit.cover,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        'assets/images/profile_dummy.png',
+                                        fit: BoxFit.cover,
+                                      );
+                                    },
+                                  )
+                                      : Image.asset(
+                                    widget.imageUrl,
                                     width: 64,
                                     height: 64,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
+
                               const SizedBox(width: 11),
                               SizedBox(
                                 width: 74,
@@ -261,7 +275,9 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                     onPressed: () {
                       Get.to(()=>RequestService(serviceProviderId: widget.serviceProviderId,));
                       // Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
-    
+                      debugPrint('IMAGE URL => ${widget.imageUrl}');
+
+
                     },
                   ),
                   const SizedBox(height: 10),

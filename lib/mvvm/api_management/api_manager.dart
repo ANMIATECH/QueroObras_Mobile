@@ -50,6 +50,7 @@ class ApiManager implements ApiReuse {
       final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
       final request = http.MultipartRequest('POST', url);
 
+      request.headers['Accept-Language'] = 'pt';
       if (bearerToken) {
         request.headers['Authorization'] = 'Bearer $token';
       }
@@ -83,6 +84,7 @@ class ApiManager implements ApiReuse {
       final url = Uri.parse('${ApiReuse.baseUrl}$endpoint');
       final request = http.MultipartRequest('POST', url);
 
+      request.headers['Accept-Language'] = 'pt'; // ✅ Add Portuguese
       if (bearerToken) {
         request.headers['Authorization'] = 'Bearer $token';
       }

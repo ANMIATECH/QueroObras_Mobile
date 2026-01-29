@@ -572,61 +572,90 @@ print(response.body);
       return;
     }
 
-    if (selectedImages.isEmpty) {
-      CustomLoading.showNotification(
-        message: 'Por favor, envie pelo menos uma imagem.',
-        messageType: MessageType.error,
-      );
-      return;
-    }
+    // if (selectedImages.isEmpty) {
+    //   CustomLoading.showNotification(
+    //     message: 'Por favor, envie pelo menos uma imagem.',
+    //     messageType: MessageType.error,
+    //   );
+    //   return;
+    // }
 
-    // 2. Prepare Data and Files
+    // 2. Prepare Data
     final Map<String, String> data = {
       "service_provider_id": serviceProviderId,
       'address': addressRequest.text,
       'description': serviceToMake.text,
     };
 
-    // 3. API Call
     try {
-      // Show loading indicator (e.g., using Get.dialog or a loading overlay)
       isCreateItemLoading.value = true;
       FocusScope.of(context).unfocus();
+
       final response = await _apiManager.uploadMultipleFilesWithData(
-        endpoint: ApiUrl.serviceRequests, // Your endpoint
+        endpoint: ApiUrl.serviceRequests,
         files: selectedImages.toList(),
         data: data,
-        fileField: 'images[]', // The array field name from your request example
+        fileField: 'images[]',
         bearerToken: true,
       );
+
+      // 🔴 IMPORTANT: Read the response stream ONCE
+      final responseBody = await response.stream.bytesToString();
+
+      // // ✅ PRINT RESPONSE
+      // debugPrint("STATUS CODE: ${response.statusCode}");
+      // debugPrint("RESPONSE BODY: $responseBody");
+      // debugPrint("SENDING serviceProviderId => $serviceProviderId");
+      // debugPrint("TYPE => ${serviceProviderId.runtimeType}");
+
       isCreateItemLoading.value = false;
 
-      // Handle response
       if (response.statusCode == 201) {
         addressRequest.clear();
         serviceToMake.clear();
-        // Successful upload
+
         CustomLoading.showNotification(
           message: "Solicitação enviada",
           messageType: MessageType.success,
         );
+
         Get.back();
         Get.back();
         Get.back();
       } else {
-        final responseBody = await response.stream.bytesToString();
-        final message =
-            jsonDecode(responseBody)['error']["message"] ??
-            'Falha ao publicar o item.';
+        final decoded = responseBody.isNotEmpty
+            ? jsonDecode(responseBody)
+            : null;
+
+        String getPortugueseMessage(String message) {
+          switch (message.toLowerCase()) {
+            case 'you have a pending request':
+              return 'Você já possui uma solicitação pendente.';
+            case 'service provider not found':
+              return 'Prestador de serviço não encontrado.';
+            default:
+              return message; // fallback to whatever message
+          }
+        }
+
+        final rawMessage =
+            decoded?['error']?['message'] ??
+                decoded?['message'] ??
+                'Falha ao publicar o item.';
+
+        final message = getPortugueseMessage(rawMessage);
+
+
         CustomLoading.showNotification(
           message: message,
           messageType: MessageType.error,
         );
       }
     } on Exception catch (e) {
-      // 👈 CATCHES the Exception re-thrown by ApiManager (SocketException, TimeoutException, etc.)
+      isCreateItemLoading.value = false;
 
-      // e.toString() will contain the message like "Exception: No Internet connection..."
+      debugPrint("EXCEPTION: ${e.toString()}");
+
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
       CustomLoading.showNotification(
         message: errorMessage,
@@ -634,6 +663,8 @@ print(response.body);
       );
     } catch (e) {
       isCreateItemLoading.value = false;
+
+      debugPrint("UNEXPECTED ERROR: ${e.toString()}");
 
       CustomLoading.showNotification(
         message: 'Ocorreu um erro inesperado: ${e.toString()}',
