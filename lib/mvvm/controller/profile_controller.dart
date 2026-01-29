@@ -160,7 +160,7 @@ class ProfileController extends GetxController {
         // OPTIONAL: backend may expose availability status
         // isAvailable.value = result.isAvailable == 1;
 
-        print("📥 AVAILABILITY ITEMS: ${availabilityList.length}");
+        // print("📥 AVAILABILITY ITEMS: ${availabilityList.length}");
       } else {
         final message = jsonDecode(response.body);
         CustomLoading.showNotification(
@@ -193,8 +193,8 @@ class ProfileController extends GetxController {
         userId.value = user.id;
         isAvailable.value = user.isAvailable;
 
-        print("👤 USER ID: ${userId.value}");
-        print("🟢 AVAILABLE: ${isAvailable.value}");
+        // print("👤 USER ID: ${userId.value}");
+        // print("🟢 AVAILABLE: ${isAvailable.value}");
 
         // 🔥 NOW fetch rating
         await getUserRating(userId.value);
