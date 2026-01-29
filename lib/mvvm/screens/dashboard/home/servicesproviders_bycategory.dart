@@ -116,6 +116,10 @@ class ServicesProvidersByCategory extends StatelessWidget {
 
                       Expanded(
                         child: Obx(() {
+                          debugPrint(
+                            'MY LOCATION => lat: ${controller.myLat.value}, lng: ${controller.myLng.value}',
+                          );
+
                           if (controller.filteredProviders.isEmpty) {
                             return const Center(
                               child: Padding(
@@ -133,82 +137,79 @@ class ServicesProvidersByCategory extends StatelessWidget {
                               ),
                             );
                           }
+
+                          // ✅ YOU MUST RETURN THIS
                           return ListView.builder(
                             itemCount: controller.filteredProviders.length,
                             itemBuilder: (context, index) {
+
                               final provider = controller.filteredProviders[index];
-                              // // 🔍 DEBUG: Print raw provider data
-                              // debugPrint('========== PROVIDER [$index] ==========');
-                              // debugPrint(provider.toString());
-                              // // debugPrint('======================================');
+
                               final double providerLat =
                                   double.tryParse(
-                                    provider['profile']?['latitude'] ?? '0',
+                                    provider['profile']?['latitude']?.toString() ?? '0',
                                   ) ??
-                                  0;
+                                      0;
+
                               final double providerLng =
                                   double.tryParse(
-                                    provider['profile']?['longitude'] ?? '0',
+                                    provider['profile']?['longitude']?.toString() ?? '0',
                                   ) ??
-                                  0;
+                                      0;
 
-                              final double distanceKm =
-                                  Geolocator.distanceBetween(
-                                    controller.myLat.value,
-                                    controller.myLng.value,
-                                    providerLat,
-                                    providerLng,
-                                  ) /
-                                  1000;
-                              final String firstName = (provider['name'] ?? '')
-                                  .split(' ')
-                                  .first;
+                              double distanceKm = 0;
+                              if (providerLat != 0.0 && providerLng != 0.0) {
+                                distanceKm =
+                                    Geolocator.distanceBetween(
+                                      controller.myLat.value,
+                                      controller.myLng.value,
+                                      providerLat,
+                                      providerLng,
+                                    ) /
+                                        1000;
+                              }
+                              debugPrint('Distance to ${provider['name']}: ${distanceKm.toStringAsFixed(1)} km');
+
+                              final String firstName =
+                                  (provider['name'] ?? '').toString().split(' ').first;
+
                               final String role = controller.categoryName.value;
-
+                              debugPrint('PROVIDER [$index]');
+                              debugPrint('Name: ${provider['name']}');
+                              debugPrint('Lat: $providerLat, Lng: $providerLng');
+                              debugPrint('------------------------------');
                               return GestureDetector(
                                 onTap: () {
-                                  String? token = StorageDesign.readItem(
-                                    StorageDesign.token,
-                                  );
+                                  final token = StorageDesign.readItem(StorageDesign.token);
 
                                   if (token == null || token.isEmpty) {
                                     Get.toNamed(AppRoutes.login);
-                                  } else {
-                                    final providerId = provider['id'];
-
-                                    Get.to(() => ServiceRequestScreen(
-                                      providerName: firstName,
-                                      serviceName: role,
-                                      amount: provider['hourly_rate']?.toString() ?? 'Preço sob consulta',
-                                      imageUrl:    provider['profile']?['avatar'] == null
-                                          ? 'assets/images/profile_dummy.png'
-                                          : "${provider['profile']['avatar']}",
-                                      providerLat: double.tryParse(provider['latitude']?.toString() ?? '0') ?? 0,
-                                      providerLng: double.tryParse(provider['longitude']?.toString() ?? '0') ?? 0,
-                                      serviceProviderId: providerId.toString(), // ✅ REAL ID
-                                    ));
-                                    // debugPrint('PROVIDER ID => ${provider['id']}');
-                                    // debugPrint('PROVIDER ID => ${provider}');
-                                    // debugPrint('PROFILE => ${provider['profile']}');
-                                    // debugPrint('PROFILE ID => ${provider['profile']?['id']}');
-                                    debugPrint('PROFILE LAT => ${provider['profile']?['latitude']}');
-                                    debugPrint('PROFILE LNG => ${provider['profile']?['longitude']}');
-                                    debugPrint('HOURLY RATE => ${provider['profile']?['hourly_rate']}');
-
+                                    return;
                                   }
+
+                                  Get.to(() => ServiceRequestScreen(
+                                    providerName: firstName,
+                                    serviceName: role,
+                                    amount: provider['profile']?['hourly_rate']?.toString() ??
+                                        'Preço sob consulta',
+                                    imageUrl: provider['profile']?['avatar'] == null
+                                        ? 'assets/images/profile_dummy.png'
+                                        : "${provider['profile']['avatar']}",
+                                    providerLat: providerLat,
+                                    providerLng: providerLng,
+                                    serviceProviderId: provider['id'].toString(),
+                                  ));
                                 },
                                 child: ProviderCardA(
                                   provider: ServiceProviderA(
                                     name: firstName,
                                     role: role,
-                                    distance:
-                                        "${distanceKm.toStringAsFixed(1)} km de você",
+                                    distance: providerLat == 0.0
+                                        ? 'Distância indisponível'
+                                        : '${distanceKm.toStringAsFixed(1)} km de você',
                                     hourlyRate:
-                                        provider['profile']?['hourly_rate']
-                                            ?.toString() ??
-                                        '',
-                                    imageUrl:
-                                        provider['profile']?['avatar'] == null
+                                    provider['profile']?['hourly_rate']?.toString() ?? '',
+                                    imageUrl: provider['profile']?['avatar'] == null
                                         ? 'assets/images/profile_dummy.png'
                                         : "${provider['profile']['avatar']}",
                                   ),

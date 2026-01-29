@@ -63,12 +63,14 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
       }
 
       // Calculate distance to provider in km
-      double distanceKm = Geolocator.distanceBetween(
-        position.latitude,
-        position.longitude,
-        widget.providerLat,
-        widget.providerLng,
-      ) / 1000;
+      double distanceKm =
+          Geolocator.distanceBetween(
+            position.latitude,
+            position.longitude,
+            widget.providerLat,
+            widget.providerLng,
+          ) /
+          1000;
 
       // Assume average speed (e.g., 40 km/h)
       double averageSpeedKmH = 40;
@@ -78,10 +80,11 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
         estimatedMinutes = minutes;
       });
     } catch (e) {
-   CustomLoading.showNotification(
-          message: e.toString(),
-          messageType: MessageType.error,
-        );    }
+      CustomLoading.showNotification(
+        message: e.toString(),
+        messageType: MessageType.error,
+      );
+    }
   }
 
   String formatArrivalTime(int totalMinutes) {
@@ -100,12 +103,14 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
     int days = totalDays % 7;
     int totalWeeks = totalDays ~/ 7;
 
-    if (totalWeeks < 4) return '${totalWeeks}w ${days}d ${hours}h ${minutes}min';
+    if (totalWeeks < 4)
+      return '${totalWeeks}w ${days}d ${hours}h ${minutes}min';
 
     int weeks = totalWeeks % 4;
     int totalMonths = totalWeeks ~/ 4;
 
-    if (totalMonths < 12) return '${totalMonths}mo ${weeks}w ${days}d ${hours}h ${minutes}min';
+    if (totalMonths < 12)
+      return '${totalMonths}mo ${weeks}w ${days}d ${hours}h ${minutes}min';
 
     int months = totalMonths % 12;
     int years = totalMonths ~/ 12;
@@ -113,31 +118,34 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
     return '${years}y ${months}mo ${weeks}w ${days}d ${hours}h ${minutes}min';
   }
 
-
   @override
   Widget build(BuildContext context) {
     Set<Marker> markers = {};
 
     if (userLocation != null) {
-      markers.add(Marker(
-        markerId: const MarkerId('user'),
-        position: userLocation!,
-        infoWindow: const InfoWindow(title: 'You'),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
-      ));
+      markers.add(
+        Marker(
+          markerId: const MarkerId('user'),
+          position: userLocation!,
+          infoWindow: const InfoWindow(title: 'You'),
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueBlue),
+        ),
+      );
 
-      markers.add(Marker(
-        markerId: const MarkerId('provider'),
-        position: LatLng(widget.providerLat, widget.providerLng),
-        infoWindow: InfoWindow(title: widget.providerName),
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
-      ));
+      markers.add(
+        Marker(
+          markerId: const MarkerId('provider'),
+          position: LatLng(widget.providerLat, widget.providerLng),
+          infoWindow: InfoWindow(title: widget.providerName),
+          icon: BitmapDescriptor.defaultMarkerWithHue(
+            BitmapDescriptor.hueOrange,
+          ),
+        ),
+      );
     }
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.serviceName),
-      ),
+      appBar: AppBar(title: Text(widget.serviceName)),
       body: SingleChildScrollView(
         child: Column(
           children: [
@@ -147,15 +155,15 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
               child: userLocation == null
                   ? const Center(child: CircularProgressIndicator())
                   : GoogleMap(
-                initialCameraPosition: CameraPosition(
-                  target: userLocation!,
-                  zoom: 14,
-                ),
-                markers: markers,
-                myLocationEnabled: true,
-                myLocationButtonEnabled: false,
-                onMapCreated: (controller) => mapController = controller,
-              ),
+                      initialCameraPosition: CameraPosition(
+                        target: userLocation!,
+                        zoom: 14,
+                      ),
+                      markers: markers,
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      onMapCreated: (controller) => mapController = controller,
+                    ),
             ),
             const SizedBox(height: 20),
             // Provider info and actions
@@ -183,28 +191,14 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                                 ),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: widget.imageUrl.startsWith('http')
-                                      ? Image.network(
-                                    widget.imageUrl,
-                                    width: 64,
-                                    height: 64,
-                                    fit: BoxFit.cover,
-                                    errorBuilder: (context, error, stackTrace) {
-                                      return Image.asset(
-                                        'assets/images/profile_dummy.png',
-                                        fit: BoxFit.cover,
-                                      );
-                                    },
-                                  )
-                                      : Image.asset(
-                                    widget.imageUrl,
+                                  child: CustomImageView(
+                                    imagePath: widget.imageUrl,
                                     width: 64,
                                     height: 64,
                                     fit: BoxFit.cover,
                                   ),
                                 ),
                               ),
-
                               const SizedBox(width: 11),
                               SizedBox(
                                 width: 74,
@@ -252,8 +246,8 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                             Text(
                               estimatedMinutes != null
                                   ? (estimatedMinutes! >= 0
-                                  ? 'Chegada estimada: ${formatArrivalTime(estimatedMinutes!)}'
-                                  : 'Permissão de localização negada')
+                                        ? 'Chegada estimada: ${formatArrivalTime(estimatedMinutes!)}'
+                                        : 'Permissão de localização negada')
                                   : 'Calculando...',
                               style: const TextStyle(
                                 fontSize: 16,
@@ -273,11 +267,13 @@ class _ServiceRequestScreenState extends State<ServiceRequestScreen> {
                     backgroundColor: const Color(0xFFF9761E),
                     textColor: Colors.white,
                     onPressed: () {
-                      Get.to(()=>RequestService(serviceProviderId: widget.serviceProviderId,));
+                      Get.to(
+                        () => RequestService(
+                          serviceProviderId: widget.serviceProviderId,
+                        ),
+                      );
                       // Navigator.of(context).pushNamed(AppRoutes.oneOnOneChat);
                       debugPrint('IMAGE URL => ${widget.imageUrl}');
-
-
                     },
                   ),
                   const SizedBox(height: 10),

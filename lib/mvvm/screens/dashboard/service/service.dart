@@ -119,14 +119,12 @@ class ServicesScreen extends StatelessWidget {
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final category = controller.categories[index];
-                    print(controller.categories[index]);
                     return ServiceCard(
                       isLarge: true,
                       imageUrl: category['avatar'],
                       title:  category["name"] ?? "Serviço",
                       onTap: () {
                         final slug = category['slug'];
-
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
                       },
 
@@ -211,7 +209,6 @@ class ServicesScreen extends StatelessWidget {
                   ),
                   delegate: SliverChildBuilderDelegate((context, index) {
                     final category = controller.aCategories[index];
-
                     return ServiceCard(
                       imageUrl: category['avatar'],
                       title: category["name"] ?? "Serviço",
@@ -219,7 +216,6 @@ class ServicesScreen extends StatelessWidget {
                         final slug = category['slug'];
                         Get.to(() => ServicesProvidersByCategory(slug: slug));
                       },
-
                     );
                   }, childCount: controller.aCategories.length),
                 ),
@@ -261,7 +257,6 @@ class ServicesScreen extends StatelessWidget {
                             fontFamily: 'Josefin Sans',
                           ),
                         ),
-
                         // Right side - Action button
                         GestureDetector(
                           onTap: (){

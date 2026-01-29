@@ -13,38 +13,43 @@ class ServiceController extends GetxController {
   RxDouble myLng = 0.0.obs;
 
   Future<void> getCurrentLocation() async {
-    LocationPermission permission;
-
-    // Check permission
-    permission = await Geolocator.checkPermission();
+    LocationPermission permission = await Geolocator.checkPermission();
 
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
     }
 
-    if (permission == LocationPermission.deniedForever) {
-      throw Exception("Location permissions are permanently denied.");
+    if (permission == LocationPermission.denied ||
+        permission == LocationPermission.deniedForever) {
+      throw Exception('Permissão de localização negada');
     }
 
-    if (permission == LocationPermission.denied) {
-      throw Exception("User denied location permission.");
-    }
-
-    // Now get location safely
-    await Geolocator.getCurrentPosition(
-      locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+    // ✅ Get position
+    final position = await Geolocator.getCurrentPosition(
+      desiredAccuracy: LocationAccuracy.high,
     );
-    // print("Current location: ${position.latitude}, ${position.longitude}");
+
+    // ✅ SAVE location
+    myLat.value = position.latitude;
+    myLng.value = position.longitude;
+
+    debugPrint('MY LOCATION => ${myLat.value}, ${myLng.value}');
   }
 
-  Future<double> calculateDistance(
-    double startLat,
-    double startLng,
-    double endLat,
-    double endLng,
-  ) async {
-    return Geolocator.distanceBetween(startLat, startLng, endLat, endLng) /
-        1000; // km
+
+  double calculateDistanceKm(
+      double endLat,
+      double endLng,
+      ) {
+    if (myLat.value == 0.0 || myLng.value == 0.0) return 0;
+
+    return Geolocator.distanceBetween(
+      myLat.value,
+      myLng.value,
+      endLat,
+      endLng,
+    ) /
+        1000;
   }
 
   var isLoading = false.obs;
@@ -55,7 +60,7 @@ class ServiceController extends GetxController {
     if (StorageDesign.validKey(
       StorageDesign.token,
     )) {
-          getPopularServiceProvider();
+      getPopularServiceProvider();
     getCurrentLocation();
     getConstructionServiceProvider();
     getAcabamentoServiceProvider();
@@ -408,7 +413,7 @@ class ServiceController extends GetxController {
   Future<void> getPopularServiceProvider() async {
     try {
       var response = await _apiManager.read(ApiUrl.popularCategory, false);
-print(response.body);
+// print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         categories.value = data["categories"] ?? [];
@@ -416,7 +421,7 @@ print(response.body);
         var message = jsonDecode(response.body);
         var error =
             message["error"]?["message"] ?? "Falha ao buscar categorias";
-        print(response.body);
+        // print(response.body);
 
         CustomLoading.showNotification(
           message: error,
@@ -654,7 +659,7 @@ print(response.body);
     } on Exception catch (e) {
       isCreateItemLoading.value = false;
 
-      debugPrint("EXCEPTION: ${e.toString()}");
+      // debugPrint("EXCEPTION: ${e.toString()}");
 
       final errorMessage = e.toString().replaceFirst('Exception: ', '');
       CustomLoading.showNotification(
@@ -664,7 +669,7 @@ print(response.body);
     } catch (e) {
       isCreateItemLoading.value = false;
 
-      debugPrint("UNEXPECTED ERROR: ${e.toString()}");
+      // debugPrint("UNEXPECTED ERROR: ${e.toString()}");
 
       CustomLoading.showNotification(
         message: 'Ocorreu um erro inesperado: ${e.toString()}',
