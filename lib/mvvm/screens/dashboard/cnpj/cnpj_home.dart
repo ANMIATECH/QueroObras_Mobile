@@ -6,6 +6,7 @@ class CnpjHomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProductDetailsController());
+    final controllerNoticiation = Get.find<ServiceController>();
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -37,9 +38,7 @@ class CnpjHomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: CustomImageView(
-                          imagePath: CustomImage.newLogo,
-                        ),
+                        child: CustomImageView(imagePath: CustomImage.newLogo),
                       ),
                       const SizedBox(height: 10),
                       // Search Bar Section
@@ -70,7 +69,7 @@ class CnpjHomeScreen extends StatelessWidget {
                                         enabled: false,
                                         decoration: const InputDecoration(
                                           hintText:
-                                          'O que você está procurando?',
+                                              'O que você está procurando?',
                                           hintStyle: TextStyle(
                                             color: Color(0xFF7F7F7F),
                                             fontSize: 16,
@@ -95,6 +94,7 @@ class CnpjHomeScreen extends StatelessWidget {
                             ),
                           ),
                           const SizedBox(width: 3),
+
                           GestureDetector(
                             onTap: () {
                               Navigator.of(
@@ -105,14 +105,70 @@ class CnpjHomeScreen extends StatelessWidget {
                               width: 50,
                               height: 50,
                               decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFEEEEEE,
-                                ), // background color
+                                color: const Color(0xFFEEEEEE),
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Center(
-                                child: CustomImageView(
-                                  imagePath: CustomImage.notification,
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  clipBehavior: Clip
+                                      .none, // Allows the badge to sit outside the icon bounds
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: CustomImage.notification,
+                                    ),
+                                    Positioned(
+                                      right: -4,
+                                      top: -4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Badge color
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ), // Adds contrast
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 18,
+                                          minHeight: 18,
+                                        ),
+                                        child: FutureBuilder(
+                                          future: controllerNoticiation
+                                              .loadNofication(isInitial: true),
+                                          builder: (context, asyncSnapshot) {
+                                            if (asyncSnapshot.connectionState ==
+                                                    ConnectionState.waiting &&
+                                                controllerNoticiation
+                                                        .notificaitoncpnf
+                                                        .value
+                                                        .data
+                                                        ?.datacpnf ==
+                                                    null) {
+                                              return SizedBox.shrink();
+                                            }
+                                            if (asyncSnapshot.hasError) {
+                                              return Text(
+                                                'Error: ${asyncSnapshot.error}',
+                                              );
+                                            }
+                                            return Obx(() {
+                                              return Text(
+                                                '${controllerNoticiation.notificaitoncpnf.value.data?.datacpnf?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ),
@@ -160,12 +216,12 @@ class CnpjHomeScreen extends StatelessWidget {
                                           future: controller.getCart(),
                                           builder: (context, asyncSnapshot) {
                                             if (asyncSnapshot.connectionState ==
-                                                ConnectionState.waiting &&
+                                                    ConnectionState.waiting &&
                                                 controller
-                                                    .cart
-                                                    .value
-                                                    .data
-                                                    ?.items ==
+                                                        .cart
+                                                        .value
+                                                        .data
+                                                        ?.items ==
                                                     null) {
                                               return SizedBox.shrink();
                                             }

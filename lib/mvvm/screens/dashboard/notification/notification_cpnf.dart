@@ -96,10 +96,37 @@ class NotificationCpnfScreen extends StatelessWidget {
   }
 }
 
-class CustomerRequestCard extends StatelessWidget {
+class CustomerRequestCard extends StatefulWidget {
   final DatumCpnf? dd;
 
   const CustomerRequestCard({super.key, this.dd});
+
+  @override
+  State<CustomerRequestCard> createState() => _CustomerRequestCardState();
+}
+
+class _CustomerRequestCardState extends State<CustomerRequestCard> {
+  late PageController _pageController;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController();
+    _pageController.addListener(() {
+      if (mounted) {
+        setState(() {
+          _currentPage = _pageController.page?.round() ?? 0;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -108,6 +135,7 @@ class CustomerRequestCard extends StatelessWidget {
     final isMobile = screenWidth <= 640;
     final controller = Get.find<ServiceController>();
 
+    // Responsive values
     double containerMaxWidth = 400;
     double containerPadding = 27;
     double contentWidth = 346;
@@ -122,6 +150,7 @@ class CustomerRequestCard extends StatelessWidget {
       containerMaxWidth = 350;
       containerPadding = 20;
       contentWidth = 310;
+      imageHeight = 220;
     } else if (isMobile) {
       containerMaxWidth = 320;
       containerPadding = 16;
@@ -133,6 +162,10 @@ class CustomerRequestCard extends StatelessWidget {
       descriptionFontSize = 14;
       locationFontSize = 13;
     }
+
+    final hasImages =
+        widget.dd?.images != null && widget.dd!.images!.isNotEmpty;
+    final imageCount = hasImages ? widget.dd!.images!.length : 0;
 
     return Center(
       child: Container(
@@ -159,71 +192,76 @@ class CustomerRequestCard extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: contentGap),
-              // Image with pagination dots
-              SizedBox(
-                height: 235,
-                child: Stack(
-                  children: [
-                    // Start of the updated image list (PageView.builder)
-                    dd?.images?.isEmpty ?? [].isEmpty
-                        ? Container()
-                        : SizedBox(
-                            height:
-                                imageHeight, // Use the dynamically calculated height
-                            child: PageView.builder(
-                              itemCount:
-                                  dd?.images?.length ??
-                                  0, // Assumed number of images, matching the dots
-                              itemBuilder: (context, index) {
-                                // Placeholder list of image URLs for demonstration.
-                                // You should replace this with a dynamic list property.
-                                var image = dd?.images?[index];
-                                return ClipRRect(
-                                  borderRadius: BorderRadius.circular(
-                                    borderRadius,
-                                  ), // Use dynamic radius
-                                  child: CustomImageView(
-                                    imagePath: image
-                                        ?.imageUrl, // Use the image for the current index
-                                    width: contentWidth,
-                                    height: imageHeight,
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                    // End of the updated image list (PageView.builder)
 
-                    // Pagination dots (existing code for context)
-                    Positioned(
-                      left: isMobile ? 104 : (isTablet ? 115 : 126),
-                      top: isMobile ? 176 : 216,
-                      child: Row(
-                        children: List.generate(dd?.images?.length ?? 0, (
-                          index,
-                        ) {
-                          return Container(
-                            margin: const EdgeInsets.only(right: 5),
-                            width: 20,
-                            height: 4,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              color: const Color(0xFFCCCCCC),
+              SizedBox(height: contentGap),
+
+              // Images + Dots (only if images exist)
+              if (hasImages) ...[
+                SizedBox(
+                  height: imageHeight,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      // Image carousel
+                      PageView.builder(
+                        controller: _pageController,
+                        itemCount: imageCount,
+                        itemBuilder: (context, index) {
+                          final image = widget.dd!.images![index];
+                          final url = image.imageUrl ?? '';
+
+                          return ClipRRect(
+                            borderRadius: BorderRadius.circular(borderRadius),
+                            child: CustomImageView(
+                              imagePath: url,
+                              width: contentWidth,
+                              height: imageHeight,
+                              fit: BoxFit.cover,
+                              // Recommended additions if CustomImageView supports them:
+                              // errorWidget: const Icon(Icons.broken_image, size: 64, color: Colors.grey),
+                              // placeholder: const Center(child: CircularProgressIndicator()),
                             ),
                           );
-                        }),
+                        },
                       ),
-                    ),
-                  ],
+
+                      // Pagination dots (only show if more than 1 image)
+                      if (imageCount > 1)
+                        Positioned(
+                          bottom: 12,
+                          left: 0,
+                          right: 0,
+                          child: Center(
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: List.generate(imageCount, (index) {
+                                final isActive = index == _currentPage;
+                                return Container(
+                                  margin: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  width: isActive ? 24 : 12,
+                                  height: 4,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    color: isActive
+                                        ? Colors.black.withOpacity(0.8)
+                                        : const Color(0xFFCCCCCC),
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: contentGap),
+                SizedBox(height: contentGap),
+              ],
 
               // Location
               Text(
-                "${dd?.address}",
+                widget.dd?.address ?? 'No address provided',
                 style: TextStyle(
                   fontFamily: 'Josefin Sans',
                   fontSize: locationFontSize,
@@ -232,9 +270,10 @@ class CustomerRequestCard extends StatelessWidget {
                   color: Colors.black,
                 ),
               ),
+
               SizedBox(height: contentGap),
 
-              // Description with "More" link
+              // Description + "More"
               SizedBox(
                 height: isMobile ? null : 48,
                 child: RichText(
@@ -247,8 +286,12 @@ class CustomerRequestCard extends StatelessWidget {
                       color: Colors.black,
                     ),
                     children: [
-                      TextSpan(text: "${dd?.description}"),
-                      const TextSpan(text: ' '),
+                      TextSpan(
+                        text: (widget.dd?.description ?? '').trim().isEmpty
+                            ? 'No description available'
+                            : widget.dd!.description!,
+                      ),
+                      const TextSpan(text: '  '),
                       const TextSpan(
                         text: 'More',
                         style: TextStyle(
@@ -260,56 +303,64 @@ class CustomerRequestCard extends StatelessWidget {
                   ),
                 ),
               ),
+
               SizedBox(height: contentGap),
 
               // Action buttons
-              isMobile
-                  ? dd?.status == "5"
-                        ? Container()
-                        : Column(
-                            children: [
-                              dd?.status == "3"
-                                  ? Container()
-                                  : _buildButton(
-                                      text: 'Cancel',
-                                      backgroundColor: const Color(0xFFDC2626),
-                                      onPressed: () {},
-                                      width: double.infinity,
-                                    ),
-                              const SizedBox(height: 8),
-                              _buildButton(
-                                text: dd?.status == "3"
-                                    ? "Completo"
-                                    : 'Aprovar',
-                                backgroundColor: const Color(0xFF1E40AF),
-                                onPressed: () {
-                                  dd?.status == "3"
-                                      ? controller.completedRequest(
-                                          id: "${dd?.slug}",
-                                        )
-                                      : Get.to(() => ApproveRequest(dd: dd));
-                                },
-                                width: double.infinity,
-                              ),
-                            ],
-                          )
-                  : Row(
-                      children: [
+              if (isMobile)
+                if (widget.dd?.status == "5")
+                  const SizedBox.shrink()
+                else
+                  Column(
+                    children: [
+                      if (widget.dd?.status != "3")
                         _buildButton(
                           text: 'Cancel',
                           backgroundColor: const Color(0xFFDC2626),
-                          onPressed: () {},
-                          width: 145,
+                          onPressed: () {
+                            // TODO: implement cancel logic
+                          },
+                          width: double.infinity,
                         ),
-                        const SizedBox(width: 10),
-                        _buildButton(
-                          text: 'Approve',
-                          backgroundColor: const Color(0xFF1E40AF),
-                          onPressed: () {},
-                          width: 145,
-                        ),
-                      ],
+                      if (widget.dd?.status != "3") const SizedBox(height: 8),
+                      _buildButton(
+                        text: widget.dd?.status == "3" ? "Completo" : 'Aprovar',
+                        backgroundColor: const Color(0xFF1E40AF),
+                        onPressed: () {
+                          if (widget.dd?.status == "3") {
+                            controller.completedRequest(
+                              id: "${widget.dd?.slug}",
+                            );
+                          } else {
+                            Get.to(() => ApproveRequest(dd: widget.dd));
+                          }
+                        },
+                        width: double.infinity,
+                      ),
+                    ],
+                  )
+              else
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildButton(
+                      text: 'Cancel',
+                      backgroundColor: const Color(0xFFDC2626),
+                      onPressed: () {
+                        // TODO: implement cancel
+                      },
+                      width: 145,
                     ),
+                    _buildButton(
+                      text: 'Approve',
+                      backgroundColor: const Color(0xFF1E40AF),
+                      onPressed: () {
+                        // TODO: implement approve
+                      },
+                      width: 145,
+                    ),
+                  ],
+                ),
             ],
           ),
         ),

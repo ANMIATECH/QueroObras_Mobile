@@ -6,6 +6,8 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ProductDetailsController());
+    final controllerNoticiation = Get.find<ServiceController>();
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: Container(
@@ -35,9 +37,7 @@ class HomeScreen extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(4),
                         ),
-                        child: CustomImageView(
-                          imagePath: CustomImage.newLogo,
-                        ),
+                        child: CustomImageView(imagePath: CustomImage.newLogo),
                       ),
                       const SizedBox(height: 10),
                       Row(
@@ -69,9 +69,11 @@ class HomeScreen extends StatelessWidget {
                                           // User NOT logged in → go to Login
                                           Get.toNamed(AppRoutes.login);
                                         } else {
-                                          Get.toNamed(AppRoutes.materiaisServiceProvider);
+                                          Get.toNamed(
+                                            AppRoutes.materiaisServiceProvider,
+                                          );
                                         }
-                                        },
+                                      },
                                       child: TextField(
                                         enabled: false,
                                         decoration: const InputDecoration(
@@ -113,37 +115,6 @@ class HomeScreen extends StatelessWidget {
                               } else {
                                 Get.toNamed(AppRoutes.notificationCpnScreen);
                               }
-
-                            },
-                            child: Container(
-                              width: 50,
-                              height: 50,
-                              decoration: BoxDecoration(
-                                color: const Color(
-                                  0xFFEEEEEE,
-                                ), // background color
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Center(
-                                child: CustomImageView(
-                                  imagePath: CustomImage.notification,
-                                ),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 3),
-                          GestureDetector(
-                            onTap: () {
-                              String? token = StorageDesign.readItem(
-                                StorageDesign.token,
-                              );
-                              if (token == null || token.isEmpty) {
-                                // User NOT logged in → go to Login
-                                Get.toNamed(AppRoutes.login);
-                              } else {
-                                Navigator.of(
-                                  context,
-                                ).pushNamed(AppRoutes.checkout);                              }
                             },
                             child: Container(
                               width: 50,
@@ -156,7 +127,96 @@ class HomeScreen extends StatelessWidget {
                                 child: Stack(
                                   alignment: Alignment.center,
                                   clipBehavior: Clip
-                                      .none,
+                                      .none, // Allows the badge to sit outside the icon bounds
+                                  children: [
+                                    CustomImageView(
+                                      imagePath: CustomImage.notification,
+                                    ),
+                                    Positioned(
+                                      right: -4,
+                                      top: -4,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(4),
+                                        decoration: BoxDecoration(
+                                          color: Colors.red, // Badge color
+                                          shape: BoxShape.circle,
+                                          border: Border.all(
+                                            color: Colors.white,
+                                            width: 2,
+                                          ), // Adds contrast
+                                        ),
+                                        constraints: const BoxConstraints(
+                                          minWidth: 18,
+                                          minHeight: 18,
+                                        ),
+                                        child: FutureBuilder(
+                                          future: controllerNoticiation
+                                              .loadNoficationCpn(
+                                                isInitial: true,
+                                              ),
+                                          builder: (context, asyncSnapshot) {
+                                            if (asyncSnapshot.connectionState ==
+                                                    ConnectionState.waiting &&
+                                                controllerNoticiation
+                                                        .notificaitoncpn
+                                                        .value
+                                                        .data
+                                                        ?.data ==
+                                                    null) {
+                                              return SizedBox.shrink();
+                                            }
+                                            if (asyncSnapshot.hasError) {
+                                              return Text(
+                                                'Error: ${asyncSnapshot.error}',
+                                              );
+                                            }
+                                            return Obx(() {
+                                              return Text(
+                                                '${controllerNoticiation.notificaitoncpn.value.data?.data?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          const SizedBox(width: 3),
+                          GestureDetector(
+                            onTap: () {
+                              String? token = StorageDesign.readItem(
+                                StorageDesign.token,
+                              );
+                              if (token == null || token.isEmpty) {
+                                // User NOT logged in → go to Login
+                                Get.toNamed(AppRoutes.login);
+                              } else {
+                                Navigator.of(
+                                  context,
+                                ).pushNamed(AppRoutes.checkout);
+                              }
+                            },
+                            child: Container(
+                              width: 50,
+                              height: 50,
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFEEEEEE),
+                                borderRadius: BorderRadius.circular(999),
+                              ),
+                              child: Center(
+                                child: Stack(
+                                  alignment: Alignment.center,
+                                  clipBehavior: Clip.none,
                                   children: [
                                     const Icon(Icons.shopping_cart, size: 28),
                                     Positioned(
@@ -567,9 +627,7 @@ class SearchBarWidget extends StatelessWidget {
         const SizedBox(width: 3),
         GestureDetector(
           onTap: () {
-            String? token = StorageDesign.readItem(
-              StorageDesign.token,
-            );
+            String? token = StorageDesign.readItem(StorageDesign.token);
 
             if (token == null || token.isEmpty) {
               // User NOT logged in → go to Login
@@ -577,7 +635,6 @@ class SearchBarWidget extends StatelessWidget {
             } else {
               Get.toNamed(AppRoutes.notificationCpnScreen);
             }
-
           },
 
           child: Container(
