@@ -36,19 +36,15 @@ class ServiceController extends GetxController {
     debugPrint('MY LOCATION => ${myLat.value}, ${myLng.value}');
   }
 
-
-  double calculateDistanceKm(
-      double endLat,
-      double endLng,
-      ) {
+  double calculateDistanceKm(double endLat, double endLng) {
     if (myLat.value == 0.0 || myLng.value == 0.0) return 0;
 
     return Geolocator.distanceBetween(
-      myLat.value,
-      myLng.value,
-      endLat,
-      endLng,
-    ) /
+          myLat.value,
+          myLng.value,
+          endLat,
+          endLng,
+        ) /
         1000;
   }
 
@@ -57,17 +53,14 @@ class ServiceController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    if (StorageDesign.validKey(
-      StorageDesign.token,
-    )) {
+    if (StorageDesign.validKey(StorageDesign.token)) {
       getPopularServiceProvider();
-    getCurrentLocation();
-    getConstructionServiceProvider();
-    getAcabamentoServiceProvider();
-    loadNofication(isInitial: true);
-    loadNoficationCpn(isInitial: true);
+      getCurrentLocation();
+      getConstructionServiceProvider();
+      getAcabamentoServiceProvider();
+      loadNofication(isInitial: true);
+      loadNoficationCpn(isInitial: true);
     }
-
   }
 
   @override
@@ -153,10 +146,9 @@ class ServiceController extends GetxController {
       approveRequestIsLoading.value = false;
     }
   }
+
   Future<void> completeRequestClient({required String id}) async {
-  
     try {
-    
       approveRequestIsLoading.value = true;
       var response = await _apiManager.post(
         "${ApiUrl.serviceRequests}/$id/confirm-completion",
@@ -165,7 +157,6 @@ class ServiceController extends GetxController {
       );
 
       if (response.statusCode == 200) {
-       
         CustomLoading.showNotification(
           message: 'Conclusão confirmada',
           messageType: MessageType.success,
@@ -180,10 +171,10 @@ class ServiceController extends GetxController {
     } catch (e) {
       approveRequestIsLoading.value = false;
 
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       approveRequestIsLoading.value = false;
     }
@@ -212,10 +203,10 @@ class ServiceController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {}
   }
 
@@ -317,10 +308,10 @@ class ServiceController extends GetxController {
             false; // Prevent further attempts if server error occurs
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       isLoadingNotification.value = false;
       isPaginating.value = false;
@@ -413,7 +404,7 @@ class ServiceController extends GetxController {
   Future<void> getPopularServiceProvider() async {
     try {
       var response = await _apiManager.read(ApiUrl.popularCategory, false);
-// print(response.body);
+      // print(response.body);
       if (response.statusCode == 200) {
         var data = jsonDecode(response.body);
         categories.value = data["categories"] ?? [];
@@ -429,10 +420,10 @@ class ServiceController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -454,10 +445,10 @@ class ServiceController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -484,10 +475,10 @@ class ServiceController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -506,17 +497,19 @@ class ServiceController extends GetxController {
         categoryName.value = data["category"]?["name"] ?? "";
       } else {
         var message = jsonDecode(response.body);
-        var error = message["error"]?["message"] ?? "Falha ao buscar prestadores de serviço";
+        var error =
+            message["error"]?["message"] ??
+            "Falha ao buscar prestadores de serviço";
         CustomLoading.showNotification(
           message: error,
           messageType: MessageType.error,
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -645,11 +638,10 @@ class ServiceController extends GetxController {
 
         final rawMessage =
             decoded?['error']?['message'] ??
-                decoded?['message'] ??
-                'Falha ao publicar o item.';
+            decoded?['message'] ??
+            'Falha ao publicar o item.';
 
         final message = getPortugueseMessage(rawMessage);
-
 
         CustomLoading.showNotification(
           message: message,

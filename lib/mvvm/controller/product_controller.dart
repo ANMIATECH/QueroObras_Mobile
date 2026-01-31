@@ -186,10 +186,10 @@ class ProductDetailsController extends GetxController {
         hasMoreData.value = false;
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       isLoading.value = false;
       isPaginating.value = false;
@@ -255,10 +255,10 @@ class ProductDetailsController extends GetxController {
             false; // Prevent further attempts if server error occurs
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       isLoadingOrder.value = false;
       isPaginatingOrder.value = false;
@@ -325,10 +325,10 @@ class ProductDetailsController extends GetxController {
             false; // Prevent further attempts if server error occurs
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       isLoadingOrderRequest.value = false;
       isPaginatingOrderRequest.value = false;
@@ -405,10 +405,10 @@ class ProductDetailsController extends GetxController {
          );
        }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -530,10 +530,10 @@ class ProductDetailsController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -574,10 +574,10 @@ class ProductDetailsController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     }
   }
 

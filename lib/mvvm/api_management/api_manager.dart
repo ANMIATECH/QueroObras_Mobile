@@ -150,7 +150,8 @@ class ApiManager implements ApiReuse {
       final url = Uri.parse(
         '${ApiReuse.baseUrl}$endpoint',
       ).replace(queryParameters: queryParameters);
-
+print("calling url: $url");
+print("using token: $token");
       return await http.get(
         url,
         headers: _buildHeaders(bearerToken, token, language: 'pt'),

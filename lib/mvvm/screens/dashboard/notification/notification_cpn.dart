@@ -11,324 +11,183 @@ class NotificationCpnScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: const Text('Notificações'),
+      ),
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-              future: controller.loadNoficationCpn(isInitial: true),
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
-                    controller.notificaitoncpnfCpn.value.data == null) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(),
+        child: Obx(() {
+          // Using Obx here so it rebuilds when the observable list changes
+          final notifications =
+              controller.notificaitoncpn.value.data?.data ?? [];
+
+          // if (controller.isLoadingNotifications.value && notifications.isEmpty) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
+
+          if (notifications.isEmpty) {
+            return _EmptyNotificationsState();
+          }
+
+          return NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              if (notification.metrics.pixels >=
+                      notification.metrics.maxScrollExtent * 0.85 &&
+                  !controller.isPaginatingCpn.value &&
+                  controller.hasMoreDataCpn.value) {
+                controller.loadNextPageCpn();
+              }
+              return false;
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.fromLTRB(20, 32, 20, 40),
+              itemCount:
+                  notifications.length +
+                  (controller.isPaginatingCpn.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == notifications.length) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   );
                 }
-                final notifications =
-                    controller.notificaitoncpn.value.data?.data ?? [];
 
-                return Container(
-                  constraints: const BoxConstraints(maxWidth: 480),
-                  width: double.infinity,
-                  child: Column(
-                    children: [
-                      // Header Section
-                      Container(
-                        width: double.infinity,
-                        constraints: const BoxConstraints(maxWidth: 400),
-                        margin: const EdgeInsets.only(top: 5),
-                        padding: const EdgeInsets.symmetric(horizontal: 20),
-                        child: Row(
-                          children: [
-                            IconButton(
-                              onPressed: () {
-                                Navigator.pop(context);
-                              },
-                              icon: Icon(Icons.arrow_back_outlined),
-                            ),
-                            const SizedBox(width: 33),
-                            Expanded(
-                              child: Container(
-                                height: 34,
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  'Notificações',
-                                  style: TextStyle(
-                                    fontSize: 32,
-                                    fontWeight: FontWeight.w700,
-                                    color: Colors.black,
-                                    fontFamily: 'Josefin Sans',
-                                    height: 1.0,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      /// EMPTY STATE
-                      if (notifications.isEmpty)
-                        Padding(
-                          padding: const EdgeInsets.only(top: 150),
-                          child: Center(
-                            child: Column(
-                              children: [
-                                CustomImageView(
-                                  imagePath:
-                                      "assets/images/new_notification.svg",
-                                ),
-                                Text(
-                                  'Ainda não há notificações',
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.grey.shade600,
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        )
-                      else
-                        // Notifications Section
-                        NotificationListener<ScrollNotification>(
-                          onNotification: (ScrollNotification scrollInfo) {
-                            // Check if the user is scrolling near the bottom
-                            if (scrollInfo.metrics.pixels >=
-                                    scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                                !controller.isPaginatingCpn.value &&
-                                controller.hasMoreDataCpn.value) {
-                              // 👈 IMPORTANT: Only load more pages if NOT searching
-                              controller.loadNextPageCpn();
-                            }
-                            return true;
-                          },
-                          child: Container(
-                            width: double.infinity,
-                            constraints: const BoxConstraints(maxWidth: 400),
-                            margin: const EdgeInsets.only(top: 44),
-                            padding: const EdgeInsets.symmetric(horizontal: 20),
-                            child: Column(
-                              children: List.generate(
-                                controller
-                                        .notificaitoncpn
-                                        .value
-                                        .data
-                                        ?.data
-                                        ?.length ??
-                                    0,
-                                (index) {
-                                  var dd = controller
-                                      .notificaitoncpn
-                                      .value
-                                      .data
-                                      ?.data?[index];
-                                  return Column(
-                                    children: [
-                                      // Service Provider Notification
-                                      NotificationCard(
-                                        title: 'Prestador de Serviço',
-                                        description:
-                                            'O prestador de serviço ${dd?.provider?.name} [especialização] aceitou sua solicitação e o preço é R\$${dd?.replies?.isEmpty ?? [].isEmpty ? "0" : dd?.replies?.first.amount}.',
-                                        actions: [
-                                          dd?.status == "5"
-                                              ? dd?.customerAccepted == "1"
-                                                    ? NotificationButton(
-                                                        text: 'Chat',
-                                                        backgroundColor:
-                                                            const Color(
-                                                              0xFFD10000,
-                                                            ),
-                                                        onPressed: () {
-                                                          Get.to(
-                                                            () => OneOnOneChat(
-                                                              id: '${dd?.provider?.id}',
-                                                              userName:
-                                                                  '${dd?.provider?.name}',
-                                                            ),
-                                                          );
-                                                        },
-                                                      )
-                                                    : Container()
-                                              : Row(
-                                                  children: [
-                                                    NotificationButton(
-                                                      text: 'Cancelar',
-                                                      backgroundColor:
-                                                          const Color(
-                                                            0xFFD10000,
-                                                          ),
-                                                      onPressed: () {
-                                                        controller
-                                                            .rejectRequest(
-                                                              id:
-                                                                  dd?.slug ??
-                                                                  "",
-                                                            );
-                                                      },
-                                                    ),
-                                                    const SizedBox(width: 10),
-
-                                                    NotificationButton(
-                                                      text: dd?.status == "4"
-                                                          ? "Concluído"
-                                                          : 'Pagar',
-                                                      backgroundColor:
-                                                          const Color(
-                                                            0xFF16577F,
-                                                          ),
-                                                      onPressed: () {
-                                                        dd?.status == "4"
-                                                            ? controller
-                                                                  .completeRequestClient(
-                                                                    id: "${dd?.slug}",
-                                                                  )
-                                                            : showLogoutDialog(
-                                                                dd,
-                                                              );
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                        ],
-                                      ),
-                                      const SizedBox(height: 15),
-
-                                      // // System Update Notification
-                                      // if (userStatus != "cnpj")
-                                      //   const NotificationCard(
-                                      //     title: '[!] New Update',
-                                      //     description:
-                                      //         'Check the new update that we share in your system.',
-                                      //   ),
-                                    ],
-                                  );
-                                },
-                              ),
-                            ),
-                          ),
-                        ),
-
-                      // Bottom padding
-                      const SizedBox(height: 472),
-                    ],
+                final item = notifications[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: NotificationCard(
+                    title: 'Prestador de Serviço',
+                    description: _buildNotificationDescription(item),
+                    actions: _buildActionButtons(item, controller),
+                    status: item.status ?? "",
                   ),
                 );
               },
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
 
-  void showLogoutDialog(DatumCpn? dd) {
+  String _buildNotificationDescription(DatumCpn? item) {
+    if (item == null || item.provider?.name == null) {
+      return 'Sua solicitação foi atualizada.';
+    }
+
+    final name = item.provider!.name!;
+    final amount = item.replies?.isNotEmpty == true
+        ? item.replies!.first.amount ?? '0'
+        : '0';
+
+    return 'O prestador de serviço $name aceitou sua solicitação e o preço é R\$$amount.';
+  }
+
+  List<Widget> _buildActionButtons(DatumCpn? dd, ServiceController controller) {
+    if (dd == null) return const [];
+
+    // ── Status 5: Accepted case ────────────────────────────────────────
+    if (dd.customerAccepted == "1") {
+      return [
+        NotificationButton(
+          text: 'Bater papo',
+          backgroundColor: const Color(0xFFD10000),
+          onPressed: () {
+            final provider = dd.provider;
+            if (provider == null) return;
+
+            Get.to(
+              () => OneOnOneChat(
+                id: '${provider.id ?? ''}',
+                userName: provider.name ?? 'Prestador',
+              ),
+            );
+          },
+        ),
+      ];
+    }
+
+    // ── Default case: Cancel + Pay / Complete ───────────────────────────
+    if (dd.status == "3") return [];
+    return [
+      NotificationButton(
+        text: 'Cancelar',
+        backgroundColor: const Color(0xFFD10000),
+        onPressed: () => controller.rejectRequest(id: dd.slug ?? ''),
+      ),
+      const SizedBox(width: 12),
+      NotificationButton(
+        text: dd.status == '4' ? 'Concluído' : 'Pagar',
+        backgroundColor: const Color(0xFF16577F),
+        onPressed: () {
+          if (dd.status == '4') {
+            controller.completeRequestClient(id: dd.slug ?? '');
+          } else if (dd.replies?.isNotEmpty == true) {
+            _showPaymentConfirmationDialog(dd);
+          }
+        },
+      ),
+    ];
+  }
+
+  void _showPaymentConfirmationDialog(DatumCpn dd) {
+    final paymentLink = dd.replies?.firstOrNull?.paymentLink;
+
     Get.dialog(
       Dialog(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(24),
-        ), // Softer corners
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
         backgroundColor: Colors.white,
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+          padding: const EdgeInsets.all(28),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Info Icon (Circular Border)
               Container(
-                padding: const EdgeInsets.all(12),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: Colors.black54, width: 2),
                 ),
                 child: const Icon(
                   Icons.info_outline,
-                  size: 40,
+                  size: 48,
                   color: Colors.black87,
                 ),
               ),
               const SizedBox(height: 24),
-
-              // Text Message
               const Text(
-                "Ao clicar em 'Aceitar', você será redirecionado para o nosso parceiro de pagamento seguro, Mercado Pago, para concluir sua transação.",
-                // Replace with your logout text:
-                // "Ao clicar em 'Sair', sua sessão será encerrada e você precisará fazer login novamente.",
+                'Ao clicar em "Aceitar", você será redirecionado para o Mercado Pago para concluir o pagamento de forma segura.',
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 17,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF555555), // Muted dark grey
-                  height: 1.4,
+                  color: Color(0xFF444444),
+                  height: 1.45,
                 ),
               ),
               const SizedBox(height: 32),
-
-              // Primary Action Button (Accept/Sair)
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    Get.back();
-                    Get.to(
-                      () => WebViewScreen(
-                        url: "${dd?.replies?.first.paymentLink}",
-                      ),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor:
-                        CustomColor.primary, // The specific orange in the image
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    "Aceitar",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              _DialogButton(
+                text: 'Aceitar',
+                color: CustomColor.primary,
+                textColor: Colors.white,
+                onPressed: () {
+                  Get.back();
+                  if (paymentLink != null && paymentLink.isNotEmpty) {
+                    Get.to(() => WebViewScreen(url: paymentLink));
+                  } else {
+                    Get.snackbar('Erro', 'Link de pagamento não disponível');
+                  }
+                },
               ),
               const SizedBox(height: 12),
-
-              // Secondary Action Button (Cancel)
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () => Get.back(),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(
-                      0xFFE0E0E0,
-                    ), // Light grey background
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    elevation: 0,
-                  ),
-                  child: const Text(
-                    "Cancelar",
-                    style: TextStyle(
-                      color: Color(0xFF4A6572), // Muted blue-grey text
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
+              _DialogButton(
+                text: 'Cancelar',
+                color: const Color(0xFFE0E0E0),
+                textColor: const Color(0xFF4A6572),
+                onPressed: Get.back,
               ),
             ],
           ),
@@ -338,14 +197,84 @@ class NotificationCpnScreen extends StatelessWidget {
   }
 }
 
+// ── Helper Widgets ──────────────────────────────────────────────────────
+
+class _EmptyNotificationsState extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CustomImageView(
+              imagePath: 'assets/images/new_notification.svg',
+              height: 140,
+            ),
+            const SizedBox(height: 32),
+            Text(
+              'Ainda não há notificações',
+              style: TextStyle(
+                fontSize: 19,
+                color: Colors.grey.shade700,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _DialogButton extends StatelessWidget {
+  final String text;
+  final Color color;
+  final Color textColor;
+  final VoidCallback onPressed;
+
+  const _DialogButton({
+    required this.text,
+    required this.color,
+    required this.textColor,
+    required this.onPressed,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 54,
+      child: ElevatedButton(
+        onPressed: onPressed,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: color,
+          foregroundColor: textColor,
+          elevation: 0,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14),
+          ),
+        ),
+        child: Text(
+          text,
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
+  }
+}
+
 class NotificationCard extends StatelessWidget {
   final String title;
+  final String status;
   final String description;
   final List<Widget>? actions;
 
   const NotificationCard({
     super.key,
     required this.title,
+    required this.status,
     required this.description,
     this.actions,
   });
@@ -368,15 +297,30 @@ class NotificationCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
-            title,
-            style: TextStyle(
-              // Scale font size slightly based on screen width
-              fontSize: screenWidth > 600 ? 24 : 20,
-              fontWeight: FontWeight.bold,
-              color: Colors.black,
-              fontFamily: 'Josefin Sans',
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: screenWidth > 600 ? 24 : 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                    fontFamily: 'Josefin Sans',
+                  ),
+                ),
+              ),
+              if (status == "3") ...[
+                const SizedBox(width: 12),
+                _StatusBadge(
+                  label: "cancelar",
+                  color: Colors.red,
+                  backgroundColor: Colors.red.withValues(alpha: 0.1),
+                ),
+              ],
+            ],
           ),
           const SizedBox(height: 12),
           Text(
@@ -681,6 +625,41 @@ class CustomerRequestCard extends StatelessWidget {
             fontWeight: FontWeight.w700,
             height: 24 / 14,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+// Small reusable badge widget
+class _StatusBadge extends StatelessWidget {
+  final String label;
+  final Color color;
+  final Color backgroundColor;
+
+  const _StatusBadge({
+    required this.label,
+    required this.color,
+    required this.backgroundColor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(999), // pill shape (fully rounded)
+        // border: Border.all(color: color.withOpacity(0.3), width: 1), // optional subtle border
+      ),
+      child: Text(
+        label.toUpperCase(),
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w700,
+          color: color,
+          letterSpacing: 0.4,
+          fontFamily: 'Josefin Sans',
         ),
       ),
     );

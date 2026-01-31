@@ -97,11 +97,11 @@ class ProfileController extends GetxController {
             .map((e) => CategoryModel.fromJson(e))
             .toList();
       } else {
-        var message = jsonDecode(response.body);
-        CustomLoading.showNotification(
-          message: message["error"]?["message"] ?? "Falha ao buscar categorias",
-          messageType: MessageType.error,
-        );
+        // var message = jsonDecode(response.body);
+        // CustomLoading.showNotification(
+        //   message: message["error"]?["message"] ?? "Falha ao buscar categorias",
+        //   messageType: MessageType.error,
+        // );
       }
     } catch (e) {
       CustomLoading.showNotification(
@@ -132,10 +132,10 @@ class ProfileController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -170,10 +170,10 @@ class ProfileController extends GetxController {
       }
     } catch (e) {
       isLoading.value = false;
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -205,10 +205,10 @@ class ProfileController extends GetxController {
         );
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 
@@ -240,10 +240,10 @@ class ProfileController extends GetxController {
       }
     } catch (e) {
 
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     } finally {
     }
   }
@@ -264,7 +264,7 @@ class ProfileController extends GetxController {
 
       if (response.statusCode == 200) {
         // 🔥 DECODE JSON (for readability)
-        final decoded = jsonDecode(response.body);
+        // final decoded = jsonDecode(response.body);
 
         // ✅ Parse model
         final Reviews result = reviewsFromJson(response.body);
@@ -297,10 +297,10 @@ class ProfileController extends GetxController {
     } catch (e) {
       isLoading.value = false;
 
-      CustomLoading.showNotification(
-        message: e.toString(),
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: e.toString(),
+      //   messageType: MessageType.error,
+      // );
     }
   }
 

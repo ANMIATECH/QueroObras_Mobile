@@ -179,10 +179,10 @@ class VendorFormController extends GetxController {
             false; // Prevent further attempts if server error occurs
       }
     } catch (e) {
-      CustomLoading.showNotification(
-        message: 'Erro de rede: $e',
-        messageType: MessageType.error,
-      );
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
     } finally {
       isLoading.value = false;
       isPaginating.value = false;

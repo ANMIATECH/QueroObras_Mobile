@@ -149,40 +149,17 @@ class HomeScreen extends StatelessWidget {
                                           minWidth: 18,
                                           minHeight: 18,
                                         ),
-                                        child: FutureBuilder(
-                                          future: controllerNoticiation
-                                              .loadNoficationCpn(
-                                                isInitial: true,
-                                              ),
-                                          builder: (context, asyncSnapshot) {
-                                            if (asyncSnapshot.connectionState ==
-                                                    ConnectionState.waiting &&
-                                                controllerNoticiation
-                                                        .notificaitoncpn
-                                                        .value
-                                                        .data
-                                                        ?.data ==
-                                                    null) {
-                                              return SizedBox.shrink();
-                                            }
-                                            if (asyncSnapshot.hasError) {
-                                              return Text(
-                                                'Error: ${asyncSnapshot.error}',
-                                              );
-                                            }
-                                            return Obx(() {
-                                              return Text(
-                                                '${controllerNoticiation.notificaitoncpn.value.data?.data?.length ?? 0}', // Replace with your variable: '${cartCount}'
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              );
-                                            });
-                                          },
-                                        ),
+                                        child: Obx(() {
+                                          return Text(
+                                            '${controllerNoticiation.notificaitoncpn.value.data?.data?.length ?? 0}', // Replace with your variable: '${cartCount}'
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          );
+                                        }),
                                       ),
                                     ),
                                   ],

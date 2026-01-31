@@ -9,86 +9,93 @@ class NotificationCpnfScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
-          color: Colors.white,
-        ),
-        child: SingleChildScrollView(
-          child: FutureBuilder(
-            future: controller.loadNofication(isInitial: true),
-            builder: (context, asyncSnapshot) {
-              if (asyncSnapshot.connectionState == ConnectionState.waiting &&
-                  controller.notificaitoncpnf.value.data == null) {
-                return Center(
-                  child: Padding(
-                    padding: EdgeInsets.all(12.0),
-                    child: CircularProgressIndicator(),
-                  ),
-                );
-              }
-              return Container(
-                constraints: const BoxConstraints(maxWidth: 480),
-                width: double.infinity,
-                child: Builder(
-                  builder: (context) {
-                    return NotificationListener<ScrollNotification>(
-                      onNotification: (ScrollNotification scrollInfo) {
-                        // Check if the user is scrolling near the bottom
-                        if (scrollInfo.metrics.pixels >=
-                                scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                            !controller.isPaginating.value &&
-                            controller.hasMoreData.value) {
-                          // 👈 IMPORTANT: Only load more pages if NOT searching
-                          controller.loadNextPage();
-                        }
-                        return true;
-                      },
-                      child: Column(
-                        children: List.generate(
-                          controller
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        title: Text("Notificações"),
+      ),
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(30),
+            color: Colors.white,
+          ),
+          child: SingleChildScrollView(
+            child: FutureBuilder(
+              future: controller.loadNofication(isInitial: true),
+              builder: (context, asyncSnapshot) {
+                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
+                    controller.notificaitoncpnf.value.data == null) {
+                  return Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(12.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+                return Container(
+                  constraints: const BoxConstraints(maxWidth: 480),
+                  width: double.infinity,
+                  child: Builder(
+                    builder: (context) {
+                      return NotificationListener<ScrollNotification>(
+                        onNotification: (ScrollNotification scrollInfo) {
+                          // Check if the user is scrolling near the bottom
+                          if (scrollInfo.metrics.pixels >=
+                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                              !controller.isPaginating.value &&
+                              controller.hasMoreData.value) {
+                            // 👈 IMPORTANT: Only load more pages if NOT searching
+                            controller.loadNextPage();
+                          }
+                          return true;
+                        },
+                        child: Column(
+                          children: List.generate(
+                            controller
+                                    .notificaitoncpnf
+                                    .value
+                                    .data
+                                    ?.datacpnf
+                                    ?.length ??
+                                0,
+                            (index) {
+                              DatumCpnf? dd = controller
                                   .notificaitoncpnf
                                   .value
                                   .data
-                                  ?.datacpnf
-                                  ?.length ??
-                              0,
-                          (index) {
-                            DatumCpnf? dd = controller
-                                .notificaitoncpnf
-                                .value
-                                .data
-                                ?.datacpnf?[index];
-                            return Column(
-                              children: [
-                                // Notifications Section
-                                Container(
-                                  width: double.infinity,
-                                  constraints: const BoxConstraints(
-                                    maxWidth: 400,
+                                  ?.datacpnf?[index];
+                              return Column(
+                                children: [
+                                  // Notifications Section
+                                  Container(
+                                    width: double.infinity,
+                                    constraints: const BoxConstraints(
+                                      maxWidth: 400,
+                                    ),
+                                    margin: const EdgeInsets.only(top: 44),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 20,
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        const SizedBox(height: 15),
+                                        CustomerRequestCard(dd: dd),
+                                        const SizedBox(height: 15),
+                                      ],
+                                    ),
                                   ),
-                                  margin: const EdgeInsets.only(top: 44),
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 20,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      const SizedBox(height: 15),
-                                      CustomerRequestCard(dd: dd),
-                                      const SizedBox(height: 15),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            );
-                          },
+                                ],
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                ),
-              );
-            },
+                      );
+                    },
+                  ),
+                );
+              },
+            ),
           ),
         ),
       ),

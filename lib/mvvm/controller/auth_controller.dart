@@ -130,11 +130,11 @@ class AuthController extends GetxController {
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Erro",
-        message: "Ocorreu um erro inesperado. Tente novamente.",
-        type: SnackbarType.error,
-      );
+      // SnackbarUtil.showSnackbar(
+      //   title: "Erro",
+      //   message: "Ocorreu um erro inesperado. Tente novamente.",
+      //   type: SnackbarType.error,
+      // );
     }
   }
 
@@ -164,11 +164,11 @@ class AuthController extends GetxController {
         );
       }
     } catch (e) {
-      SnackbarUtil.showSnackbar(
-        title: "Erro",
-        message: "Ocorreu um erro inesperado. Tente novamente.",
-        type: SnackbarType.error,
-      );
+      // SnackbarUtil.showSnackbar(
+      //   title: "Erro",
+      //   message: "Ocorreu um erro inesperado. Tente novamente.",
+      //   type: SnackbarType.error,
+      // );
     }
   }
 
