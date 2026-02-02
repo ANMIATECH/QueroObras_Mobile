@@ -150,6 +150,7 @@ class DatumCpn {
     final String? customerAccepted;
     final DateTime? createdAt;
     final DateTime? updatedAt;
+        final String? statusText;
     final Provider? provider;
     final List<ImageCpn>? images;
     final List<ReplyCpn>? replies;
@@ -161,6 +162,8 @@ class DatumCpn {
         this.description,
         this.address,
         this.slug,
+                this.statusText,
+
         this.status,
         this.customerAccepted,
         this.createdAt,
@@ -178,6 +181,8 @@ class DatumCpn {
         String? address,
         String? slug,
         String? status,
+                String? statusText,
+
         String? customerAccepted,
         DateTime? createdAt,
         DateTime? updatedAt,
@@ -193,6 +198,8 @@ class DatumCpn {
             address: address ?? this.address,
             slug: slug ?? this.slug,
             status: status ?? this.status,
+                        statusText: statusText ?? this.statusText,
+
             customerAccepted: customerAccepted ?? this.customerAccepted,
             createdAt: createdAt ?? this.createdAt,
             updatedAt: updatedAt ?? this.updatedAt,
@@ -214,6 +221,8 @@ class DatumCpn {
         slug: json["slug"],
         status: json["status"],
         customerAccepted: json["customer_accepted"],
+                statusText: json["status_text"],
+
         createdAt: json["created_at"] == null ? null : DateTime.parse(json["created_at"]),
         updatedAt: json["updated_at"] == null ? null : DateTime.parse(json["updated_at"]),
         provider: json["provider"] == null ? null : Provider.fromJson(json["provider"]),
@@ -229,6 +238,8 @@ class DatumCpn {
         "address": address,
         "slug": slug,
         "status": status,
+                "status_text": statusText,
+
         "customer_accepted": customerAccepted,
         "created_at": createdAt?.toIso8601String(),
         "updated_at": updatedAt?.toIso8601String(),

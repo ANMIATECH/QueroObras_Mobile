@@ -88,9 +88,9 @@ class NotificationCpnScreen extends StatelessWidget {
 
   List<Widget> _buildActionButtons(DatumCpn? dd, ServiceController controller) {
     if (dd == null) return const [];
-
+    final status = (dd.statusText ?? '').trim().toLowerCase();
     // ── Status 5: Accepted case ────────────────────────────────────────
-    if (dd.customerAccepted == "1") {
+    if (status == 'active') {
       return [
         NotificationButton(
           text: 'Bater papo',
@@ -111,7 +111,10 @@ class NotificationCpnScreen extends StatelessWidget {
     }
 
     // ── Default case: Cancel + Pay / Complete ───────────────────────────
-    if (dd.status == "3") return [];
+    // ── Cancelled ───────────────────────────────────────────────
+    if (status == 'cancelled') {
+      return [];
+    }
     return [
       NotificationButton(
         text: 'Cancelar',
@@ -120,17 +123,35 @@ class NotificationCpnScreen extends StatelessWidget {
       ),
       const SizedBox(width: 12),
       NotificationButton(
-        text: dd.status == '4' ? 'Concluído' : 'Pagar',
+        text: _getActionButtonText(status),
         backgroundColor: const Color(0xFF16577F),
         onPressed: () {
-          if (dd.status == '4') {
+          if (status == 'complete_pending_confirmation') {
             controller.completeRequestClient(id: dd.slug ?? '');
           } else if (dd.replies?.isNotEmpty == true) {
             _showPaymentConfirmationDialog(dd);
+          } else {
+            Get.snackbar('Aviso', 'Nenhuma proposta disponível para pagamento');
           }
+          // if (dd.status == '4') {
+          //   controller.completeRequestClient(id: dd.slug ?? '');
+          // } else if (dd.replies?.isNotEmpty == true) {
+          //   _showPaymentConfirmationDialog(dd);
+          // }
         },
       ),
     ];
+  }
+
+  String _getActionButtonText(String status) {
+    switch (status) {
+      case 'complete_pending_confirmation':
+        return 'Concluído';
+      case 'pending':
+      case 'active': // fallback — should not reach here
+      default:
+        return 'Pagar';
+    }
   }
 
   void _showPaymentConfirmationDialog(DatumCpn dd) {

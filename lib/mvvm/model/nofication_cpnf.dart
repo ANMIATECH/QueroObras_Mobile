@@ -7,12 +7,15 @@ class NotificationCpnf {
 
   NotificationCpnf({this.status, this.message, this.data});
 
-  NotificationCpnf copyWith({String? status, String? message, DataCpnf? data}) =>
-      NotificationCpnf(
-        status: status ?? this.status,
-        message: message ?? this.message,
-        data: data ?? this.data,
-      );
+  NotificationCpnf copyWith({
+    String? status,
+    String? message,
+    DataCpnf? data,
+  }) => NotificationCpnf(
+    status: status ?? this.status,
+    message: message ?? this.message,
+    data: data ?? this.data,
+  );
 
   factory NotificationCpnf.fromRawJson(String str) =>
       NotificationCpnf.fromJson(json.decode(str));
@@ -94,7 +97,8 @@ class DataCpnf {
     total: total ?? this.total,
   );
 
-  factory DataCpnf.fromRawJson(String str) => DataCpnf.fromJson(json.decode(str));
+  factory DataCpnf.fromRawJson(String str) =>
+      DataCpnf.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -150,6 +154,8 @@ class DatumCpnf {
   final String? customerAccepted;
   final DateTime? createdAt;
   final DateTime? updatedAt;
+  final String? statusText;
+
   final User? user;
   final List<ImageCpnf>? images;
   final List<dynamic>? replies;
@@ -162,6 +168,8 @@ class DatumCpnf {
     this.address,
     this.slug,
     this.status,
+    this.statusText,
+
     this.customerAccepted,
     this.createdAt,
     this.updatedAt,
@@ -180,6 +188,8 @@ class DatumCpnf {
     String? status,
     String? customerAccepted,
     DateTime? createdAt,
+    String? statusText,
+
     DateTime? updatedAt,
     User? user,
     List<ImageCpnf>? images,
@@ -192,6 +202,8 @@ class DatumCpnf {
     address: address ?? this.address,
     slug: slug ?? this.slug,
     status: status ?? this.status,
+    statusText: statusText ?? this.statusText,
+
     customerAccepted: customerAccepted ?? this.customerAccepted,
     createdAt: createdAt ?? this.createdAt,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -200,7 +212,8 @@ class DatumCpnf {
     replies: replies ?? this.replies,
   );
 
-  factory DatumCpnf.fromRawJson(String str) => DatumCpnf.fromJson(json.decode(str));
+  factory DatumCpnf.fromRawJson(String str) =>
+      DatumCpnf.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -212,6 +225,8 @@ class DatumCpnf {
     address: json["address"],
     slug: json["slug"],
     status: json["status"],
+    statusText: json["status_text"],
+
     customerAccepted: json["customer_accepted"],
     createdAt: json["created_at"] == null
         ? null
@@ -237,6 +252,8 @@ class DatumCpnf {
     "description": description,
     "address": address,
     "slug": slug,
+    "status_text": statusText,
+
     "status": status,
     "customer_accepted": customerAccepted,
     "created_at": createdAt?.toIso8601String(),
@@ -404,14 +421,16 @@ class LinkCpnf {
 
   LinkCpnf({this.url, this.label, this.page, this.active});
 
-  LinkCpnf copyWith({String? url, String? label, int? page, bool? active}) => LinkCpnf(
-    url: url ?? this.url,
-    label: label ?? this.label,
-    page: page ?? this.page,
-    active: active ?? this.active,
-  );
+  LinkCpnf copyWith({String? url, String? label, int? page, bool? active}) =>
+      LinkCpnf(
+        url: url ?? this.url,
+        label: label ?? this.label,
+        page: page ?? this.page,
+        active: active ?? this.active,
+      );
 
-  factory LinkCpnf.fromRawJson(String str) => LinkCpnf.fromJson(json.decode(str));
+  factory LinkCpnf.fromRawJson(String str) =>
+      LinkCpnf.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 

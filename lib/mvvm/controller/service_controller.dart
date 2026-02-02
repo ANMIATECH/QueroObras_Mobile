@@ -180,6 +180,40 @@ class ServiceController extends GetxController {
     }
   }
 
+
+   Future<void> cancelRequestClient({required String id}) async {
+    try {
+      approveRequestIsLoading.value = true;
+      var response = await _apiManager.post(
+        "${ApiUrl.serviceRequests}/$id/cancel-by-provider",
+        {},
+        true,
+      );
+
+      if (response.statusCode == 200) {
+        CustomLoading.showNotification(
+          message: 'Solicitação cancelada com sucesso.',
+          messageType: MessageType.success,
+        );
+        Get.back();
+      } else {
+        CustomLoading.showNotification(
+          message: 'Falha ao cancelar a solicitação.',
+          messageType: MessageType.error,
+        );
+      }
+    } catch (e) {
+      approveRequestIsLoading.value = false;
+
+      // CustomLoading.showNotification(
+      //   message: 'Erro de rede: $e',
+      //   messageType: MessageType.error,
+      // );
+    } finally {
+      approveRequestIsLoading.value = false;
+    }
+  }
+
   Future<void> completedRequest({required String id}) async {
     try {
       var response = await _apiManager.post(

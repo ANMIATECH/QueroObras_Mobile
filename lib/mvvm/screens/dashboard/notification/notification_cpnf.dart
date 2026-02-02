@@ -12,92 +12,60 @@ class NotificationCpnfScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        title: Text("Notificações"),
+        title: const Text("Notificações"),
       ),
       body: SafeArea(
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-            color: Colors.white,
-          ),
-          child: SingleChildScrollView(
-            child: FutureBuilder(
-              future: controller.loadNofication(isInitial: true),
-              builder: (context, asyncSnapshot) {
-                if (asyncSnapshot.connectionState == ConnectionState.waiting &&
-                    controller.notificaitoncpnf.value.data == null) {
-                  return Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(12.0),
-                      child: CircularProgressIndicator(),
+        child: Obx(() {
+          final notifications =
+              controller.notificaitoncpnf.value.data?.datacpnf ?? [];
+
+          if (controller.isLoading.value && notifications.isEmpty) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (notifications.isEmpty) {
+            return const Center(
+              child: Text(
+                "Nenhuma solicitação encontrada",
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
+          return NotificationListener<ScrollNotification>(
+            onNotification: (scrollInfo) {
+              if (scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.9 &&
+                  !controller.isPaginating.value &&
+                  controller.hasMoreData.value) {
+                controller.loadNextPage();
+              }
+              return false;
+            },
+            child: ListView.builder(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              itemCount:
+                  notifications.length +
+                  (controller.isPaginating.value ? 1 : 0),
+              itemBuilder: (context, index) {
+                if (index == notifications.length) {
+                  return const Padding(
+                    padding: EdgeInsets.symmetric(vertical: 32),
+                    child: Center(
+                      child: CircularProgressIndicator(strokeWidth: 2),
                     ),
                   );
                 }
-                return Container(
-                  constraints: const BoxConstraints(maxWidth: 480),
-                  width: double.infinity,
-                  child: Builder(
-                    builder: (context) {
-                      return NotificationListener<ScrollNotification>(
-                        onNotification: (ScrollNotification scrollInfo) {
-                          // Check if the user is scrolling near the bottom
-                          if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent * 0.9 &&
-                              !controller.isPaginating.value &&
-                              controller.hasMoreData.value) {
-                            // 👈 IMPORTANT: Only load more pages if NOT searching
-                            controller.loadNextPage();
-                          }
-                          return true;
-                        },
-                        child: Column(
-                          children: List.generate(
-                            controller
-                                    .notificaitoncpnf
-                                    .value
-                                    .data
-                                    ?.datacpnf
-                                    ?.length ??
-                                0,
-                            (index) {
-                              DatumCpnf? dd = controller
-                                  .notificaitoncpnf
-                                  .value
-                                  .data
-                                  ?.datacpnf?[index];
-                              return Column(
-                                children: [
-                                  // Notifications Section
-                                  Container(
-                                    width: double.infinity,
-                                    constraints: const BoxConstraints(
-                                      maxWidth: 400,
-                                    ),
-                                    margin: const EdgeInsets.only(top: 44),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                    ),
-                                    child: Column(
-                                      children: [
-                                        const SizedBox(height: 15),
-                                        CustomerRequestCard(dd: dd),
-                                        const SizedBox(height: 15),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              );
-                            },
-                          ),
-                        ),
-                      );
-                    },
-                  ),
+
+                final dd = notifications[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 16),
+                  child: CustomerRequestCard(dd: dd),
                 );
               },
             ),
-          ),
-        ),
+          );
+        }),
       ),
     );
   }
@@ -122,9 +90,7 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
     _pageController = PageController();
     _pageController.addListener(() {
       if (mounted) {
-        setState(() {
-          _currentPage = _pageController.page?.round() ?? 0;
-        });
+        setState(() => _currentPage = _pageController.page?.round() ?? 0);
       }
     });
   }
@@ -137,12 +103,11 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isTablet = screenWidth > 640 && screenWidth <= 991;
-    final isMobile = screenWidth <= 640;
     final controller = Get.find<ServiceController>();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth <= 640;
 
-    // Responsive values
+    // Responsive values (unchanged)
     double containerMaxWidth = 400;
     double containerPadding = 27;
     double contentWidth = 346;
@@ -153,7 +118,7 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
     double descriptionFontSize = 16;
     double locationFontSize = 14;
 
-    if (isTablet) {
+    if (screenWidth > 640 && screenWidth <= 991) {
       containerMaxWidth = 350;
       containerPadding = 20;
       contentWidth = 310;
@@ -170,9 +135,12 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
       locationFontSize = 13;
     }
 
-    final hasImages =
-        widget.dd?.images != null && widget.dd!.images!.isNotEmpty;
-    final imageCount = hasImages ? widget.dd!.images!.length : 0;
+    final item = widget.dd;
+    if (item == null) return const SizedBox.shrink();
+
+    final status = (item.statusText ?? '').trim().toLowerCase();
+    final hasImages = item.images != null && item.images!.isNotEmpty;
+    final imageCount = hasImages ? item.images!.length : 0;
 
     return Center(
       child: Container(
@@ -190,7 +158,7 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
             children: [
               // Title
               Text(
-                "New Customer",
+                "Novo Cliente",
                 style: TextStyle(
                   fontFamily: 'Josefin Sans',
                   fontSize: titleFontSize,
@@ -199,24 +167,20 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                   color: Colors.black,
                 ),
               ),
-
               SizedBox(height: contentGap),
 
-              // Images + Dots (only if images exist)
+              // Images carousel + dots
               if (hasImages) ...[
                 SizedBox(
                   height: imageHeight,
                   child: Stack(
                     fit: StackFit.expand,
                     children: [
-                      // Image carousel
                       PageView.builder(
                         controller: _pageController,
                         itemCount: imageCount,
-                        itemBuilder: (context, index) {
-                          final image = widget.dd!.images![index];
-                          final url = image.imageUrl ?? '';
-
+                        itemBuilder: (context, idx) {
+                          final url = item.images![idx].imageUrl ?? '';
                           return ClipRRect(
                             borderRadius: BorderRadius.circular(borderRadius),
                             child: CustomImageView(
@@ -224,15 +188,10 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                               width: contentWidth,
                               height: imageHeight,
                               fit: BoxFit.cover,
-                              // Recommended additions if CustomImageView supports them:
-                              // errorWidget: const Icon(Icons.broken_image, size: 64, color: Colors.grey),
-                              // placeholder: const Center(child: CircularProgressIndicator()),
                             ),
                           );
                         },
                       ),
-
-                      // Pagination dots (only show if more than 1 image)
                       if (imageCount > 1)
                         Positioned(
                           bottom: 12,
@@ -241,8 +200,8 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                           child: Center(
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: List.generate(imageCount, (index) {
-                                final isActive = index == _currentPage;
+                              children: List.generate(imageCount, (idx) {
+                                final isActive = idx == _currentPage;
                                 return Container(
                                   margin: const EdgeInsets.symmetric(
                                     horizontal: 4,
@@ -266,9 +225,9 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                 SizedBox(height: contentGap),
               ],
 
-              // Location
+              // Location / Address
               Text(
-                widget.dd?.address ?? 'No address provided',
+                item.address ?? 'Endereço não informado',
                 style: TextStyle(
                   fontFamily: 'Josefin Sans',
                   fontSize: locationFontSize,
@@ -277,10 +236,9 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                   color: Colors.black,
                 ),
               ),
-
               SizedBox(height: contentGap),
 
-              // Description + "More"
+              // Description
               SizedBox(
                 height: isMobile ? null : 48,
                 child: RichText(
@@ -294,13 +252,13 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                     ),
                     children: [
                       TextSpan(
-                        text: (widget.dd?.description ?? '').trim().isEmpty
-                            ? 'No description available'
-                            : widget.dd!.description!,
+                        text: (item.description ?? '').trim().isEmpty
+                            ? 'Sem descrição disponível'
+                            : item.description!.trim(),
                       ),
                       const TextSpan(text: '  '),
                       const TextSpan(
-                        text: 'More',
+                        text: 'Mais',
                         style: TextStyle(
                           fontWeight: FontWeight.w700,
                           color: Color(0xFF16577F),
@@ -310,59 +268,67 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
                   ),
                 ),
               ),
-
               SizedBox(height: contentGap),
 
-              // Action buttons
-              if (isMobile)
-                if (widget.dd?.status == "5")
-                  const SizedBox.shrink()
-                else
-                  Column(
-                    children: [
-                      if (widget.dd?.status != "3")
-                        _buildButton(
-                          text: 'Cancel',
-                          backgroundColor: const Color(0xFFDC2626),
-                          onPressed: () {
-                            // TODO: implement cancel logic
-                          },
-                          width: double.infinity,
-                        ),
-                      if (widget.dd?.status != "3") const SizedBox(height: 8),
+              // Action buttons – now using statusText
+              if (status == 'cancelled' || status == 'completed')
+                const SizedBox.shrink()
+              else if (isMobile)
+                Column(
+                  children: [
+                    if (status != 'cancelled')
                       _buildButton(
-                        text: widget.dd?.status == "3" ? "Completo" : 'Aprovar',
-                        backgroundColor: const Color(0xFF1E40AF),
+                        text: 'Cancelar',
+                        backgroundColor: const Color(0xFFDC2626),
                         onPressed: () {
-                          if (widget.dd?.status == "3") {
-                            controller.completedRequest(
-                              id: "${widget.dd?.slug}",
-                            );
-                          } else {
-                            Get.to(() => ApproveRequest(dd: widget.dd));
-                          }
+                          // TODO: call controller.cancelRequest(id: item.slug ?? '')
+                                                                            controller.cancelRequestClient(id: item.slug ?? '');
+
+                          Get.snackbar(
+                            'Ação',
+                            'Cancelar solicitação (implementar)',
+                          );
                         },
                         width: double.infinity,
                       ),
-                    ],
-                  )
+                    if (status != 'cancelled') const SizedBox(height: 8),
+                    _buildButton(
+                      text: _getPrimaryButtonText(status),
+                      backgroundColor: const Color(0xFF1E40AF),
+                      onPressed: () {
+                        if (status == 'complete_pending_confirmation') {
+                          controller.completedRequest(id: item.slug ?? '');
+                        } else {
+                          Get.to(() => ApproveRequest(dd: item));
+                        }
+                      },
+                      width: double.infinity,
+                    ),
+                  ],
+                )
               else
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buildButton(
-                      text: 'Cancel',
+                      text: 'Cancelar',
                       backgroundColor: const Color(0xFFDC2626),
                       onPressed: () {
                         // TODO: implement cancel
+                                                  controller.cancelRequestClient(id: item.slug ?? '');
+
                       },
                       width: 145,
                     ),
                     _buildButton(
-                      text: 'Approve',
+                      text: _getPrimaryButtonText(status),
                       backgroundColor: const Color(0xFF1E40AF),
                       onPressed: () {
-                        // TODO: implement approve
+                        if (status == 'complete_pending_confirmation') {
+                          controller.completedRequest(id: item.slug ?? '');
+                        } else {
+                          Get.to(() => ApproveRequest(dd: item));
+                        }
                       },
                       width: 145,
                     ),
@@ -373,6 +339,19 @@ class _CustomerRequestCardState extends State<CustomerRequestCard> {
         ),
       ),
     );
+  }
+
+  String _getPrimaryButtonText(String status) {
+    switch (status) {
+      case 'complete_pending_confirmation':
+        return 'Completar';
+      case 'cancelled':
+        return 'Cancelado';
+      case 'completed':
+        return 'Concluído';
+      default:
+        return 'Aprovar';
+    }
   }
 
   Widget _buildButton({
