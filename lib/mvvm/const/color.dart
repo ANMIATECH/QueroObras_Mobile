@@ -714,7 +714,7 @@ class _MultiSelectDropdownFieldState extends State<MultiSelectDropdownField> {
             Expanded(
               child: ListView(
                 children: _filteredRoles.asMap().entries.map((entry) {
-                  int index = entry.key;
+                  // int index = entry.key;
                   Role role = entry.value;
                   return RoleItem(
                     role: role,
